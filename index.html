@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>HUD — Profile + History</title>
+  <title>HUD</title>
   <style>
     :root{
       --bg0:#070a10;
@@ -18,14 +18,14 @@
       --text: rgba(232,238,250,.92);
       --muted: rgba(232,238,250,.55);
 
-      --accent: 120 180 255;     /* rgb components */
-      --accent2: 255 140 120;    /* rgb components */
+      --accent: 120 180 255;
+      --accent2: 255 140 120;
 
-      --r1: 28px;
-      --r2: 22px;
+      --r1: 26px;
+      --r2: 20px;
 
-      --shadow: 0 16px 60px rgba(0,0,0,.55);
       --shadow2: 0 0 0 1px rgba(255,255,255,.08), 0 14px 50px rgba(0,0,0,.55);
+      --shadow: 0 16px 60px rgba(0,0,0,.55);
       --glow: 0 0 28px rgba(120,180,255,.18);
 
       --ui: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
@@ -38,9 +38,9 @@
       font-family: var(--ui);
       color: var(--text);
       background:
-        radial-gradient(1200px 800px at 28% 18%, rgba(70, 120, 190, .22), transparent 60%),
-        radial-gradient(900px 700px at 78% 75%, rgba(160, 70, 120, .18), transparent 58%),
-        radial-gradient(700px 520px at 60% 20%, rgba(80, 200, 170, .10), transparent 60%),
+        radial-gradient(1100px 740px at 28% 18%, rgba(70, 120, 190, .22), transparent 60%),
+        radial-gradient(880px 660px at 78% 75%, rgba(160, 70, 120, .18), transparent 58%),
+        radial-gradient(640px 500px at 60% 20%, rgba(80, 200, 170, .10), transparent 60%),
         linear-gradient(180deg, var(--bg1), var(--bg0));
       overflow-x:hidden;
     }
@@ -74,10 +74,9 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 18px;
+      padding: 14px;
     }
 
-    /* Main HUD container */
     .hud{
       width: min(1150px, 100%);
       border-radius: var(--r1);
@@ -96,16 +95,15 @@
       border: 1px solid var(--line2);
       pointer-events:none;
     }
-    .pad{ padding: 16px 16px 18px 16px; }
+    .pad{ padding: 14px; }
 
-    /* Top Bar */
     .topbar{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 12px;
-      padding: 12px 14px;
-      border-radius: 18px;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
       border: 1px solid var(--line);
       background: var(--panel2);
       backdrop-filter: blur(10px);
@@ -126,8 +124,14 @@
     }
     @keyframes topLine{ 0%,100%{opacity:.2} 50%{opacity:.85} }
 
+    .statusLeft{
+      display:flex;
+      flex-direction:column;
+      gap: 4px;
+      min-width: 180px;
+    }
     .kicker{
-      font-size: 11px;
+      font-size: 10px;
       letter-spacing: .22em;
       color: var(--muted);
       text-transform: uppercase;
@@ -135,7 +139,17 @@
     .sub{
       font-size: 11px;
       color: var(--muted);
-      margin-top: 4px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rightTop{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content:flex-end;
     }
     .pill{
       border-radius: 999px;
@@ -144,38 +158,51 @@
       background: rgba(255,255,255,.05);
       font-size: 12px;
       white-space: nowrap;
+      user-select:none;
     }
     .pill span{ color: var(--muted); }
     .pill b{ font-weight: 750; color: rgba(255,255,255,.90); }
 
-    /* ======= Main content grid (your scheme-ish) ======= */
+    .topBtn{
+      border-radius: 999px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.85);
+      font-size: 12px;
+      cursor:pointer;
+      transition: transform .14s ease, background .14s ease;
+      user-select:none;
+    }
+    .topBtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); }
+    .topBtn:active{ transform: translateY(0px) scale(.99); }
+
     .grid{
-      margin-top: 14px;
+      margin-top: 12px;
       display:grid;
-      grid-template-columns: 340px 1fr;
-      gap: 14px;
+      grid-template-columns: 330px 1fr;
+      gap: 12px;
       align-items:start;
     }
 
-    /* Left side: profile(1) + commands */
     .leftcol{
       display:flex;
       flex-direction:column;
-      gap: 14px;
+      gap: 12px;
+      min-height: 560px;
     }
 
-    /* (1) Profile orb card */
-    .profileCard{
+    .panel{
       border-radius: var(--r2);
       border: 1px solid var(--line);
       background: rgba(10,12,18,.38);
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
-      padding: 14px;
+      padding: 12px;
       position: relative;
       overflow:hidden;
     }
-    .profileCard::after{
+    .panel::after{
       content:"";
       position:absolute;
       inset: 10px;
@@ -183,8 +210,18 @@
       border: 1px solid rgba(255,255,255,.06);
       pointer-events:none;
     }
+    .panelHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+    }
 
-    .profileOrb{
+    /* Profile (1) */
+    .profileBtn{
+      margin-top: 10px;
       width: 100%;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.10);
@@ -198,18 +235,19 @@
       transition: transform .16s ease, background .16s ease, border-color .16s ease;
       user-select:none;
       transform: translateZ(0);
+      outline:none;
     }
-    .profileOrb:hover{
+    .profileBtn:hover{
       transform: translateY(-2px);
       background: rgba(255,255,255,.06);
       border-color: rgba(var(--accent), .35);
       box-shadow: 0 0 22px rgba(var(--accent), .12);
     }
-    .profileOrb:active{ transform: translateY(0px) scale(.995); }
+    .profileBtn:active{ transform: translateY(0px) scale(.995); }
 
     .avatar{
-      width: 64px;
-      height: 64px;
+      width: 62px;
+      height: 62px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.14);
       background:
@@ -221,14 +259,7 @@
       position: relative;
       flex:none;
     }
-    .avatar img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      filter: saturate(1.05) contrast(1.05);
-    }
-    /* idle glow ring */
+    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
     .avatar::after{
       content:"";
       position:absolute;
@@ -241,58 +272,40 @@
     }
     @keyframes glowPulse{ 0%,100%{opacity:.25} 50%{opacity:.75} }
 
-    .pmeta{ min-width:0; }
-    .pname{
+    .pmeta{ min-width:0; position: relative; z-index: 2; }
+    .plogin{
       font-size: 14px;
-      font-weight: 760;
+      font-weight: 800;
       letter-spacing: .2px;
       white-space: nowrap;
       overflow:hidden;
       text-overflow: ellipsis;
     }
-    .phint{
+    .pnick{
       margin-top: 6px;
       font-size: 12px;
       color: var(--muted);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
     }
-
-    /* tooltip */
-    .tip{
+    .pLock{
       position:absolute;
       right: 12px;
       top: 12px;
       font-size: 11px;
       color: rgba(255,255,255,.60);
-      opacity: .0;
+      opacity: 0;
       transform: translateY(-2px);
       transition: opacity .16s ease, transform .16s ease;
       pointer-events:none;
     }
-    .profileOrb:hover .tip{
+    .profileBtn:hover .pLock{
       opacity: 1;
       transform: translateY(0px);
     }
 
-    /* Commands panel (buttons) */
-    .commands{
-      border-radius: var(--r2);
-      border: 1px solid var(--line);
-      background: rgba(10,12,18,.38);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      position: relative;
-      overflow:hidden;
-    }
-    .commands::after{
-      content:"";
-      position:absolute;
-      inset: 10px;
-      border-radius: calc(var(--r2) - 8px);
-      border: 1px solid rgba(255,255,255,.06);
-      pointer-events:none;
-    }
-
+    /* Commands */
     .cmdGrid{
       margin-top: 10px;
       display:grid;
@@ -301,8 +314,6 @@
       position: relative;
       z-index: 2;
     }
-
-    /* Fancy command button */
     .cmd{
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
@@ -317,9 +328,9 @@
       position: relative;
       overflow:hidden;
       transform: translateZ(0);
-      transition: transform .14s ease, background .14s ease, border-color .14s ease;
+      transition: transform .14s ease, background .14s ease, border-color .14s ease, opacity .14s ease;
       user-select:none;
-      outline: none;
+      outline:none;
     }
     .cmd:hover{
       transform: translateY(-2px);
@@ -327,58 +338,49 @@
       border-color: rgba(var(--accent), .35);
       box-shadow: 0 0 22px rgba(var(--accent), .10);
     }
-    .cmd:active{
-      transform: translateY(0px) scale(.995);
+    .cmd:active{ transform: translateY(0px) scale(.995); }
+
+    .cmd[disabled]{
+      opacity: .42;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    .cmd[disabled]:hover{
+      background: rgba(255,255,255,.05);
+      border-color: rgba(255,255,255,.10);
     }
 
-    .cmd .label{
-      font-weight: 760;
-      letter-spacing: .2px;
-      font-size: 13px;
-    }
+    .cmd .label{ font-weight: 800; letter-spacing: .2px; font-size: 13px; }
     .cmd .ico{
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
+      width: 34px; height: 34px; border-radius: 12px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
-      display:grid;
-      place-items:center;
-      opacity:.9;
-      flex:none;
+      display:grid; place-items:center;
+      opacity:.9; flex:none;
     }
-
-    /* shiny sweep on hover */
     .cmd::before{
       content:"";
       position:absolute;
       inset:-40%;
-      background: linear-gradient(90deg,
-        transparent,
-        rgba(var(--accent), .18),
-        transparent);
+      background: linear-gradient(90deg, transparent, rgba(var(--accent), .18), transparent);
       transform: translateX(-30%) rotate(10deg);
       opacity: 0;
       transition: opacity .18s ease;
       pointer-events:none;
     }
-    .cmd:hover::before{
-      opacity: 1;
-      animation: shine 0.8s ease-out 1;
-    }
+    .cmd:hover::before{ opacity: 1; animation: shine 0.8s ease-out 1; }
     @keyframes shine{
       from{ transform: translateX(-45%) rotate(10deg); }
       to{ transform: translateX(45%) rotate(10deg); }
     }
 
-    /* Ripple effect element injected */
     .ripple{
       position:absolute;
       border-radius:999px;
       transform: translate(-50%,-50%);
       pointer-events:none;
       background: rgba(var(--accent), .25);
-      filter: blur(.2px);
       animation: ripple .55s ease-out forwards;
     }
     @keyframes ripple{
@@ -386,7 +388,7 @@
       to{ width: 260px; height: 260px; opacity: 0; }
     }
 
-    /* Right side: history (2) */
+    /* History (2) */
     .rightcol{
       border-radius: var(--r2);
       border: 1px solid var(--line);
@@ -395,8 +397,8 @@
       box-shadow: var(--shadow);
       position: relative;
       overflow:hidden;
-      padding: 14px;
-      min-height: 520px;
+      padding: 12px;
+      min-height: 560px;
     }
     .rightcol::after{
       content:"";
@@ -407,55 +409,40 @@
       pointer-events:none;
     }
 
-    .historyHead{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 10px;
-      position: relative;
-      z-index: 2;
+    .scan{
+      position:absolute;
+      left:0; right:0;
+      height: 2px;
+      background: rgba(var(--accent), .45);
+      opacity: .14;
+      animation: scan 5.4s ease-in-out infinite;
+      pointer-events:none;
     }
-    .htitle{
-      font-size: 18px;
-      font-weight: 780;
-      margin-top: 4px;
+    @keyframes scan{
+      0%{ top: 14%; opacity:.12; }
+      50%{ top: 86%; opacity:.50; }
+      100%{ top: 14%; opacity:.12; }
     }
-    .miniBtn{
-      border-radius: 999px;
-      padding: 8px 12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.85);
-      font-size: 12px;
-      cursor:pointer;
-      transition: transform .14s ease, background .14s ease;
-      user-select:none;
-    }
-    .miniBtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); }
-    .miniBtn:active{ transform: translateY(0px) scale(.99); }
 
     .hlist{
-      margin-top: 12px;
+      margin-top: 10px;
       display:flex;
       flex-direction:column;
       gap: 10px;
       position: relative;
       z-index: 2;
-      max-height: 430px;
+      height: calc(560px - 64px); /* под заголовок */
       overflow:auto;
       padding-right: 6px;
     }
     .hlist::-webkit-scrollbar{ width: 8px; }
-    .hlist::-webkit-scrollbar-thumb{
-      background: rgba(255,255,255,.10);
-      border-radius: 999px;
-    }
+    .hlist::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.10); border-radius: 999px; }
 
     .hitem{
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
-      padding: 12px 12px;
+      padding: 10px 10px;
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
@@ -463,35 +450,31 @@
       overflow:hidden;
       position: relative;
     }
-    .hitem .left{
-      display:flex;
-      gap: 10px;
-      min-width:0;
-    }
+    .hleft{ display:flex; gap: 10px; min-width:0; }
     .hbadge{
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
+      width: 34px; height: 34px; border-radius: 12px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
-      display:grid;
-      place-items:center;
-      opacity:.9;
-      flex:none;
+      display:grid; place-items:center; opacity:.9; flex:none;
+      overflow:hidden;
     }
+    .hbadge img{ width:100%; height:100%; object-fit:cover; display:block; }
+
     .hmain{ min-width:0; }
-    .hcmd{
-      font-weight: 760;
+    .hline1{
+      font-weight: 800;
       font-size: 13px;
       white-space: nowrap;
       overflow:hidden;
       text-overflow: ellipsis;
     }
-    .hmeta{
+    .hline2{
       margin-top: 5px;
       font-size: 12px;
       color: var(--muted);
-      line-height: 1.35;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
     }
     .htime{
       font-size: 11px;
@@ -500,35 +483,69 @@
       flex:none;
       padding-top: 2px;
     }
+    .pop{ animation: pop .22s ease-out both; }
+    @keyframes pop{ from{ opacity:0; transform: translateY(10px);} to{opacity:1; transform: translateY(0px);} }
 
-    /* new item appear animation */
-    .pop{
-      animation: pop .22s ease-out both;
+    /* Bottom core */
+    .bottom{
+      margin-top: 12px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
     }
-    @keyframes pop{
-      from{ opacity:0; transform: translateY(10px); }
-      to{ opacity:1; transform: translateY(0px); }
+    .core{
+      width: min(320px, 82vw);
+      aspect-ratio: 1/1;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(10, 12, 18, .55);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+      position: relative;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      animation: floaty 6.5s ease-in-out infinite;
+      user-select:none;
     }
+    @keyframes floaty{ 0%,100%{transform: translateY(0px);} 50%{transform: translateY(-6px);} }
 
-    /* subtle scan line in history */
-    .scan{
+    .core::before{
+      content:"";
+      position:absolute;
+      inset: 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      pointer-events:none;
+    }
+    .core::after{
+      content:"";
+      position:absolute;
+      inset:-20%;
+      background: radial-gradient(circle at 30% 30%, rgba(var(--accent), .18), transparent 55%);
+      opacity:.75;
+      animation: glowPulse2 3.2s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes glowPulse2{ 0%,100%{opacity:.28} 50%{opacity:.85} }
+    .coreScan{
       position:absolute;
       left:0; right:0;
       height: 2px;
       background: rgba(var(--accent), .45);
-      opacity: .18;
-      animation: scan 5.4s ease-in-out infinite;
+      animation: coreScan 4.8s ease-in-out infinite;
+      opacity:.55;
       pointer-events:none;
     }
-    @keyframes scan{
-      0%{ top: 14%; opacity:.14; }
-      50%{ top: 86%; opacity:.55; }
-      100%{ top: 14%; opacity:.14; }
-    }
+    @keyframes coreScan{ 0%{top: 18%;opacity:.22} 50%{top: 82%;opacity:.85} 100%{top: 18%;opacity:.22} }
 
-    /* Footer */
+    .coreText{ position: relative; text-align:center; padding: 0 22px; z-index:2; }
+    .coreK{ font-size: 10px; letter-spacing: .22em; color: var(--muted); text-transform: uppercase; }
+    .coreT{ margin-top: 8px; font-size: 18px; font-weight: 860; line-height: 1.2; }
+    .coreS{ margin-top: 10px; font-size: 12px; color: var(--muted); }
+
     .foot{
-      margin-top: 12px;
+      margin-top: 10px;
       display:flex;
       justify-content:space-between;
       gap: 10px;
@@ -547,12 +564,12 @@
       display:none;
       align-items:center;
       justify-content:center;
-      padding: 18px;
+      padding: 16px;
       z-index: 999;
     }
     .modalBack.open{ display:flex; }
     .modal{
-      width: min(620px, 100%);
+      width: min(560px, 100%);
       border-radius: 22px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(12,14,20,.72);
@@ -568,17 +585,14 @@
       border: 1px solid rgba(255,255,255,.07);
       pointer-events:none;
     }
-    .modalPad{ padding: 16px; position: relative; z-index:2; }
+    .modalPad{ padding: 14px; position: relative; z-index:2; }
     .modalTop{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap: 10px;
     }
-    .mTitle{
-      font-weight: 820;
-      font-size: 16px;
-    }
+    .mTitle{ font-weight: 880; font-size: 14px; }
     .close{
       border-radius: 999px;
       padding: 8px 12px;
@@ -588,47 +602,117 @@
       cursor:pointer;
     }
     .close:hover{ background: rgba(255,255,255,.08); }
-    .profileRow{
-      margin-top: 14px;
-      display:flex;
-      gap: 12px;
-      align-items:center;
-    }
-    .bigAvatar{
-      width: 86px;
-      height: 86px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 30% 30%, rgba(var(--accent), .22), transparent 55%),
-        rgba(255,255,255,.06);
-      overflow:hidden;
-      flex:none;
-    }
-    .bigAvatar img{ width:100%; height:100%; object-fit:cover; display:block; }
-    .mMeta .nm{ font-weight: 820; font-size: 18px; }
-    .mMeta .id{ margin-top: 6px; color: var(--muted); font-size: 12px; }
-    .mBlock{
-      margin-top: 14px;
-      border-radius: 16px;
+
+    .tabs{ display:flex; gap: 8px; margin-top: 10px; }
+    .tab{
+      flex:1;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
-      padding: 12px;
+      padding: 10px;
+      cursor:pointer;
       color: rgba(255,255,255,.86);
+      font-weight: 800;
+      font-size: 12px;
+      user-select:none;
+      transition: transform .14s ease, background .14s ease, border-color .14s ease;
+    }
+    .tab:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); }
+    .tab.active{ border-color: rgba(var(--accent), .35); background: rgba(255,255,255,.07); }
+
+    .form{
+      margin-top: 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .row{ display:flex; gap: 10px; }
+    .row > *{ flex:1; }
+    .field{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 10px 12px;
+      color: rgba(255,255,255,.90);
+      outline:none;
       font-size: 13px;
-      line-height: 1.45;
+    }
+    .field::placeholder{ color: rgba(255,255,255,.35); }
+
+    .fileWrap{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+    }
+    .fileBtn{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 10px 12px;
+      cursor:pointer;
+      user-select:none;
+      font-weight: 800;
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+      transition: transform .14s ease, background .14s ease;
+    }
+    .fileBtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); }
+    .fileName{
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    .primary{
+      border-radius: 14px;
+      border: 1px solid rgba(var(--accent), .35);
+      background: rgba(var(--accent), .10);
+      padding: 10px 12px;
+      cursor:pointer;
+      user-select:none;
+      font-weight: 900;
+      font-size: 12px;
+      color: rgba(255,255,255,.92);
+      transition: transform .14s ease, background .14s ease;
+    }
+    .primary:hover{ transform: translateY(-1px); background: rgba(var(--accent), .14); }
+    .primary:active{ transform: translateY(0px) scale(.99); }
+
+    .danger{
+      border-radius: 14px;
+      border: 1px solid rgba(var(--accent2), .35);
+      background: rgba(var(--accent2), .10);
+      padding: 10px 12px;
+      cursor:pointer;
+      user-select:none;
+      font-weight: 900;
+      font-size: 12px;
+      color: rgba(255,255,255,.92);
+    }
+
+    .hintLine{
+      font-size: 12px;
+      color: rgba(255,255,255,.65);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      min-height: 16px;
     }
 
     @media (max-width: 980px){
       .grid{ grid-template-columns: 1fr; }
-      .rightcol{ min-height: 420px; }
-      .cmdGrid{ grid-template-columns: 1fr 1fr; }
+      .leftcol{ min-height: auto; }
+      .rightcol{ min-height: 520px; }
+      .hlist{ height: calc(520px - 64px); }
     }
     @media (max-width: 520px){
       .cmdGrid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
+
 <body>
   <div class="sweep" aria-hidden="true"></div>
 
@@ -636,16 +720,16 @@
     <div class="hud">
       <div class="pad">
 
-        <!-- Top bar -->
         <div class="topbar">
-          <div>
+          <div class="statusLeft">
             <div class="kicker">HUD SYSTEM</div>
-            <div class="sub" id="statusLine">Система: готова</div>
+            <div class="sub" id="statusLine">ONLINE</div>
           </div>
 
-          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+          <div class="rightTop">
             <div class="pill"><span>CR</span> <b id="cr">1,240</b></div>
-            <div class="pill"><span>PING</span> <b id="ping">24</b>ms</div>
+            <div class="pill" id="pingPill"><span>PING</span> <b id="ping">24</b>ms</div>
+            <button class="topBtn" id="authBtn">Войти</button>
           </div>
         </div>
 
@@ -654,54 +738,45 @@
           <div class="leftcol">
 
             <!-- (1) Profile -->
-            <div class="profileCard">
-              <div class="kicker">1 • профиль</div>
+            <div class="panel">
+              <div class="panelHead">
+                <div class="kicker">PROFILE</div>
+                <button class="topBtn" id="logoutBtn" style="display:none;">Выйти</button>
+              </div>
 
-              <div class="profileOrb" id="profileBtn" role="button" tabindex="0" aria-label="Открыть профиль">
+              <div class="profileBtn" id="profileBtn" role="button" tabindex="0">
                 <div class="avatar" aria-hidden="true">
-                  <!-- Можешь заменить картинку на свою -->
                   <img id="avatarImg" alt="avatar"
                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cdefs%3E%3CradialGradient id='g' cx='30%25' cy='30%25'%3E%3Cstop offset='0%25' stop-color='%2378b4ff' stop-opacity='.55'/%3E%3Cstop offset='100%25' stop-color='%2310111a' stop-opacity='1'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='160' height='160' fill='url(%23g)'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.85' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E">
                 </div>
 
                 <div class="pmeta">
-                  <div class="pname" id="userName">Имя_Фамилия</div>
-                  <div class="phint">Наведи и нажми — перейти в профиль</div>
+                  <div class="plogin" id="userLogin">Guest</div>
+                  <div class="pnick" id="userNick">guest_0000</div>
                 </div>
 
-                <div class="tip">Открыть →</div>
-              </div>
-
-              <div class="sub" style="margin-top:10px;">
-                Здесь будет кликабельный переход в профиль. Сейчас — модалка-демо.
+                <div class="pLock" id="profileHint">→</div>
               </div>
             </div>
 
             <!-- Commands -->
-            <div class="commands">
-              <div class="kicker">команды</div>
-              <div class="sub">Клик по команде добавляет запись в историю (макс. 15)</div>
+            <div class="panel">
+              <div class="panelHead">
+                <div class="kicker">COMMANDS</div>
+              </div>
 
               <div class="cmdGrid">
-                <button class="cmd" data-cmd="Бонус" data-ico="✦">
-                  <span class="label">Бонус</span>
-                  <span class="ico">✦</span>
+                <button class="cmd" data-cmd="Бонус" data-ico="✦" disabled>
+                  <span class="label">Бонус</span><span class="ico">✦</span>
                 </button>
-
-                <button class="cmd" data-cmd="Рулетка" data-ico="⟡">
-                  <span class="label">Рулетка</span>
-                  <span class="ico">⟡</span>
+                <button class="cmd" data-cmd="Рулетка" data-ico="⟡" disabled>
+                  <span class="label">Рулетка</span><span class="ico">⟡</span>
                 </button>
-
-                <button class="cmd" data-cmd="Шанс" data-ico="⚑">
-                  <span class="label">Шанс</span>
-                  <span class="ico">⚑</span>
+                <button class="cmd" data-cmd="Шанс" data-ico="⚑" disabled>
+                  <span class="label">Шанс</span><span class="ico">⚑</span>
                 </button>
-
-                <!-- 4-ая команда: замени название на своё -->
-                <button class="cmd" data-cmd="Команда_4" data-ico="⛭">
-                  <span class="label">Команда_4</span>
-                  <span class="ico">⛭</span>
+                <button class="cmd" data-cmd="Команда_4" data-ico="⛭" disabled>
+                  <span class="label">Команда_4</span><span class="ico">⛭</span>
                 </button>
               </div>
             </div>
@@ -712,25 +787,28 @@
           <div class="rightcol">
             <div class="scan" aria-hidden="true"></div>
 
-            <div class="historyHead">
-              <div>
-                <div class="kicker">2 • история действий</div>
-                <div class="htitle">Последние 15 команд</div>
-                <div class="sub">Показывает, что пользователь делал: Бонус / Рулетка / Шанс / …</div>
-              </div>
-
-              <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
-                <button class="miniBtn" id="demoFill">Заполнить демо</button>
-                <button class="miniBtn" id="clearHistory">Очистить</button>
-              </div>
+            <div class="panelHead" style="position:relative; z-index:2;">
+              <div class="kicker">ACTIVITY</div>
+              <div class="sub" id="activitySub">LIVE</div>
             </div>
 
             <div class="hlist" id="historyList" aria-live="polite"></div>
           </div>
         </div>
 
+        <div class="bottom">
+          <div class="core" id="core">
+            <div class="coreScan" aria-hidden="true"></div>
+            <div class="coreText">
+              <div class="coreK">CORE</div>
+              <div class="coreT" id="coreTitle">Приморская биржа</div>
+              <div class="coreS" id="coreSub">ONLINE</div>
+            </div>
+          </div>
+        </div>
+
         <div class="foot">
-          <div>SYS • build 0.1 • UI: HUD</div>
+          <div>SYS • build 0.1</div>
           <div id="footRight">READY</div>
         </div>
 
@@ -738,208 +816,569 @@
     </div>
   </div>
 
-  <!-- Profile modal -->
-  <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-label="Профиль">
+  <!-- Auth / Profile modal -->
+  <div class="modalBack" id="modalBack" role="dialog" aria-modal="true">
     <div class="modal">
       <div class="modalPad">
         <div class="modalTop">
-          <div class="mTitle">Профиль пользователя</div>
+          <div class="mTitle" id="modalTitle">AUTH</div>
           <button class="close" id="closeModal">Закрыть</button>
         </div>
 
-        <div class="profileRow">
-          <div class="bigAvatar" aria-hidden="true">
-            <img id="bigAvatarImg" alt="avatar_big"
-                 src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cdefs%3E%3CradialGradient id='g' cx='30%25' cy='30%25'%3E%3Cstop offset='0%25' stop-color='%2378b4ff' stop-opacity='.55'/%3E%3Cstop offset='100%25' stop-color='%2310111a' stop-opacity='1'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='160' height='160' fill='url(%23g)'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.85' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E">
+        <div class="tabs">
+          <button class="tab active" id="tabLogin">Вход</button>
+          <button class="tab" id="tabRegister">Регистрация</button>
+        </div>
+
+        <div class="form" id="loginForm">
+          <input class="field" id="emailLogin" placeholder="Email" autocomplete="email" />
+          <input class="field" id="passLogin" placeholder="Пароль" type="password" autocomplete="current-password" />
+          <button class="primary" id="doLogin">Войти</button>
+          <div class="hintLine" id="loginHint"></div>
+        </div>
+
+        <div class="form" id="registerForm" style="display:none;">
+          <div class="row">
+            <input class="field" id="emailReg" placeholder="Email" autocomplete="email" />
+            <input class="field" id="passReg" placeholder="Пароль" type="password" autocomplete="new-password" />
           </div>
 
-          <div class="mMeta">
-            <div class="nm" id="modalName">Имя_Фамилия</div>
-            <div class="id">ID: <span style="color:rgba(255,255,255,.86)">user_0001</span></div>
-            <div class="id">Статус: <span style="color:rgba(255,255,255,.86)">online</span></div>
+          <div class="row">
+            <input class="field" id="loginReg" placeholder="Логин" />
+            <input class="field" id="nickReg" placeholder="Ник" />
           </div>
+
+          <div class="fileWrap">
+            <input id="avatarFile" type="file" accept="image/*" style="display:none;" />
+            <button class="fileBtn" id="pickAvatar">Аватар</button>
+            <div class="fileName" id="avatarName">—</div>
+          </div>
+
+          <button class="primary" id="doRegister">Создать аккаунт</button>
+          <div class="hintLine" id="regHint"></div>
         </div>
 
-        <div class="mBlock">
-          Тут ты потом заменишь модалку на переход на отдельную страницу профиля,
-          или откроешь “экран профиля” внутри HUD.
+        <div class="form" id="profileForm" style="display:none;">
+          <button class="danger" id="signOut2">Выйти</button>
+          <div class="hintLine" id="profileHintLine"></div>
         </div>
 
-        <div class="mBlock">
-          Поддержка формата имени: <b>Имя_Фамилия</b> — уже сделано.
-        </div>
       </div>
     </div>
   </div>
 
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
-    // ====== Helpers ======
+    /* ===============================
+       CONFIG
+       =============================== */
+    const SUPABASE_URL = "PASTE_YOUR_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY";
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    /* ===============================
+       UI refs
+       =============================== */
     const el = (id) => document.getElementById(id);
-    const historyList = el("historyList");
+
     const statusLine = el("statusLine");
-    const pingEl = el("ping");
     const crEl = el("cr");
+    const pingEl = el("ping");
+    const pingPill = el("pingPill");
+    const authBtn = el("authBtn");
+    const logoutBtn = el("logoutBtn");
+
+    const userLoginEl = el("userLogin");
+    const userNickEl = el("userNick");
+    const avatarImg = el("avatarImg");
+    const profileBtn = el("profileBtn");
+
+    const historyList = el("historyList");
+    const activitySub = el("activitySub");
+
+    const coreTitle = el("coreTitle");
+    const coreSub = el("coreSub");
     const footRight = el("footRight");
 
-    const userNameEl = el("userName");
-    const modalNameEl = el("modalName");
+    const modalBack = el("modalBack");
+    const closeModal = el("closeModal");
+    const modalTitle = el("modalTitle");
 
-    // Set user name in format Имя_Фамилия (example)
-    const USER = { first: "Имя", last: "Фамилия" };
-    const userDisplay = `${USER.first}_${USER.last}`;
-    userNameEl.textContent = userDisplay;
-    modalNameEl.textContent = userDisplay;
+    const tabLogin = el("tabLogin");
+    const tabRegister = el("tabRegister");
 
-    // ====== History logic (max 15) ======
+    const loginForm = el("loginForm");
+    const registerForm = el("registerForm");
+    const profileForm = el("profileForm");
+
+    const emailLogin = el("emailLogin");
+    const passLogin = el("passLogin");
+    const doLogin = el("doLogin");
+    const loginHint = el("loginHint");
+
+    const emailReg = el("emailReg");
+    const passReg = el("passReg");
+    const loginReg = el("loginReg");
+    const nickReg = el("nickReg");
+    const avatarFile = el("avatarFile");
+    const pickAvatar = el("pickAvatar");
+    const avatarName = el("avatarName");
+    const doRegister = el("doRegister");
+    const regHint = el("regHint");
+
+    const signOut2 = el("signOut2");
+    const profileHintLine = el("profileHintLine");
+
+    const cmdButtons = [...document.querySelectorAll(".cmd")];
+
+    /* ===============================
+       State
+       =============================== */
     const MAX_HISTORY = 15;
-    const history = []; // {cmd, detail, time, icon}
+    let currentUser = null;      // auth user
+    let currentProfile = null;   // profiles row
+    let activityChannel = null;
 
-    function nowTime(){
-      const d = new Date();
+    /* ===============================
+       Helpers
+       =============================== */
+    function nowTime(d = new Date()){
       const hh = String(d.getHours()).padStart(2,"0");
       const mm = String(d.getMinutes()).padStart(2,"0");
-      const ss = String(d.getSeconds()).padStart(2,"0");
-      return `${hh}:${mm}:${ss}`;
+      return `${hh}:${mm}`;
     }
 
-    function cmdDetail(cmd){
-      // Можешь заменить на реальные детали (например, результат рулетки)
-      if (cmd === "Бонус") return "Начисление бонуса: + случайное значение";
-      if (cmd === "Рулетка") return "Запуск рулетки: выпадение награды";
-      if (cmd === "Шанс") return "Проверка шанса: успех/провал";
-      return "Выполнение команды: обработка запроса";
+    function setStatus(text){
+      statusLine.textContent = text;
     }
 
-    function addHistory(cmd, icon){
-      const item = {
-        cmd,
-        icon,
-        detail: cmdDetail(cmd),
-        time: nowTime()
-      };
+    function setAuthUI(isAuthed){
+      cmdButtons.forEach(b => b.disabled = !isAuthed);
+      authBtn.style.display = isAuthed ? "none" : "inline-flex";
+      logoutBtn.style.display = isAuthed ? "inline-flex" : "none";
 
-      history.unshift(item);
-      if (history.length > MAX_HISTORY) history.length = MAX_HISTORY;
-
-      renderHistory(true);
-      pulseStatus(`Команда "${cmd}" выполнена`);
-      footRight.textContent = cmd.toUpperCase();
+      if (!isAuthed){
+        userLoginEl.textContent = "Guest";
+        userNickEl.textContent = "guest_0000";
+      }
     }
 
-    function renderHistory(animateTop=false){
-      historyList.innerHTML = history.map((h, idx) => {
+    function setProfileUI(profile){
+      if (!profile){
+        currentProfile = null;
+        setAuthUI(false);
+        return;
+      }
+      currentProfile = profile;
+      userLoginEl.textContent = profile.login || "User";
+      userNickEl.textContent = profile.nick || "user";
+      if (profile.avatar_url) avatarImg.src = profile.avatar_url;
+      setAuthUI(true);
+    }
+
+    function openModal(mode){
+      modalBack.classList.add("open");
+      if (mode === "profile"){
+        modalTitle.textContent = "PROFILE";
+        tabLogin.style.display = "none";
+        tabRegister.style.display = "none";
+        loginForm.style.display = "none";
+        registerForm.style.display = "none";
+        profileForm.style.display = "flex";
+        profileHintLine.textContent = "";
+      } else {
+        modalTitle.textContent = "AUTH";
+        tabLogin.style.display = "flex";
+        tabRegister.style.display = "flex";
+        profileForm.style.display = "none";
+        showTab(mode || "login");
+      }
+    }
+    function closeModalFn(){
+      modalBack.classList.remove("open");
+      loginHint.textContent = "";
+      regHint.textContent = "";
+      profileHintLine.textContent = "";
+    }
+
+    function showTab(which){
+      if (which === "login"){
+        tabLogin.classList.add("active");
+        tabRegister.classList.remove("active");
+        loginForm.style.display = "flex";
+        registerForm.style.display = "none";
+      } else {
+        tabRegister.classList.add("active");
+        tabLogin.classList.remove("active");
+        loginForm.style.display = "none";
+        registerForm.style.display = "flex";
+      }
+    }
+
+    function ripple(btn, clientX, clientY){
+      const rect = btn.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      const r = document.createElement("span");
+      r.className = "ripple";
+      r.style.left = x + "px";
+      r.style.top = y + "px";
+      btn.appendChild(r);
+      setTimeout(() => r.remove(), 560);
+    }
+
+    function safeText(s){
+      return (s ?? "").toString();
+    }
+
+    /* ===============================
+       History rendering (from DB)
+       =============================== */
+    function renderHistory(items, animateTop=false){
+      historyList.innerHTML = items.map((h, idx) => {
+        const t = new Date(h.created_at);
         const cls = (animateTop && idx === 0) ? "hitem pop" : "hitem";
+        const login = safeText(h.login || "unknown");
+        const nick  = safeText(h.nick || "unknown");
+        const action = safeText(h.action || "");
+        const time = nowTime(t);
+
+        const badge = h.avatar_url
+          ? `<img alt="" src="${h.avatar_url}">`
+          : `${actionIcon(action)}`;
+
         return `
           <div class="${cls}">
-            <div class="left">
-              <div class="hbadge">${h.icon}</div>
+            <div class="hleft">
+              <div class="hbadge">${badge}</div>
               <div class="hmain">
-                <div class="hcmd">${h.cmd}</div>
-                <div class="hmeta">${h.detail}</div>
+                <div class="hline1">${login}</div>
+                <div class="hline2">${nick} • ${action}</div>
               </div>
             </div>
-            <div class="htime">${h.time}</div>
+            <div class="htime">${time}</div>
           </div>
         `;
       }).join("");
-
-      if (animateTop) historyList.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function clearHistory(){
-      history.length = 0;
-      renderHistory(false);
-      pulseStatus("История очищена");
-      footRight.textContent = "READY";
+    function actionIcon(action){
+      if (action === "Бонус") return "✦";
+      if (action === "Рулетка") return "⟡";
+      if (action === "Шанс") return "⚑";
+      return "⛭";
     }
 
-    // ====== Fancy ripple on command buttons + click ======
-    document.querySelectorAll(".cmd").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const cmd = btn.dataset.cmd;
-        const icon = btn.dataset.ico || "⟡";
+    async function loadLatestActivity(){
+      const { data, error } = await supabase
+        .from("activity")
+        .select("id,user_id,login,nick,avatar_url,action,created_at")
+        .order("id", { ascending: false })
+        .limit(MAX_HISTORY);
 
-        // ripple
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const r = document.createElement("span");
-        r.className = "ripple";
-        r.style.left = x + "px";
-        r.style.top = y + "px";
-        btn.appendChild(r);
-        setTimeout(() => r.remove(), 560);
+      if (error){
+        activitySub.textContent = "OFFLINE";
+        return;
+      }
+      activitySub.textContent = "LIVE";
+      renderHistory(data || [], false);
+    }
 
-        addHistory(cmd, icon);
+    async function insertActivity(action){
+      if (!currentUser || !currentProfile) return;
+
+      const row = {
+        user_id: currentUser.id,
+        login: currentProfile.login,
+        nick: currentProfile.nick,
+        avatar_url: currentProfile.avatar_url || null,
+        action
+      };
+
+      const { error } = await supabase.from("activity").insert(row);
+      if (!error) {
+        await trimActivityTo15();
+      }
+    }
+
+    // Гарантия "если больше 15 — нижние убираются"
+    async function trimActivityTo15(){
+      const { data, error } = await supabase
+        .from("activity")
+        .select("id")
+        .order("id", { ascending: false })
+        .range(MAX_HISTORY, MAX_HISTORY + 200); // всё, что ниже 15
+
+      if (error || !data || data.length === 0) return;
+
+      const ids = data.map(x => x.id);
+      await supabase.from("activity").delete().in("id", ids);
+    }
+
+    function subscribeRealtime(){
+      if (activityChannel) return;
+
+      activityChannel = supabase
+        .channel("activity_live")
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "activity" },
+          async (payload) => {
+            const newRow = payload.new;
+            // Перерисуем быстро: подгрузим TOP15
+            await loadLatestActivity();
+            // визуальный сигнал
+            coreSub.textContent = newRow.action;
+            footRight.textContent = "LIVE";
+            setTimeout(() => { footRight.textContent = "READY"; }, 800);
+          }
+        )
+        .subscribe();
+    }
+
+    /* ===============================
+       Supabase profile (get/create)
+       =============================== */
+    async function fetchMyProfile(uid){
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id,login,nick,avatar_url,created_at")
+        .eq("id", uid)
+        .maybeSingle();
+
+      if (error) return null;
+      return data || null;
+    }
+
+    async function uploadAvatar(file, uid){
+      // простое имя файла
+      const ext = (file.name.split(".").pop() || "png").toLowerCase();
+      const path = `${uid}/${Date.now()}.${ext}`;
+
+      const { error: upErr } = await supabase
+        .storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+
+      if (upErr) throw upErr;
+
+      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    /* ===============================
+       Auth flows
+       =============================== */
+    async function initAuth(){
+      const { data } = await supabase.auth.getSession();
+      currentUser = data?.session?.user || null;
+
+      if (currentUser){
+        const p = await fetchMyProfile(currentUser.id);
+        setProfileUI(p);
+        setStatus("ONLINE");
+      } else {
+        setProfileUI(null);
+        setStatus("ONLINE");
+      }
+    }
+
+    async function doLoginFlow(){
+      loginHint.textContent = "";
+      const email = emailLogin.value.trim();
+      const pass = passLogin.value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+      if (error){
+        loginHint.textContent = error.message;
+        return;
+      }
+
+      currentUser = data.user;
+      const p = await fetchMyProfile(currentUser.id);
+      setProfileUI(p);
+      closeModalFn();
+    }
+
+    async function doRegisterFlow(){
+      regHint.textContent = "";
+      const email = emailReg.value.trim();
+      const pass = passReg.value;
+      const login = loginReg.value.trim();
+      const nick = nickReg.value.trim();
+
+      if (!email || !pass || !login || !nick){
+        regHint.textContent = "Заполни поля";
+        return;
+      }
+
+      const file = avatarFile.files?.[0] || null;
+
+      const { data, error } = await supabase.auth.signUp({ email, password: pass });
+      if (error){
+        regHint.textContent = error.message;
+        return;
+      }
+
+      // ВАЖНО: если включено подтверждение email, session может быть null.
+      // Но user обычно приходит. Если нет — попросим войти вручную.
+      const user = data.user;
+      if (!user){
+        regHint.textContent = "Проверь почту и войди";
+        return;
+      }
+
+      let avatarUrl = null;
+      try{
+        if (file){
+          avatarUrl = await uploadAvatar(file, user.id);
+        }
+      } catch (e){
+        regHint.textContent = "Аватар не загрузился";
+        avatarUrl = null;
+      }
+
+      const profileRow = {
+        id: user.id,
+        login,
+        nick,
+        avatar_url: avatarUrl
+      };
+
+      const { error: pErr } = await supabase.from("profiles").insert(profileRow);
+      if (pErr){
+        regHint.textContent = pErr.message;
+        return;
+      }
+
+      // Попробуем получить сессию (если email confirm выключен — сразу войдёт)
+      const s = await supabase.auth.getSession();
+      currentUser = s.data?.session?.user || null;
+
+      // Если сессии нет — пользователь должен подтвердить почту и войти
+      const p = await fetchMyProfile(user.id);
+      setProfileUI(p);
+
+      closeModalFn();
+    }
+
+    async function doLogoutFlow(){
+      await supabase.auth.signOut();
+      currentUser = null;
+      currentProfile = null;
+      setProfileUI(null);
+      await loadLatestActivity();
+    }
+
+    /* ===============================
+       Commands gating
+       =============================== */
+    function setupCommands(){
+      cmdButtons.forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+          if (btn.disabled){
+            openModal("login");
+            return;
+          }
+          ripple(btn, e.clientX, e.clientY);
+
+          const action = btn.dataset.cmd;
+          coreSub.textContent = action;
+          footRight.textContent = action.toUpperCase();
+          setTimeout(() => { footRight.textContent = "READY"; }, 850);
+
+          await insertActivity(action);
+        });
       });
-    });
-
-    // ====== Status line pulse ======
-    let statusTimer = null;
-    function pulseStatus(text){
-      statusLine.textContent = text;
-      statusLine.style.color = "rgba(255,255,255,.88)";
-      if (statusTimer) clearTimeout(statusTimer);
-      statusTimer = setTimeout(() => {
-        statusLine.textContent = "Система: готова";
-        statusLine.style.color = "rgba(232,238,250,.55)";
-      }, 900);
     }
 
-    // ====== Demo fill / ping / credits tick ======
-    el("demoFill").addEventListener("click", () => {
-      const demo = [
-        ["Бонус","✦"],["Рулетка","⟡"],["Шанс","⚑"],["Команда_4","⛭"],
-        ["Рулетка","⟡"],["Бонус","✦"],["Шанс","⚑"]
-      ];
-      demo.forEach(([c,i]) => addHistory(c,i));
-      pulseStatus("Демо-история заполнена");
+    /* ===============================
+       Profile click behavior
+       =============================== */
+    profileBtn.addEventListener("click", () => {
+      if (!currentUser){
+        openModal("login");
+      } else {
+        // Здесь можно заменить на реальный переход на /profile
+        openModal("profile");
+      }
+    });
+    profileBtn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " "){
+        profileBtn.click();
+      }
     });
 
-    el("clearHistory").addEventListener("click", clearHistory);
+    /* ===============================
+       Modal events
+       =============================== */
+    authBtn.addEventListener("click", () => openModal("login"));
+    logoutBtn.addEventListener("click", doLogoutFlow);
 
-    // Ping button simulation via click on PING pill
-    pingEl.parentElement.addEventListener("click", () => {
+    closeModal.addEventListener("click", closeModalFn);
+    modalBack.addEventListener("click", (e) => { if (e.target === modalBack) closeModalFn(); });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modalBack.classList.contains("open")) closeModalFn();
+    });
+
+    tabLogin.addEventListener("click", () => showTab("login"));
+    tabRegister.addEventListener("click", () => showTab("register"));
+
+    doLogin.addEventListener("click", doLoginFlow);
+    doRegister.addEventListener("click", doRegisterFlow);
+
+    signOut2.addEventListener("click", async () => {
+      await doLogoutFlow();
+      closeModalFn();
+    });
+
+    pickAvatar.addEventListener("click", () => avatarFile.click());
+    avatarFile.addEventListener("change", () => {
+      const f = avatarFile.files?.[0];
+      avatarName.textContent = f ? f.name : "—";
+    });
+
+    /* ===============================
+       Top small effects
+       =============================== */
+    pingPill.addEventListener("click", () => {
       const v = Math.floor(18 + Math.random()*22);
       pingEl.textContent = String(v);
-      pulseStatus("Проверка канала… OK");
     });
-
-    // “Alive” credits tick
     setInterval(() => {
       const base = 1240;
       const delta = Math.floor(Math.random()*7) - 3;
       crEl.textContent = (base + delta).toLocaleString("ru-RU");
     }, 2200);
 
-    // ====== Profile modal open/close ======
-    const modalBack = el("modalBack");
-    const profileBtn = el("profileBtn");
-    const closeModal = el("closeModal");
+    /* ===============================
+       Boot
+       =============================== */
+    (async function boot(){
+      setStatus("ONLINE");
+      coreTitle.textContent = "Приморская биржа";
+      coreSub.textContent = "ONLINE";
 
-    function openModal(){
-      modalBack.classList.add("open");
-      pulseStatus("Открыт профиль пользователя");
-    }
-    function closeModalFn(){
-      modalBack.classList.remove("open");
-      pulseStatus("Возврат в HUD");
-    }
+      setupCommands();
 
-    profileBtn.addEventListener("click", openModal);
-    profileBtn.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") openModal();
-    });
-    closeModal.addEventListener("click", closeModalFn);
-    modalBack.addEventListener("click", (e) => {
-      if (e.target === modalBack) closeModalFn();
-    });
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modalBack.classList.contains("open")) closeModalFn();
-    });
+      await initAuth();
+      await loadLatestActivity();
+      subscribeRealtime();
 
-    // init: empty state
-    renderHistory(false);
+      // Реакция на изменение сессии (вкладки, refresh)
+      supabase.auth.onAuthStateChange(async (_event, session) => {
+        currentUser = session?.user || null;
+        if (currentUser){
+          const p = await fetchMyProfile(currentUser.id);
+          setProfileUI(p);
+        } else {
+          setProfileUI(null);
+        }
+      });
+    })();
   </script>
 </body>
 </html>
