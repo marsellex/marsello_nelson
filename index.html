@@ -159,6 +159,7 @@
       font-size: 12px;
       white-space: nowrap;
       user-select:none;
+      cursor: default;
     }
     .pill span{ color: var(--muted); }
     .pill b{ font-weight: 750; color: rgba(255,255,255,.90); }
@@ -219,7 +220,6 @@
       z-index: 2;
     }
 
-    /* Profile (1) */
     .profileBtn{
       margin-top: 10px;
       width: 100%;
@@ -289,23 +289,7 @@
       overflow:hidden;
       text-overflow: ellipsis;
     }
-    .pLock{
-      position:absolute;
-      right: 12px;
-      top: 12px;
-      font-size: 11px;
-      color: rgba(255,255,255,.60);
-      opacity: 0;
-      transform: translateY(-2px);
-      transition: opacity .16s ease, transform .16s ease;
-      pointer-events:none;
-    }
-    .profileBtn:hover .pLock{
-      opacity: 1;
-      transform: translateY(0px);
-    }
 
-    /* Commands */
     .cmdGrid{
       margin-top: 10px;
       display:grid;
@@ -339,25 +323,18 @@
       box-shadow: 0 0 22px rgba(var(--accent), .10);
     }
     .cmd:active{ transform: translateY(0px) scale(.995); }
-
     .cmd[disabled]{
       opacity: .42;
       cursor: not-allowed;
       transform: none !important;
       box-shadow: none !important;
     }
-    .cmd[disabled]:hover{
-      background: rgba(255,255,255,.05);
-      border-color: rgba(255,255,255,.10);
-    }
-
     .cmd .label{ font-weight: 800; letter-spacing: .2px; font-size: 13px; }
     .cmd .ico{
       width: 34px; height: 34px; border-radius: 12px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
-      display:grid; place-items:center;
-      opacity:.9; flex:none;
+      display:grid; place-items:center; opacity:.9; flex:none;
     }
     .cmd::before{
       content:"";
@@ -374,7 +351,6 @@
       from{ transform: translateX(-45%) rotate(10deg); }
       to{ transform: translateX(45%) rotate(10deg); }
     }
-
     .ripple{
       position:absolute;
       border-radius:999px;
@@ -388,7 +364,6 @@
       to{ width: 260px; height: 260px; opacity: 0; }
     }
 
-    /* History (2) */
     .rightcol{
       border-radius: var(--r2);
       border: 1px solid var(--line);
@@ -408,7 +383,6 @@
       border: 1px solid rgba(255,255,255,.06);
       pointer-events:none;
     }
-
     .scan{
       position:absolute;
       left:0; right:0;
@@ -431,7 +405,7 @@
       gap: 10px;
       position: relative;
       z-index: 2;
-      height: calc(560px - 64px); /* под заголовок */
+      height: calc(560px - 32px);
       overflow:auto;
       padding-right: 6px;
     }
@@ -486,7 +460,6 @@
     .pop{ animation: pop .22s ease-out both; }
     @keyframes pop{ from{ opacity:0; transform: translateY(10px);} to{opacity:1; transform: translateY(0px);} }
 
-    /* Bottom core */
     .bottom{
       margin-top: 12px;
       display:flex;
@@ -509,7 +482,6 @@
       user-select:none;
     }
     @keyframes floaty{ 0%,100%{transform: translateY(0px);} 50%{transform: translateY(-6px);} }
-
     .core::before{
       content:"";
       position:absolute;
@@ -538,7 +510,6 @@
       pointer-events:none;
     }
     @keyframes coreScan{ 0%{top: 18%;opacity:.22} 50%{top: 82%;opacity:.85} 100%{top: 18%;opacity:.22} }
-
     .coreText{ position: relative; text-align:center; padding: 0 22px; z-index:2; }
     .coreK{ font-size: 10px; letter-spacing: .22em; color: var(--muted); text-transform: uppercase; }
     .coreT{ margin-top: 8px; font-size: 18px; font-weight: 860; line-height: 1.2; }
@@ -592,7 +563,8 @@
       justify-content:space-between;
       gap: 10px;
     }
-    .mTitle{ font-weight: 880; font-size: 14px; }
+    .mTitle{ font-weight: 880; font-size: 14px; letter-spacing: .16em; color: rgba(255,255,255,.80); }
+
     .close{
       border-radius: 999px;
       padding: 8px 12px;
@@ -639,11 +611,7 @@
     }
     .field::placeholder{ color: rgba(255,255,255,.35); }
 
-    .fileWrap{
-      display:flex;
-      gap: 10px;
-      align-items:center;
-    }
+    .fileWrap{ display:flex; gap: 10px; align-items:center; }
     .fileBtn{
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
@@ -705,7 +673,7 @@
       .grid{ grid-template-columns: 1fr; }
       .leftcol{ min-height: auto; }
       .rightcol{ min-height: 520px; }
-      .hlist{ height: calc(520px - 64px); }
+      .hlist{ height: calc(520px - 32px); }
     }
     @media (max-width: 520px){
       .cmdGrid{ grid-template-columns: 1fr; }
@@ -722,7 +690,7 @@
 
         <div class="topbar">
           <div class="statusLeft">
-            <div class="kicker">HUD SYSTEM</div>
+            <div class="kicker">HUD</div>
             <div class="sub" id="statusLine">ONLINE</div>
           </div>
 
@@ -730,18 +698,15 @@
             <div class="pill"><span>CR</span> <b id="cr">1,240</b></div>
             <div class="pill" id="pingPill"><span>PING</span> <b id="ping">24</b>ms</div>
             <button class="topBtn" id="authBtn">Войти</button>
+            <button class="topBtn" id="logoutBtn" style="display:none;">Выйти</button>
           </div>
         </div>
 
         <div class="grid">
-          <!-- LEFT -->
           <div class="leftcol">
-
-            <!-- (1) Profile -->
             <div class="panel">
               <div class="panelHead">
                 <div class="kicker">PROFILE</div>
-                <button class="topBtn" id="logoutBtn" style="display:none;">Выйти</button>
               </div>
 
               <div class="profileBtn" id="profileBtn" role="button" tabindex="0">
@@ -749,17 +714,13 @@
                   <img id="avatarImg" alt="avatar"
                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cdefs%3E%3CradialGradient id='g' cx='30%25' cy='30%25'%3E%3Cstop offset='0%25' stop-color='%2378b4ff' stop-opacity='.55'/%3E%3Cstop offset='100%25' stop-color='%2310111a' stop-opacity='1'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='160' height='160' fill='url(%23g)'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.85' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E">
                 </div>
-
                 <div class="pmeta">
                   <div class="plogin" id="userLogin">Guest</div>
                   <div class="pnick" id="userNick">guest_0000</div>
                 </div>
-
-                <div class="pLock" id="profileHint">→</div>
               </div>
             </div>
 
-            <!-- Commands -->
             <div class="panel">
               <div class="panelHead">
                 <div class="kicker">COMMANDS</div>
@@ -780,18 +741,14 @@
                 </button>
               </div>
             </div>
-
           </div>
 
-          <!-- RIGHT (2) History -->
           <div class="rightcol">
             <div class="scan" aria-hidden="true"></div>
-
             <div class="panelHead" style="position:relative; z-index:2;">
               <div class="kicker">ACTIVITY</div>
               <div class="sub" id="activitySub">LIVE</div>
             </div>
-
             <div class="hlist" id="historyList" aria-live="polite"></div>
           </div>
         </div>
@@ -816,7 +773,6 @@
     </div>
   </div>
 
-  <!-- Auth / Profile modal -->
   <div class="modalBack" id="modalBack" role="dialog" aria-modal="true">
     <div class="modal">
       <div class="modalPad">
@@ -825,7 +781,7 @@
           <button class="close" id="closeModal">Закрыть</button>
         </div>
 
-        <div class="tabs">
+        <div class="tabs" id="tabs">
           <button class="tab active" id="tabLogin">Вход</button>
           <button class="tab" id="tabRegister">Регистрация</button>
         </div>
@@ -854,7 +810,7 @@
             <div class="fileName" id="avatarName">—</div>
           </div>
 
-          <button class="primary" id="doRegister">Создать аккаунт</button>
+          <button class="primary" id="doRegister">Создать</button>
           <div class="hintLine" id="regHint"></div>
         </div>
 
@@ -862,26 +818,18 @@
           <button class="danger" id="signOut2">Выйти</button>
           <div class="hintLine" id="profileHintLine"></div>
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
-    /* ===============================
-       CONFIG
-       =============================== */
-    const SUPABASE_URL = "https://qjbhflpoelgusfhymipi.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqYmhmbHBvZWxndXNmaHltaXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4NzEzODMsImV4cCI6MjA4MDQ0NzM4M30.OUBE062cKr4p4KpKlZlWIYCmqCBpXK43tQq9m-laDfg";
-
+    // ===== CONFIG =====
+    const SUPABASE_URL = "PASTE_YOUR_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    /* ===============================
-       UI refs
-       =============================== */
+    // ===== refs =====
     const el = (id) => document.getElementById(id);
 
     const statusLine = el("statusLine");
@@ -899,7 +847,6 @@
     const historyList = el("historyList");
     const activitySub = el("activitySub");
 
-    const coreTitle = el("coreTitle");
     const coreSub = el("coreSub");
     const footRight = el("footRight");
 
@@ -907,6 +854,7 @@
     const closeModal = el("closeModal");
     const modalTitle = el("modalTitle");
 
+    const tabs = el("tabs");
     const tabLogin = el("tabLogin");
     const tabRegister = el("tabRegister");
 
@@ -934,48 +882,47 @@
 
     const cmdButtons = [...document.querySelectorAll(".cmd")];
 
-    /* ===============================
-       State
-       =============================== */
+    // ===== state =====
     const MAX_HISTORY = 15;
-    let currentUser = null;      // auth user
-    let currentProfile = null;   // profiles row
+    let currentUser = null;       // auth user
+    let hudProfile = null;        // hud_profiles row
     let activityChannel = null;
 
-    /* ===============================
-       Helpers
-       =============================== */
+    // ===== utils =====
     function nowTime(d = new Date()){
       const hh = String(d.getHours()).padStart(2,"0");
       const mm = String(d.getMinutes()).padStart(2,"0");
       return `${hh}:${mm}`;
     }
 
-    function setStatus(text){
-      statusLine.textContent = text;
+    function setAuthUI(isAuthedForHud){
+      cmdButtons.forEach(b => b.disabled = !isAuthedForHud);
+      authBtn.style.display = isAuthedForHud ? "none" : "inline-flex";
+      logoutBtn.style.display = currentUser ? "inline-flex" : "none";
     }
 
-    function setAuthUI(isAuthed){
-      cmdButtons.forEach(b => b.disabled = !isAuthed);
-      authBtn.style.display = isAuthed ? "none" : "inline-flex";
-      logoutBtn.style.display = isAuthed ? "inline-flex" : "none";
-
-      if (!isAuthed){
-        userLoginEl.textContent = "Guest";
-        userNickEl.textContent = "guest_0000";
-      }
+    function setGuestUI(){
+      userLoginEl.textContent = "Guest";
+      userNickEl.textContent = "guest_0000";
+      setAuthUI(false);
     }
 
-    function setProfileUI(profile){
-      if (!profile){
-        currentProfile = null;
-        setAuthUI(false);
+    function setHudProfileUI(p){
+      hudProfile = p;
+      if (!p){
+        // есть auth, но нет hud_profiles => для HUD это гость
+        if (currentUser){
+          userLoginEl.textContent = "Guest";
+          userNickEl.textContent = "create_profile";
+          setAuthUI(false);
+        } else {
+          setGuestUI();
+        }
         return;
       }
-      currentProfile = profile;
-      userLoginEl.textContent = profile.login || "User";
-      userNickEl.textContent = profile.nick || "user";
-      if (profile.avatar_url) avatarImg.src = profile.avatar_url;
+      userLoginEl.textContent = p.login || "User";
+      userNickEl.textContent = p.nick || "user";
+      if (p.avatar_url) avatarImg.src = p.avatar_url;
       setAuthUI(true);
     }
 
@@ -983,16 +930,14 @@
       modalBack.classList.add("open");
       if (mode === "profile"){
         modalTitle.textContent = "PROFILE";
-        tabLogin.style.display = "none";
-        tabRegister.style.display = "none";
+        tabs.style.display = "none";
         loginForm.style.display = "none";
         registerForm.style.display = "none";
         profileForm.style.display = "flex";
         profileHintLine.textContent = "";
       } else {
         modalTitle.textContent = "AUTH";
-        tabLogin.style.display = "flex";
-        tabRegister.style.display = "flex";
+        tabs.style.display = "flex";
         profileForm.style.display = "none";
         showTab(mode || "login");
       }
@@ -1003,7 +948,6 @@
       regHint.textContent = "";
       profileHintLine.textContent = "";
     }
-
     function showTab(which){
       if (which === "login"){
         tabLogin.classList.add("active");
@@ -1030,20 +974,48 @@
       setTimeout(() => r.remove(), 560);
     }
 
-    function safeText(s){
-      return (s ?? "").toString();
+    function actionIcon(action){
+      if (action === "Бонус") return "✦";
+      if (action === "Рулетка") return "⟡";
+      if (action === "Шанс") return "⚑";
+      return "⛭";
     }
 
-    /* ===============================
-       History rendering (from DB)
-       =============================== */
+    // ===== HUD tables =====
+    async function fetchMyHudProfile(uid){
+      const { data, error } = await supabase
+        .from("hud_profiles")
+        .select("id,login,nick,avatar_url,created_at")
+        .eq("id", uid)
+        .maybeSingle();
+
+      if (error) return null;
+      return data || null;
+    }
+
+    async function uploadAvatar(file, uid){
+      const ext = (file.name.split(".").pop() || "png").toLowerCase();
+      const path = `${uid}/${Date.now()}.${ext}`;
+
+      const { error: upErr } = await supabase
+        .storage
+        .from("hud_avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+
+      if (upErr) throw upErr;
+
+      const { data } = supabase.storage.from("hud_avatars").getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    // ===== Activity (HUD) =====
     function renderHistory(items, animateTop=false){
       historyList.innerHTML = items.map((h, idx) => {
         const t = new Date(h.created_at);
         const cls = (animateTop && idx === 0) ? "hitem pop" : "hitem";
-        const login = safeText(h.login || "unknown");
-        const nick  = safeText(h.nick || "unknown");
-        const action = safeText(h.action || "");
+        const login = (h.login || "unknown").toString();
+        const nick  = (h.nick || "unknown").toString();
+        const action = (h.action || "").toString();
         const time = nowTime(t);
 
         const badge = h.avatar_url
@@ -1065,16 +1037,9 @@
       }).join("");
     }
 
-    function actionIcon(action){
-      if (action === "Бонус") return "✦";
-      if (action === "Рулетка") return "⟡";
-      if (action === "Шанс") return "⚑";
-      return "⛭";
-    }
-
     async function loadLatestActivity(){
       const { data, error } = await supabase
-        .from("activity")
+        .from("hud_activity")
         .select("id,user_id,login,nick,avatar_url,action,created_at")
         .order("id", { ascending: false })
         .limit(MAX_HISTORY);
@@ -1087,102 +1052,57 @@
       renderHistory(data || [], false);
     }
 
+    async function trimActivityTo15(){
+      // удаляем всё, что "ниже" первых 15
+      const { data, error } = await supabase
+        .from("hud_activity")
+        .select("id")
+        .order("id", { ascending: false })
+        .range(MAX_HISTORY, MAX_HISTORY + 500);
+
+      if (error || !data || data.length === 0) return;
+      await supabase.from("hud_activity").delete().in("id", data.map(x => x.id));
+    }
+
     async function insertActivity(action){
-      if (!currentUser || !currentProfile) return;
+      if (!currentUser || !hudProfile) return;
 
       const row = {
         user_id: currentUser.id,
-        login: currentProfile.login,
-        nick: currentProfile.nick,
-        avatar_url: currentProfile.avatar_url || null,
+        login: hudProfile.login,
+        nick: hudProfile.nick,
+        avatar_url: hudProfile.avatar_url || null,
         action
       };
 
-      const { error } = await supabase.from("activity").insert(row);
-      if (!error) {
-        await trimActivityTo15();
-      }
-    }
-
-    // Гарантия "если больше 15 — нижние убираются"
-    async function trimActivityTo15(){
-      const { data, error } = await supabase
-        .from("activity")
-        .select("id")
-        .order("id", { ascending: false })
-        .range(MAX_HISTORY, MAX_HISTORY + 200); // всё, что ниже 15
-
-      if (error || !data || data.length === 0) return;
-
-      const ids = data.map(x => x.id);
-      await supabase.from("activity").delete().in("id", ids);
+      const { error } = await supabase.from("hud_activity").insert(row);
+      if (!error) await trimActivityTo15();
     }
 
     function subscribeRealtime(){
       if (activityChannel) return;
-
       activityChannel = supabase
-        .channel("activity_live")
-        .on(
-          "postgres_changes",
-          { event: "INSERT", schema: "public", table: "activity" },
-          async (payload) => {
-            const newRow = payload.new;
-            // Перерисуем быстро: подгрузим TOP15
-            await loadLatestActivity();
-            // визуальный сигнал
-            coreSub.textContent = newRow.action;
-            footRight.textContent = "LIVE";
-            setTimeout(() => { footRight.textContent = "READY"; }, 800);
-          }
-        )
+        .channel("hud_activity_live")
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "hud_activity" }, async (payload) => {
+          const newRow = payload.new;
+          await loadLatestActivity();
+          coreSub.textContent = newRow.action;
+          footRight.textContent = "LIVE";
+          setTimeout(() => { footRight.textContent = "READY"; }, 800);
+        })
         .subscribe();
     }
 
-    /* ===============================
-       Supabase profile (get/create)
-       =============================== */
-    async function fetchMyProfile(uid){
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id,login,nick,avatar_url,created_at")
-        .eq("id", uid)
-        .maybeSingle();
-
-      if (error) return null;
-      return data || null;
-    }
-
-    async function uploadAvatar(file, uid){
-      // простое имя файла
-      const ext = (file.name.split(".").pop() || "png").toLowerCase();
-      const path = `${uid}/${Date.now()}.${ext}`;
-
-      const { error: upErr } = await supabase
-        .storage
-        .from("avatars")
-        .upload(path, file, { upsert: true, contentType: file.type });
-
-      if (upErr) throw upErr;
-
-      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-      return data.publicUrl;
-    }
-
-    /* ===============================
-       Auth flows
-       =============================== */
+    // ===== Auth flows =====
     async function initAuth(){
       const { data } = await supabase.auth.getSession();
       currentUser = data?.session?.user || null;
 
       if (currentUser){
-        const p = await fetchMyProfile(currentUser.id);
-        setProfileUI(p);
-        setStatus("ONLINE");
+        const p = await fetchMyHudProfile(currentUser.id);
+        setHudProfileUI(p);
       } else {
-        setProfileUI(null);
-        setStatus("ONLINE");
+        setGuestUI();
       }
     }
 
@@ -1198,24 +1118,24 @@
       }
 
       currentUser = data.user;
-      const p = await fetchMyProfile(currentUser.id);
-      setProfileUI(p);
+      const p = await fetchMyHudProfile(currentUser.id);
+      setHudProfileUI(p);
       closeModalFn();
     }
 
     async function doRegisterFlow(){
       regHint.textContent = "";
+
       const email = emailReg.value.trim();
       const pass = passReg.value;
       const login = loginReg.value.trim();
       const nick = nickReg.value.trim();
+      const file = avatarFile.files?.[0] || null;
 
       if (!email || !pass || !login || !nick){
         regHint.textContent = "Заполни поля";
         return;
       }
-
-      const file = avatarFile.files?.[0] || null;
 
       const { data, error } = await supabase.auth.signUp({ email, password: pass });
       if (error){
@@ -1223,100 +1143,68 @@
         return;
       }
 
-      // ВАЖНО: если включено подтверждение email, session может быть null.
-      // Но user обычно приходит. Если нет — попросим войти вручную.
       const user = data.user;
       if (!user){
-        regHint.textContent = "Проверь почту и войди";
+        regHint.textContent = "Подтверди email и войди";
         return;
       }
 
       let avatarUrl = null;
       try{
-        if (file){
-          avatarUrl = await uploadAvatar(file, user.id);
-        }
+        if (file) avatarUrl = await uploadAvatar(file, user.id);
       } catch (e){
-        regHint.textContent = "Аватар не загрузился";
         avatarUrl = null;
       }
 
-      const profileRow = {
+      const { error: pErr } = await supabase.from("hud_profiles").insert({
         id: user.id,
         login,
         nick,
         avatar_url: avatarUrl
-      };
+      });
 
-      const { error: pErr } = await supabase.from("profiles").insert(profileRow);
       if (pErr){
         regHint.textContent = pErr.message;
         return;
       }
 
-      // Попробуем получить сессию (если email confirm выключен — сразу войдёт)
+      // если email confirm выключен, сессия может быть сразу
       const s = await supabase.auth.getSession();
-      currentUser = s.data?.session?.user || null;
+      currentUser = s.data?.session?.user || user;
 
-      // Если сессии нет — пользователь должен подтвердить почту и войти
-      const p = await fetchMyProfile(user.id);
-      setProfileUI(p);
-
+      const p = await fetchMyHudProfile(user.id);
+      setHudProfileUI(p);
       closeModalFn();
     }
 
     async function doLogoutFlow(){
       await supabase.auth.signOut();
       currentUser = null;
-      currentProfile = null;
-      setProfileUI(null);
+      hudProfile = null;
+      setGuestUI();
       await loadLatestActivity();
     }
 
-    /* ===============================
-       Commands gating
-       =============================== */
-    function setupCommands(){
-      cmdButtons.forEach(btn => {
-        btn.addEventListener("click", async (e) => {
-          if (btn.disabled){
-            openModal("login");
-            return;
-          }
-          ripple(btn, e.clientX, e.clientY);
+    // ===== Events =====
+    authBtn.addEventListener("click", () => openModal("login"));
+    logoutBtn.addEventListener("click", doLogoutFlow);
 
-          const action = btn.dataset.cmd;
-          coreSub.textContent = action;
-          footRight.textContent = action.toUpperCase();
-          setTimeout(() => { footRight.textContent = "READY"; }, 850);
-
-          await insertActivity(action);
-        });
-      });
-    }
-
-    /* ===============================
-       Profile click behavior
-       =============================== */
     profileBtn.addEventListener("click", () => {
       if (!currentUser){
         openModal("login");
-      } else {
-        // Здесь можно заменить на реальный переход на /profile
-        openModal("profile");
+        return;
       }
-    });
-    profileBtn.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " "){
-        profileBtn.click();
+      // Если пользователь авторизован, но HUD-профиль не создан — показываем регистрацию
+      if (!hudProfile){
+        openModal("register");
+        return;
       }
+      openModal("profile");
     });
 
-    /* ===============================
-       Modal events
-       =============================== */
-    authBtn.addEventListener("click", () => openModal("login"));
-    logoutBtn.addEventListener("click", doLogoutFlow);
+    profileBtn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") profileBtn.click();
+    });
 
     closeModal.addEventListener("click", closeModalFn);
     modalBack.addEventListener("click", (e) => { if (e.target === modalBack) closeModalFn(); });
@@ -1330,10 +1218,7 @@
     doLogin.addEventListener("click", doLoginFlow);
     doRegister.addEventListener("click", doRegisterFlow);
 
-    signOut2.addEventListener("click", async () => {
-      await doLogoutFlow();
-      closeModalFn();
-    });
+    signOut2.addEventListener("click", async () => { await doLogoutFlow(); closeModalFn(); });
 
     pickAvatar.addEventListener("click", () => avatarFile.click());
     avatarFile.addEventListener("change", () => {
@@ -1341,42 +1226,49 @@
       avatarName.textContent = f ? f.name : "—";
     });
 
-    /* ===============================
-       Top small effects
-       =============================== */
+    cmdButtons.forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        if (btn.disabled){
+          openModal(currentUser ? "register" : "login");
+          return;
+        }
+        ripple(btn, e.clientX, e.clientY);
+        const action = btn.dataset.cmd;
+
+        coreSub.textContent = action;
+        footRight.textContent = action.toUpperCase();
+        setTimeout(() => { footRight.textContent = "READY"; }, 850);
+
+        await insertActivity(action);
+      });
+    });
+
     pingPill.addEventListener("click", () => {
       const v = Math.floor(18 + Math.random()*22);
       pingEl.textContent = String(v);
     });
+
     setInterval(() => {
       const base = 1240;
       const delta = Math.floor(Math.random()*7) - 3;
       crEl.textContent = (base + delta).toLocaleString("ru-RU");
     }, 2200);
 
-    /* ===============================
-       Boot
-       =============================== */
+    // ===== Boot =====
     (async function boot(){
-      setStatus("ONLINE");
-      coreTitle.textContent = "Приморская биржа";
-      coreSub.textContent = "ONLINE";
-
-      setupCommands();
-
+      statusLine.textContent = "ONLINE";
       await initAuth();
       await loadLatestActivity();
       subscribeRealtime();
 
-      // Реакция на изменение сессии (вкладки, refresh)
       supabase.auth.onAuthStateChange(async (_event, session) => {
         currentUser = session?.user || null;
-        if (currentUser){
-          const p = await fetchMyProfile(currentUser.id);
-          setProfileUI(p);
-        } else {
-          setProfileUI(null);
+        if (!currentUser){
+          setGuestUI();
+          return;
         }
+        const p = await fetchMyHudProfile(currentUser.id);
+        setHudProfileUI(p);
       });
     })();
   </script>
