@@ -3,35 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>HUD</title>
+  <title>Simple Auth + Profile (Supabase)</title>
   <style>
     :root{
       --bg0:#070a10;
       --bg1:#0b1020;
-
       --panel: rgba(14,18,28,.78);
-      --panel2: rgba(10,12,18,.55);
-
       --line: rgba(255,255,255,.10);
-      --line2: rgba(255,255,255,.07);
-
       --text: rgba(232,238,250,.92);
       --muted: rgba(232,238,250,.55);
-
       --accent: 120 180 255;
-      --accent2: 255 140 120;
-
-      --r1: 26px;
-      --r2: 20px;
-
-      --shadow2: 0 0 0 1px rgba(255,255,255,.08), 0 14px 50px rgba(0,0,0,.55);
-      --shadow: 0 16px 60px rgba(0,0,0,.55);
-      --glow: 0 0 28px rgba(120,180,255,.18);
-
-      --ui: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      --r1: 22px;
+      --ui: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
-
-    *{ box-sizing: border-box; }
+    *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
       margin:0;
@@ -40,542 +25,35 @@
       background:
         radial-gradient(1100px 740px at 28% 18%, rgba(70, 120, 190, .22), transparent 60%),
         radial-gradient(880px 660px at 78% 75%, rgba(160, 70, 120, .18), transparent 58%),
-        radial-gradient(640px 500px at 60% 20%, rgba(80, 200, 170, .10), transparent 60%),
         linear-gradient(180deg, var(--bg1), var(--bg0));
-      overflow-x:hidden;
-    }
-    body::before{
-      content:"";
-      position: fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.08;
-      mix-blend-mode: overlay;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
-    }
-    .sweep{
-      position: fixed;
-      inset: -40% -40% -40% -40%;
-      pointer-events:none;
-      background: linear-gradient(90deg, transparent, rgba(120,180,255,.10), transparent);
-      background-size: 200% 200%;
-      filter: blur(40px);
-      opacity:.55;
-      animation: sweep 12s linear infinite;
-    }
-    @keyframes sweep{
-      0%{ transform: translateX(-10%); background-position: 0% 50%; }
-      100%{ transform: translateX(10%); background-position: 100% 50%; }
-    }
-
-    .wrap{
-      min-height:100%;
       display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 14px;
-    }
-
-    .hud{
-      width: min(1150px, 100%);
-      border-radius: var(--r1);
-      background: var(--panel);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow2);
-      backdrop-filter: blur(14px);
-      position: relative;
-      overflow:hidden;
-    }
-    .hud::after{
-      content:"";
-      position:absolute;
-      inset: 10px;
-      border-radius: calc(var(--r1) - 8px);
-      border: 1px solid var(--line2);
-      pointer-events:none;
-    }
-    .pad{ padding: 14px; }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--glow);
-      position: relative;
-      overflow:hidden;
-    }
-    .topbar::before{
-      content:"";
-      position:absolute;
-      left: 10%;
-      right: 10%;
-      bottom: -7px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(var(--accent), .55), transparent);
-      opacity:.6;
-      animation: topLine 3.2s ease-in-out infinite;
-    }
-    @keyframes topLine{ 0%,100%{opacity:.2} 50%{opacity:.85} }
-
-    .statusLeft{
-      display:flex;
-      flex-direction:column;
-      gap: 4px;
-      min-width: 180px;
-    }
-    .kicker{
-      font-size: 10px;
-      letter-spacing: .22em;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-    .sub{
-      font-size: 11px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    .rightTop{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content:flex-end;
-    }
-    .pill{
-      border-radius: 999px;
-      padding: 7px 10px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.05);
-      font-size: 12px;
-      white-space: nowrap;
-      user-select:none;
-      cursor: default;
-    }
-    .pill span{ color: var(--muted); }
-    .pill b{ font-weight: 750; color: rgba(255,255,255,.90); }
-
-    .topBtn{
-      border-radius: 999px;
-      padding: 7px 10px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.85);
-      font-size: 12px;
-      cursor:pointer;
-      transition: transform .14s ease, background .14s ease;
-      user-select:none;
-    }
-    .topBtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); }
-    .topBtn:active{ transform: translateY(0px) scale(.99); }
-
-    .grid{
-      margin-top: 12px;
-      display:grid;
-      grid-template-columns: 330px 1fr;
-      gap: 12px;
-      align-items:start;
-    }
-
-    .leftcol{
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-      min-height: 560px;
-    }
-
-    .panel{
-      border-radius: var(--r2);
-      border: 1px solid var(--line);
-      background: rgba(10,12,18,.38);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      padding: 12px;
-      position: relative;
-      overflow:hidden;
-    }
-    .panel::after{
-      content:"";
-      position:absolute;
-      inset: 10px;
-      border-radius: calc(var(--r2) - 8px);
-      border: 1px solid rgba(255,255,255,.06);
-      pointer-events:none;
-    }
-    .panelHead{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 8px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .profileBtn{
-      margin-top: 10px;
-      width: 100%;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      padding: 12px;
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      cursor:pointer;
-      position: relative;
-      transition: transform .16s ease, background .16s ease, border-color .16s ease;
-      user-select:none;
-      transform: translateZ(0);
-      outline:none;
-    }
-    .profileBtn:hover{
-      transform: translateY(-2px);
-      background: rgba(255,255,255,.06);
-      border-color: rgba(var(--accent), .35);
-      box-shadow: 0 0 22px rgba(var(--accent), .12);
-    }
-    .profileBtn:active{ transform: translateY(0px) scale(.995); }
-
-    .avatar{
-      width: 62px;
-      height: 62px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 30% 30%, rgba(var(--accent), .22), transparent 55%),
-        rgba(255,255,255,.06);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      position: relative;
-      flex:none;
-    }
-    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
-    .avatar::after{
-      content:"";
-      position:absolute;
-      inset:-10px;
-      border-radius:999px;
-      box-shadow: 0 0 26px rgba(var(--accent), .18);
-      opacity:.35;
-      animation: glowPulse 3.1s ease-in-out infinite;
-      pointer-events:none;
-    }
-    @keyframes glowPulse{ 0%,100%{opacity:.25} 50%{opacity:.75} }
-
-    .pmeta{ min-width:0; position: relative; z-index: 2; }
-    .plogin{
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: .2px;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .pnick{
-      margin-top: 6px;
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    .cmdGrid{
-      margin-top: 10px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      position: relative;
-      z-index: 2;
-    }
-    .cmd{
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      border-radius: 16px;
-      padding: 12px 12px;
-      cursor:pointer;
-      color: rgba(255,255,255,.90);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      position: relative;
-      overflow:hidden;
-      transform: translateZ(0);
-      transition: transform .14s ease, background .14s ease, border-color .14s ease, opacity .14s ease;
-      user-select:none;
-      outline:none;
-    }
-    .cmd:hover{
-      transform: translateY(-2px);
-      background: rgba(255,255,255,.07);
-      border-color: rgba(var(--accent), .35);
-      box-shadow: 0 0 22px rgba(var(--accent), .10);
-    }
-    .cmd:active{ transform: translateY(0px) scale(.995); }
-    .cmd[disabled]{
-      opacity: .42;
-      cursor: not-allowed;
-      transform: none !important;
-      box-shadow: none !important;
-    }
-    .cmd .label{ font-weight: 800; letter-spacing: .2px; font-size: 13px; }
-    .cmd .ico{
-      width: 34px; height: 34px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      display:grid; place-items:center; opacity:.9; flex:none;
-    }
-    .cmd::before{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: linear-gradient(90deg, transparent, rgba(var(--accent), .18), transparent);
-      transform: translateX(-30%) rotate(10deg);
-      opacity: 0;
-      transition: opacity .18s ease;
-      pointer-events:none;
-    }
-    .cmd:hover::before{ opacity: 1; animation: shine 0.8s ease-out 1; }
-    @keyframes shine{
-      from{ transform: translateX(-45%) rotate(10deg); }
-      to{ transform: translateX(45%) rotate(10deg); }
-    }
-    .ripple{
-      position:absolute;
-      border-radius:999px;
-      transform: translate(-50%,-50%);
-      pointer-events:none;
-      background: rgba(var(--accent), .25);
-      animation: ripple .55s ease-out forwards;
-    }
-    @keyframes ripple{
-      from{ width: 0px; height: 0px; opacity: .65; }
-      to{ width: 260px; height: 260px; opacity: 0; }
-    }
-
-    .rightcol{
-      border-radius: var(--r2);
-      border: 1px solid var(--line);
-      background: rgba(10,12,18,.35);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow:hidden;
-      padding: 12px;
-      min-height: 560px;
-    }
-    .rightcol::after{
-      content:"";
-      position:absolute;
-      inset: 10px;
-      border-radius: calc(var(--r2) - 8px);
-      border: 1px solid rgba(255,255,255,.06);
-      pointer-events:none;
-    }
-    .scan{
-      position:absolute;
-      left:0; right:0;
-      height: 2px;
-      background: rgba(var(--accent), .45);
-      opacity: .14;
-      animation: scan 5.4s ease-in-out infinite;
-      pointer-events:none;
-    }
-    @keyframes scan{
-      0%{ top: 14%; opacity:.12; }
-      50%{ top: 86%; opacity:.50; }
-      100%{ top: 14%; opacity:.12; }
-    }
-
-    .hlist{
-      margin-top: 10px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-      position: relative;
-      z-index: 2;
-      height: calc(560px - 32px);
-      overflow:auto;
-      padding-right: 6px;
-    }
-    .hlist::-webkit-scrollbar{ width: 8px; }
-    .hlist::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.10); border-radius: 999px; }
-
-    .hitem{
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      padding: 10px 10px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 10px;
-      overflow:hidden;
-      position: relative;
-    }
-    .hleft{ display:flex; gap: 10px; min-width:0; }
-    .hbadge{
-      width: 34px; height: 34px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      display:grid; place-items:center; opacity:.9; flex:none;
-      overflow:hidden;
-    }
-    .hbadge img{ width:100%; height:100%; object-fit:cover; display:block; }
-
-    .hmain{ min-width:0; }
-    .hline1{
-      font-weight: 800;
-      font-size: 13px;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .hline2{
-      margin-top: 5px;
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .htime{
-      font-size: 11px;
-      color: rgba(255,255,255,.45);
-      white-space: nowrap;
-      flex:none;
-      padding-top: 2px;
-    }
-    .pop{ animation: pop .22s ease-out both; }
-    @keyframes pop{ from{ opacity:0; transform: translateY(10px);} to{opacity:1; transform: translateY(0px);} }
-
-    .bottom{
-      margin-top: 12px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-    }
-    .core{
-      width: min(320px, 82vw);
-      aspect-ratio: 1/1;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(10, 12, 18, .55);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow2);
-      position: relative;
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      animation: floaty 6.5s ease-in-out infinite;
-      user-select:none;
-    }
-    @keyframes floaty{ 0%,100%{transform: translateY(0px);} 50%{transform: translateY(-6px);} }
-    .core::before{
-      content:"";
-      position:absolute;
-      inset: 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      pointer-events:none;
-    }
-    .core::after{
-      content:"";
-      position:absolute;
-      inset:-20%;
-      background: radial-gradient(circle at 30% 30%, rgba(var(--accent), .18), transparent 55%);
-      opacity:.75;
-      animation: glowPulse2 3.2s ease-in-out infinite;
-      pointer-events:none;
-    }
-    @keyframes glowPulse2{ 0%,100%{opacity:.28} 50%{opacity:.85} }
-    .coreScan{
-      position:absolute;
-      left:0; right:0;
-      height: 2px;
-      background: rgba(var(--accent), .45);
-      animation: coreScan 4.8s ease-in-out infinite;
-      opacity:.55;
-      pointer-events:none;
-    }
-    @keyframes coreScan{ 0%{top: 18%;opacity:.22} 50%{top: 82%;opacity:.85} 100%{top: 18%;opacity:.22} }
-    .coreText{ position: relative; text-align:center; padding: 0 22px; z-index:2; }
-    .coreK{ font-size: 10px; letter-spacing: .22em; color: var(--muted); text-transform: uppercase; }
-    .coreT{ margin-top: 8px; font-size: 18px; font-weight: 860; line-height: 1.2; }
-    .coreS{ margin-top: 10px; font-size: 12px; color: var(--muted); }
-
-    .foot{
-      margin-top: 10px;
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      color: rgba(255,255,255,.48);
-      font-size: 12px;
-      letter-spacing: .08em;
-      padding: 0 6px;
-    }
-
-    /* Modal */
-    .modalBack{
-      position: fixed;
-      inset:0;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(8px);
-      display:none;
       align-items:center;
       justify-content:center;
       padding: 16px;
-      z-index: 999;
     }
-    .modalBack.open{ display:flex; }
-    .modal{
-      width: min(560px, 100%);
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(12,14,20,.72);
-      box-shadow: 0 22px 80px rgba(0,0,0,.65);
-      overflow:hidden;
-      position: relative;
+    .card{
+      width: min(520px, 100%);
+      border-radius: var(--r1);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+      padding: 14px;
     }
-    .modal::after{
-      content:"";
-      position:absolute;
-      inset: 10px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.07);
-      pointer-events:none;
+    .row{ display:flex; gap:10px; }
+    .row > *{ flex:1; }
+    .title{
+      font-weight: 900;
+      letter-spacing: .14em;
+      color: rgba(255,255,255,.82);
+      font-size: 12px;
     }
-    .modalPad{ padding: 14px; position: relative; z-index:2; }
-    .modalTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
+    .sub{
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      min-height: 16px;
     }
-    .mTitle{ font-weight: 880; font-size: 14px; letter-spacing: .16em; color: rgba(255,255,255,.80); }
-
-    .close{
-      border-radius: 999px;
-      padding: 8px 12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.86);
-      cursor:pointer;
-    }
-    .close:hover{ background: rgba(255,255,255,.08); }
-
-    .tabs{ display:flex; gap: 8px; margin-top: 10px; }
+    .tabs{ display:flex; gap:8px; margin-top: 12px; }
     .tab{
       flex:1;
       border-radius: 14px;
@@ -587,19 +65,12 @@
       font-weight: 800;
       font-size: 12px;
       user-select:none;
-      transition: transform .14s ease, background .14s ease, border-color .14s ease;
     }
-    .tab:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); }
-    .tab.active{ border-color: rgba(var(--accent), .35); background: rgba(255,255,255,.07); }
-
-    .form{
-      margin-top: 12px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
+    .tab.active{
+      border-color: rgba(var(--accent), .35);
+      background: rgba(255,255,255,.07);
     }
-    .row{ display:flex; gap: 10px; }
-    .row > *{ flex:1; }
+    .form{ margin-top: 12px; display:flex; flex-direction:column; gap:10px; }
     .field{
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
@@ -610,30 +81,7 @@
       font-size: 13px;
     }
     .field::placeholder{ color: rgba(255,255,255,.35); }
-
-    .fileWrap{ display:flex; gap: 10px; align-items:center; }
-    .fileBtn{
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      padding: 10px 12px;
-      cursor:pointer;
-      user-select:none;
-      font-weight: 800;
-      font-size: 12px;
-      color: rgba(255,255,255,.86);
-      transition: transform .14s ease, background .14s ease;
-    }
-    .fileBtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); }
-    .fileName{
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    .primary{
+    .btn{
       border-radius: 14px;
       border: 1px solid rgba(var(--accent), .35);
       background: rgba(var(--accent), .10);
@@ -643,15 +91,11 @@
       font-weight: 900;
       font-size: 12px;
       color: rgba(255,255,255,.92);
-      transition: transform .14s ease, background .14s ease;
     }
-    .primary:hover{ transform: translateY(-1px); background: rgba(var(--accent), .14); }
-    .primary:active{ transform: translateY(0px) scale(.99); }
-
-    .danger{
+    .btn2{
       border-radius: 14px;
-      border: 1px solid rgba(var(--accent2), .35);
-      background: rgba(var(--accent2), .10);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
       padding: 10px 12px;
       cursor:pointer;
       user-select:none;
@@ -659,566 +103,161 @@
       font-size: 12px;
       color: rgba(255,255,255,.92);
     }
-
-    .hintLine{
+    .btnDanger{
+      border-radius: 14px;
+      border: 1px solid rgba(255,140,120,.35);
+      background: rgba(255,140,120,.10);
+      padding: 10px 12px;
+      cursor:pointer;
+      user-select:none;
+      font-weight: 900;
       font-size: 12px;
-      color: rgba(255,255,255,.65);
-      white-space: nowrap;
+      color: rgba(255,255,255,.92);
+    }
+    .profile{
+      margin-top: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 12px;
+      display:flex;
+      align-items:center;
+      gap: 12px;
+    }
+    .avatar{
+      width: 64px; height: 64px;
+      border-radius: 999px;
       overflow:hidden;
-      text-overflow: ellipsis;
-      min-height: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      flex:none;
     }
+    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .pmeta{ min-width:0; }
+    .plogin{ font-weight: 900; font-size: 14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .pnick{ margin-top: 6px; font-size: 12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-    @media (max-width: 980px){
-      .grid{ grid-template-columns: 1fr; }
-      .leftcol{ min-height: auto; }
-      .rightcol{ min-height: 520px; }
-      .hlist{ height: calc(520px - 32px); }
-    }
-    @media (max-width: 520px){
-      .cmdGrid{ grid-template-columns: 1fr; }
-    }
+    .hint{ font-size: 12px; color: var(--muted); }
+    .fileRow{ display:flex; gap:10px; align-items:center; }
+    .fileName{ font-size:12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   </style>
 </head>
 
 <body>
-  <div class="sweep" aria-hidden="true"></div>
+  <div class="card">
+    <div class="title">AUTH / PROFILE</div>
+    <div class="sub" id="msg"></div>
 
-  <div class="wrap">
-    <div class="hud">
-      <div class="pad">
+    <div class="tabs" id="tabs">
+      <button class="tab active" id="tLogin">Вход</button>
+      <button class="tab" id="tReg">Регистрация</button>
+    </div>
 
-        <div class="topbar">
-          <div class="statusLeft">
-            <div class="kicker">HUD</div>
-            <div class="sub" id="statusLine">ONLINE</div>
-          </div>
+    <!-- LOGIN -->
+    <div class="form" id="loginForm">
+      <input class="field" id="emailL" placeholder="Email" autocomplete="email" />
+      <input class="field" id="passL" placeholder="Пароль" type="password" autocomplete="current-password" />
+      <button class="btn" id="loginBtn">Войти</button>
+    </div>
 
-          <div class="rightTop">
-            <div class="pill"><span>CR</span> <b id="cr">1,240</b></div>
-            <div class="pill" id="pingPill"><span>PING</span> <b id="ping">24</b>ms</div>
-            <button class="topBtn" id="authBtn">Войти</button>
-            <button class="topBtn" id="logoutBtn" style="display:none;">Выйти</button>
-          </div>
+    <!-- REGISTER -->
+    <div class="form" id="regForm" style="display:none;">
+      <div class="row">
+        <input class="field" id="emailR" placeholder="Email" autocomplete="email" />
+        <input class="field" id="passR" placeholder="Пароль" type="password" autocomplete="new-password" />
+      </div>
+      <div class="row">
+        <input class="field" id="loginR" placeholder="Логин" />
+        <input class="field" id="nickR" placeholder="Ник" />
+      </div>
+      <div class="fileRow">
+        <input id="avatarFile" type="file" accept="image/*" style="display:none;" />
+        <button class="btn2" id="pickAvatar">Аватар</button>
+        <div class="fileName" id="avatarName">—</div>
+      </div>
+      <button class="btn" id="regBtn">Создать аккаунт</button>
+      <div class="hint">Если включено подтверждение email в Supabase — нужно подтвердить почту и затем войти.</div>
+    </div>
+
+    <!-- PROFILE VIEW -->
+    <div id="profileArea" style="display:none;">
+      <div class="profile">
+        <div class="avatar">
+          <img id="avatarImg" alt="avatar"
+               src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect width='160' height='160' fill='%2310111a'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.75' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E">
         </div>
-
-        <div class="grid">
-          <div class="leftcol">
-            <div class="panel">
-              <div class="panelHead">
-                <div class="kicker">PROFILE</div>
-              </div>
-
-              <div class="profileBtn" id="profileBtn" role="button" tabindex="0">
-                <div class="avatar" aria-hidden="true">
-                  <img id="avatarImg" alt="avatar"
-                       src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cdefs%3E%3CradialGradient id='g' cx='30%25' cy='30%25'%3E%3Cstop offset='0%25' stop-color='%2378b4ff' stop-opacity='.55'/%3E%3Cstop offset='100%25' stop-color='%2310111a' stop-opacity='1'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='160' height='160' fill='url(%23g)'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.85' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E">
-                </div>
-                <div class="pmeta">
-                  <div class="plogin" id="userLogin">Guest</div>
-                  <div class="pnick" id="userNick">guest_0000</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="panel">
-              <div class="panelHead">
-                <div class="kicker">COMMANDS</div>
-              </div>
-
-              <div class="cmdGrid">
-                <button class="cmd" data-cmd="Бонус" data-ico="✦" disabled>
-                  <span class="label">Бонус</span><span class="ico">✦</span>
-                </button>
-                <button class="cmd" data-cmd="Рулетка" data-ico="⟡" disabled>
-                  <span class="label">Рулетка</span><span class="ico">⟡</span>
-                </button>
-                <button class="cmd" data-cmd="Шанс" data-ico="⚑" disabled>
-                  <span class="label">Шанс</span><span class="ico">⚑</span>
-                </button>
-                <button class="cmd" data-cmd="Команда_4" data-ico="⛭" disabled>
-                  <span class="label">Команда_4</span><span class="ico">⛭</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="rightcol">
-            <div class="scan" aria-hidden="true"></div>
-            <div class="panelHead" style="position:relative; z-index:2;">
-              <div class="kicker">ACTIVITY</div>
-              <div class="sub" id="activitySub">LIVE</div>
-            </div>
-            <div class="hlist" id="historyList" aria-live="polite"></div>
-          </div>
+        <div class="pmeta">
+          <div class="plogin" id="pLogin">—</div>
+          <div class="pnick" id="pNick">—</div>
         </div>
+      </div>
 
-        <div class="bottom">
-          <div class="core" id="core">
-            <div class="coreScan" aria-hidden="true"></div>
-            <div class="coreText">
-              <div class="coreK">CORE</div>
-              <div class="coreT" id="coreTitle">Приморская биржа</div>
-              <div class="coreS" id="coreSub">ONLINE</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="foot">
-          <div>SYS • build 0.1</div>
-          <div id="footRight">READY</div>
-        </div>
-
+      <div class="form">
+        <button class="btnDanger" id="logoutBtn">Выйти</button>
       </div>
     </div>
   </div>
 
-  <div class="modalBack" id="modalBack" role="dialog" aria-modal="true">
-    <div class="modal">
-      <div class="modalPad">
-        <div class="modalTop">
-          <div class="mTitle" id="modalTitle">AUTH</div>
-          <button class="close" id="closeModal">Закрыть</button>
-        </div>
-
-        <div class="tabs" id="tabs">
-          <button class="tab active" id="tabLogin">Вход</button>
-          <button class="tab" id="tabRegister">Регистрация</button>
-        </div>
-
-        <div class="form" id="loginForm">
-          <input class="field" id="emailLogin" placeholder="Email" autocomplete="email" />
-          <input class="field" id="passLogin" placeholder="Пароль" type="password" autocomplete="current-password" />
-          <button class="primary" id="doLogin">Войти</button>
-          <div class="hintLine" id="loginHint"></div>
-        </div>
-
-        <div class="form" id="registerForm" style="display:none;">
-          <div class="row">
-            <input class="field" id="emailReg" placeholder="Email" autocomplete="email" />
-            <input class="field" id="passReg" placeholder="Пароль" type="password" autocomplete="new-password" />
-          </div>
-
-          <div class="row">
-            <input class="field" id="loginReg" placeholder="Логин" />
-            <input class="field" id="nickReg" placeholder="Ник" />
-          </div>
-
-          <div class="fileWrap">
-            <input id="avatarFile" type="file" accept="image/*" style="display:none;" />
-            <button class="fileBtn" id="pickAvatar">Аватар</button>
-            <div class="fileName" id="avatarName">—</div>
-          </div>
-
-          <button class="primary" id="doRegister">Создать</button>
-          <div class="hintLine" id="regHint"></div>
-        </div>
-
-        <div class="form" id="profileForm" style="display:none;">
-          <button class="danger" id="signOut2">Выйти</button>
-          <div class="hintLine" id="profileHintLine"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ===== CONFIG =====
+    // ====== твоё ======
     const SUPABASE_URL = "https://buwzzxpzcwjihvylfzom.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1d3p6eHB6Y3dqaWh2eWxmem9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNDUwMTIsImV4cCI6MjA4MTkyMTAxMn0.5vYMVieAY_AAKdCw6_Y-aR21UJrl0A-AE-ayWPw-L54";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ===== refs =====
-    const el = (id) => document.getElementById(id);
+    const msg = document.getElementById("msg");
+    const tLogin = document.getElementById("tLogin");
+    const tReg = document.getElementById("tReg");
+    const loginForm = document.getElementById("loginForm");
+    const regForm = document.getElementById("regForm");
+    const profileArea = document.getElementById("profileArea");
 
-    const statusLine = el("statusLine");
-    const crEl = el("cr");
-    const pingEl = el("ping");
-    const pingPill = el("pingPill");
-    const authBtn = el("authBtn");
-    const logoutBtn = el("logoutBtn");
+    const emailL = document.getElementById("emailL");
+    const passL = document.getElementById("passL");
+    const loginBtn = document.getElementById("loginBtn");
 
-    const userLoginEl = el("userLogin");
-    const userNickEl = el("userNick");
-    const avatarImg = el("avatarImg");
-    const profileBtn = el("profileBtn");
+    const emailR = document.getElementById("emailR");
+    const passR = document.getElementById("passR");
+    const loginR = document.getElementById("loginR");
+    const nickR = document.getElementById("nickR");
+    const avatarFile = document.getElementById("avatarFile");
+    const pickAvatar = document.getElementById("pickAvatar");
+    const avatarName = document.getElementById("avatarName");
+    const regBtn = document.getElementById("regBtn");
 
-    const historyList = el("historyList");
-    const activitySub = el("activitySub");
+    const pLogin = document.getElementById("pLogin");
+    const pNick = document.getElementById("pNick");
+    const avatarImg = document.getElementById("avatarImg");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    const coreSub = el("coreSub");
-    const footRight = el("footRight");
+    function setMsg(text){ msg.textContent = text || ""; }
 
-    const modalBack = el("modalBack");
-    const closeModal = el("closeModal");
-    const modalTitle = el("modalTitle");
-
-    const tabs = el("tabs");
-    const tabLogin = el("tabLogin");
-    const tabRegister = el("tabRegister");
-
-    const loginForm = el("loginForm");
-    const registerForm = el("registerForm");
-    const profileForm = el("profileForm");
-
-    const emailLogin = el("emailLogin");
-    const passLogin = el("passLogin");
-    const doLogin = el("doLogin");
-    const loginHint = el("loginHint");
-
-    const emailReg = el("emailReg");
-    const passReg = el("passReg");
-    const loginReg = el("loginReg");
-    const nickReg = el("nickReg");
-    const avatarFile = el("avatarFile");
-    const pickAvatar = el("pickAvatar");
-    const avatarName = el("avatarName");
-    const doRegister = el("doRegister");
-    const regHint = el("regHint");
-
-    const signOut2 = el("signOut2");
-    const profileHintLine = el("profileHintLine");
-
-    const cmdButtons = [...document.querySelectorAll(".cmd")];
-
-    // ===== state =====
-    const MAX_HISTORY = 15;
-    let currentUser = null;       // auth user
-    let hudProfile = null;        // hud_profiles row
-    let activityChannel = null;
-
-    // ===== utils =====
-    function nowTime(d = new Date()){
-      const hh = String(d.getHours()).padStart(2,"0");
-      const mm = String(d.getMinutes()).padStart(2,"0");
-      return `${hh}:${mm}`;
+    // защитная инициализация
+    let supabase = null;
+    try{
+      if (!window.supabase?.createClient) throw new Error("Supabase SDK не загрузился (CDN).");
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }catch(e){
+      console.error(e);
+      setMsg(e.message);
     }
 
-    function setAuthUI(isAuthedForHud){
-      cmdButtons.forEach(b => b.disabled = !isAuthedForHud);
-      authBtn.style.display = isAuthedForHud ? "none" : "inline-flex";
-      logoutBtn.style.display = currentUser ? "inline-flex" : "none";
-    }
-
-    function setGuestUI(){
-      userLoginEl.textContent = "Guest";
-      userNickEl.textContent = "guest_0000";
-      setAuthUI(false);
-    }
-
-    function setHudProfileUI(p){
-      hudProfile = p;
-      if (!p){
-        // есть auth, но нет hud_profiles => для HUD это гость
-        if (currentUser){
-          userLoginEl.textContent = "Guest";
-          userNickEl.textContent = "create_profile";
-          setAuthUI(false);
-        } else {
-          setGuestUI();
-        }
-        return;
-      }
-      userLoginEl.textContent = p.login || "User";
-      userNickEl.textContent = p.nick || "user";
-      if (p.avatar_url) avatarImg.src = p.avatar_url;
-      setAuthUI(true);
-    }
-
-    function openModal(mode){
-      modalBack.classList.add("open");
-      if (mode === "profile"){
-        modalTitle.textContent = "PROFILE";
-        tabs.style.display = "none";
-        loginForm.style.display = "none";
-        registerForm.style.display = "none";
-        profileForm.style.display = "flex";
-        profileHintLine.textContent = "";
-      } else {
-        modalTitle.textContent = "AUTH";
-        tabs.style.display = "flex";
-        profileForm.style.display = "none";
-        showTab(mode || "login");
-      }
-    }
-    function closeModalFn(){
-      modalBack.classList.remove("open");
-      loginHint.textContent = "";
-      regHint.textContent = "";
-      profileHintLine.textContent = "";
-    }
     function showTab(which){
       if (which === "login"){
-        tabLogin.classList.add("active");
-        tabRegister.classList.remove("active");
+        tLogin.classList.add("active");
+        tReg.classList.remove("active");
         loginForm.style.display = "flex";
-        registerForm.style.display = "none";
+        regForm.style.display = "none";
       } else {
-        tabRegister.classList.add("active");
-        tabLogin.classList.remove("active");
+        tReg.classList.add("active");
+        tLogin.classList.remove("active");
         loginForm.style.display = "none";
-        registerForm.style.display = "flex";
+        regForm.style.display = "flex";
       }
     }
 
-    function ripple(btn, clientX, clientY){
-      const rect = btn.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-      const r = document.createElement("span");
-      r.className = "ripple";
-      r.style.left = x + "px";
-      r.style.top = y + "px";
-      btn.appendChild(r);
-      setTimeout(() => r.remove(), 560);
-    }
-
-    function actionIcon(action){
-      if (action === "Бонус") return "✦";
-      if (action === "Рулетка") return "⟡";
-      if (action === "Шанс") return "⚑";
-      return "⛭";
-    }
-
-    // ===== HUD tables =====
-    async function fetchMyHudProfile(uid){
-      const { data, error } = await supabase
-        .from("hud_profiles")
-        .select("id,login,nick,avatar_url,created_at")
-        .eq("id", uid)
-        .maybeSingle();
-
-      if (error) return null;
-      return data || null;
-    }
-
-    async function uploadAvatar(file, uid){
-      const ext = (file.name.split(".").pop() || "png").toLowerCase();
-      const path = `${uid}/${Date.now()}.${ext}`;
-
-      const { error: upErr } = await supabase
-        .storage
-        .from("hud_avatars")
-        .upload(path, file, { upsert: true, contentType: file.type });
-
-      if (upErr) throw upErr;
-
-      const { data } = supabase.storage.from("hud_avatars").getPublicUrl(path);
-      return data.publicUrl;
-    }
-
-    // ===== Activity (HUD) =====
-    function renderHistory(items, animateTop=false){
-      historyList.innerHTML = items.map((h, idx) => {
-        const t = new Date(h.created_at);
-        const cls = (animateTop && idx === 0) ? "hitem pop" : "hitem";
-        const login = (h.login || "unknown").toString();
-        const nick  = (h.nick || "unknown").toString();
-        const action = (h.action || "").toString();
-        const time = nowTime(t);
-
-        const badge = h.avatar_url
-          ? `<img alt="" src="${h.avatar_url}">`
-          : `${actionIcon(action)}`;
-
-        return `
-          <div class="${cls}">
-            <div class="hleft">
-              <div class="hbadge">${badge}</div>
-              <div class="hmain">
-                <div class="hline1">${login}</div>
-                <div class="hline2">${nick} • ${action}</div>
-              </div>
-            </div>
-            <div class="htime">${time}</div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    async function loadLatestActivity(){
-      const { data, error } = await supabase
-        .from("hud_activity")
-        .select("id,user_id,login,nick,avatar_url,action,created_at")
-        .order("id", { ascending: false })
-        .limit(MAX_HISTORY);
-
-      if (error){
-        activitySub.textContent = "OFFLINE";
-        return;
-      }
-      activitySub.textContent = "LIVE";
-      renderHistory(data || [], false);
-    }
-
-    async function trimActivityTo15(){
-      // удаляем всё, что "ниже" первых 15
-      const { data, error } = await supabase
-        .from("hud_activity")
-        .select("id")
-        .order("id", { ascending: false })
-        .range(MAX_HISTORY, MAX_HISTORY + 500);
-
-      if (error || !data || data.length === 0) return;
-      await supabase.from("hud_activity").delete().in("id", data.map(x => x.id));
-    }
-
-    async function insertActivity(action){
-      if (!currentUser || !hudProfile) return;
-
-      const row = {
-        user_id: currentUser.id,
-        login: hudProfile.login,
-        nick: hudProfile.nick,
-        avatar_url: hudProfile.avatar_url || null,
-        action
-      };
-
-      const { error } = await supabase.from("hud_activity").insert(row);
-      if (!error) await trimActivityTo15();
-    }
-
-    function subscribeRealtime(){
-      if (activityChannel) return;
-      activityChannel = supabase
-        .channel("hud_activity_live")
-        .on("postgres_changes", { event: "INSERT", schema: "public", table: "hud_activity" }, async (payload) => {
-          const newRow = payload.new;
-          await loadLatestActivity();
-          coreSub.textContent = newRow.action;
-          footRight.textContent = "LIVE";
-          setTimeout(() => { footRight.textContent = "READY"; }, 800);
-        })
-        .subscribe();
-    }
-
-    // ===== Auth flows =====
-    async function initAuth(){
-      const { data } = await supabase.auth.getSession();
-      currentUser = data?.session?.user || null;
-
-      if (currentUser){
-        const p = await fetchMyHudProfile(currentUser.id);
-        setHudProfileUI(p);
-      } else {
-        setGuestUI();
-      }
-    }
-
-    async function doLoginFlow(){
-      loginHint.textContent = "";
-      const email = emailLogin.value.trim();
-      const pass = passLogin.value;
-
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
-      if (error){
-        loginHint.textContent = error.message;
-        return;
-      }
-
-      currentUser = data.user;
-      const p = await fetchMyHudProfile(currentUser.id);
-      setHudProfileUI(p);
-      closeModalFn();
-    }
-
-    async function doRegisterFlow(){
-      regHint.textContent = "";
-
-      const email = emailReg.value.trim();
-      const pass = passReg.value;
-      const login = loginReg.value.trim();
-      const nick = nickReg.value.trim();
-      const file = avatarFile.files?.[0] || null;
-
-      if (!email || !pass || !login || !nick){
-        regHint.textContent = "Заполни поля";
-        return;
-      }
-
-      const { data, error } = await supabase.auth.signUp({ email, password: pass });
-      if (error){
-        regHint.textContent = error.message;
-        return;
-      }
-
-      const user = data.user;
-      if (!user){
-        regHint.textContent = "Подтверди email и войди";
-        return;
-      }
-
-      let avatarUrl = null;
-      try{
-        if (file) avatarUrl = await uploadAvatar(file, user.id);
-      } catch (e){
-        avatarUrl = null;
-      }
-
-      const { error: pErr } = await supabase.from("hud_profiles").insert({
-        id: user.id,
-        login,
-        nick,
-        avatar_url: avatarUrl
-      });
-
-      if (pErr){
-        regHint.textContent = pErr.message;
-        return;
-      }
-
-      // если email confirm выключен, сессия может быть сразу
-      const s = await supabase.auth.getSession();
-      currentUser = s.data?.session?.user || user;
-
-      const p = await fetchMyHudProfile(user.id);
-      setHudProfileUI(p);
-      closeModalFn();
-    }
-
-    async function doLogoutFlow(){
-      await supabase.auth.signOut();
-      currentUser = null;
-      hudProfile = null;
-      setGuestUI();
-      await loadLatestActivity();
-    }
-
-    // ===== Events =====
-    authBtn.addEventListener("click", () => openModal("login"));
-    logoutBtn.addEventListener("click", doLogoutFlow);
-
-    profileBtn.addEventListener("click", () => {
-      if (!currentUser){
-        openModal("login");
-        return;
-      }
-      // Если пользователь авторизован, но HUD-профиль не создан — показываем регистрацию
-      if (!hudProfile){
-        openModal("register");
-        return;
-      }
-      openModal("profile");
-    });
-
-    profileBtn.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") profileBtn.click();
-    });
-
-    closeModal.addEventListener("click", closeModalFn);
-    modalBack.addEventListener("click", (e) => { if (e.target === modalBack) closeModalFn(); });
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modalBack.classList.contains("open")) closeModalFn();
-    });
-
-    tabLogin.addEventListener("click", () => showTab("login"));
-    tabRegister.addEventListener("click", () => showTab("register"));
-
-    doLogin.addEventListener("click", doLoginFlow);
-    doRegister.addEventListener("click", doRegisterFlow);
-
-    signOut2.addEventListener("click", async () => { await doLogoutFlow(); closeModalFn(); });
+    tLogin.addEventListener("click", () => showTab("login"));
+    tReg.addEventListener("click", () => showTab("reg"));
 
     pickAvatar.addEventListener("click", () => avatarFile.click());
     avatarFile.addEventListener("change", () => {
@@ -1226,50 +265,156 @@
       avatarName.textContent = f ? f.name : "—";
     });
 
-    cmdButtons.forEach(btn => {
-      btn.addEventListener("click", async (e) => {
-        if (btn.disabled){
-          openModal(currentUser ? "register" : "login");
+    async function uploadAvatar(userId, file){
+      const ext = (file.name.split(".").pop() || "png").toLowerCase();
+      const path = `${userId}/${Date.now()}.${ext}`;
+
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+
+      if (upErr) throw upErr;
+
+      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    async function loadProfile(userId){
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id,login,nick,avatar_url")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data || null;
+    }
+
+    function setAuthedUI(profile){
+      profileArea.style.display = "block";
+      document.getElementById("tabs").style.display = "none";
+      loginForm.style.display = "none";
+      regForm.style.display = "none";
+
+      pLogin.textContent = profile?.login || "—";
+      pNick.textContent = profile?.nick || "—";
+      if (profile?.avatar_url) avatarImg.src = profile.avatar_url;
+    }
+
+    function setGuestUI(){
+      profileArea.style.display = "none";
+      document.getElementById("tabs").style.display = "flex";
+      showTab("login");
+      setMsg("");
+    }
+
+    loginBtn.addEventListener("click", async () => {
+      if (!supabase) return;
+      setMsg("");
+      const email = emailL.value.trim();
+      const pass = passL.value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+      if (error){ setMsg(error.message); return; }
+
+      const user = data.user;
+      try{
+        const profile = await loadProfile(user.id);
+        if (!profile){
+          setMsg("Нет профиля. Создай через регистрацию.");
+          await supabase.auth.signOut();
           return;
         }
-        ripple(btn, e.clientX, e.clientY);
-        const action = btn.dataset.cmd;
-
-        coreSub.textContent = action;
-        footRight.textContent = action.toUpperCase();
-        setTimeout(() => { footRight.textContent = "READY"; }, 850);
-
-        await insertActivity(action);
-      });
+        setAuthedUI(profile);
+      }catch(e){
+        console.error(e);
+        setMsg(e.message);
+      }
     });
 
-    pingPill.addEventListener("click", () => {
-      const v = Math.floor(18 + Math.random()*22);
-      pingEl.textContent = String(v);
+    regBtn.addEventListener("click", async () => {
+      if (!supabase) return;
+      setMsg("");
+
+      const email = emailR.value.trim();
+      const pass = passR.value;
+      const login = loginR.value.trim();
+      const nick = nickR.value.trim();
+      const file = avatarFile.files?.[0] || null;
+
+      if (!email || !pass || !login || !nick){
+        setMsg("Заполни поля");
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signUp({ email, password: pass });
+      if (error){ setMsg(error.message); return; }
+
+      const user = data.user;
+      if (!user){
+        setMsg("Подтверди email и затем войди.");
+        return;
+      }
+
+      let avatarUrl = null;
+      try{
+        if (file) avatarUrl = await uploadAvatar(user.id, file);
+      }catch(e){
+        console.error(e);
+      }
+
+      const { error: pErr } = await supabase.from("profiles").insert({
+        id: user.id,
+        login,
+        nick,
+        avatar_url: avatarUrl
+      });
+
+      if (pErr){
+        setMsg(pErr.message);
+        return;
+      }
+
+      // если email confirm выключен — сессия может появиться сразу
+      const s = await supabase.auth.getSession();
+      const authed = s.data?.session?.user;
+
+      if (!authed){
+        setMsg("Аккаунт создан. Подтверди email и войди.");
+        await supabase.auth.signOut();
+        return;
+      }
+
+      const profile = await loadProfile(user.id);
+      setAuthedUI(profile);
     });
 
-    setInterval(() => {
-      const base = 1240;
-      const delta = Math.floor(Math.random()*7) - 3;
-      crEl.textContent = (base + delta).toLocaleString("ru-RU");
-    }, 2200);
+    logoutBtn.addEventListener("click", async () => {
+      if (!supabase) return;
+      await supabase.auth.signOut();
+      setGuestUI();
+    });
 
-    // ===== Boot =====
-    (async function boot(){
-      statusLine.textContent = "ONLINE";
-      await initAuth();
-      await loadLatestActivity();
-      subscribeRealtime();
+    // небольшие "живые" штуки (не обязательно)
+    document.getElementById("pingPill")?.addEventListener?.("click", ()=>{});
 
-      supabase.auth.onAuthStateChange(async (_event, session) => {
-        currentUser = session?.user || null;
-        if (!currentUser){
-          setGuestUI();
-          return;
-        }
-        const p = await fetchMyHudProfile(currentUser.id);
-        setHudProfileUI(p);
-      });
+    // init session
+    (async function init(){
+      if (!supabase) return;
+      const { data } = await supabase.auth.getSession();
+      const user = data?.session?.user || null;
+      if (!user){
+        setGuestUI();
+        return;
+      }
+      try{
+        const profile = await loadProfile(user.id);
+        if (profile) setAuthedUI(profile);
+        else setGuestUI();
+      }catch(e){
+        console.error(e);
+        setGuestUI();
+      }
     })();
   </script>
 </body>
