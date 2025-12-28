@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>VK Leadboard Editor (Supabase)</title>
+  <title>Auth + Leader Card (Supabase)</title>
   <style>
     :root{
       --bg0:#070a10;
@@ -27,18 +27,20 @@
         radial-gradient(880px 660px at 78% 75%, rgba(160, 70, 120, .18), transparent 58%),
         linear-gradient(180deg, var(--bg1), var(--bg0));
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:center;
       padding: 16px;
     }
     .card{
-      width: min(980px, 100%);
+      width: min(560px, 100%);
       border-radius: var(--r1);
       background: var(--panel);
       border: 1px solid var(--line);
       backdrop-filter: blur(12px);
       padding: 14px;
     }
+    .row{ display:flex; gap:10px; }
+    .row > *{ flex:1; }
     .title{
       font-weight: 900;
       letter-spacing: .14em;
@@ -50,25 +52,36 @@
       font-size: 12px;
       color: var(--muted);
       min-height: 16px;
+      white-space: pre-wrap;
     }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:12px;
-      margin-top: 12px;
-    }
-    @media (max-width: 900px){
-      .grid{ grid-template-columns: 1fr; }
-    }
-
-    .panel{
-      border-radius: 18px;
+    .tabs{ display:flex; gap:8px; margin-top: 12px; }
+    .tab{
+      flex:1;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
-      padding: 12px;
-      min-width:0;
+      padding: 10px;
+      cursor:pointer;
+      color: rgba(255,255,255,.86);
+      font-weight: 800;
+      font-size: 12px;
+      user-select:none;
     }
+    .tab.active{
+      border-color: rgba(var(--accent), .35);
+      background: rgba(255,255,255,.07);
+    }
+    .form{ margin-top: 12px; display:flex; flex-direction:column; gap:10px; }
+    .field{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 10px 12px;
+      color: rgba(255,255,255,.90);
+      outline:none;
+      font-size: 13px;
+    }
+    .field::placeholder{ color: rgba(255,255,255,.35); }
 
     .btn{
       border-radius: 14px;
@@ -103,163 +116,152 @@
       font-size: 12px;
       color: rgba(255,255,255,.92);
     }
-    .row{ display:flex; gap:10px; flex-wrap:wrap; }
-    .row > *{ flex:1; min-width: 180px; }
 
-    .field{
-      width:100%;
-      border-radius: 14px;
+    .profile{
+      margin-top: 14px;
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
-      padding: 10px 12px;
-      color: rgba(255,255,255,.90);
-      outline:none;
-      font-size: 13px;
+      padding: 12px;
+      display:flex;
+      align-items:center;
+      gap: 12px;
     }
-    .field::placeholder{ color: rgba(255,255,255,.35); }
-
-    table{
-      width:100%;
-      border-collapse: collapse;
+    .avatar{
+      width: 64px; height: 64px;
+      border-radius: 999px;
       overflow:hidden;
-      border-radius: 14px;
-    }
-    th, td{
-      text-align:left;
-      padding: 10px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      font-size: 13px;
-      vertical-align: middle;
-    }
-    th{ font-size: 12px; color: rgba(255,255,255,.75); letter-spacing:.06em; }
-    .muted{ color: var(--muted); font-size:12px; }
-
-    .ava{
-      width:42px; height:42px; border-radius:999px; overflow:hidden;
-      border:1px solid rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.25);
+      flex:none;
     }
-    .ava img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .pmeta{ min-width:0; }
+    .plogin{ font-weight: 900; font-size: 14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .pnick{ margin-top: 6px; font-size: 12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-    .editorTop{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      margin-bottom: 10px;
-    }
-    .fileRow{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .fileName{ font-size:12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 260px;}
-    .hint{ font-size:12px; color: var(--muted); margin-top:8px; line-height:1.4; }
+    .hint{ font-size: 12px; color: var(--muted); }
+    .fileRow{ display:flex; gap:10px; align-items:center; }
+    .fileName{ font-size:12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .hr{ height:1px; background: rgba(255,255,255,.10); margin: 10px 0; border-radius: 99px; }
   </style>
 </head>
 
 <body>
   <div class="card">
-    <div class="title">VK LEADBOARD</div>
+    <div class="title">AUTH / LEADER CARD</div>
     <div class="sub" id="msg"></div>
 
-    <div class="grid">
-      <!-- LEFT: LIST -->
-      <div class="panel">
-        <div class="editorTop">
-          <div style="font-weight:900;">Лидеры</div>
-          <div class="row" style="margin:0;">
-            <input class="field" id="search" placeholder="Поиск по нику / аккаунту / департаменту" />
-          </div>
-        </div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" id="tLogin" type="button">Вход</button>
+      <button class="tab" id="tReg" type="button">Регистрация</button>
+    </div>
 
-        <div class="row" style="margin-bottom:10px;">
-          <button class="btn2" id="refreshBtn">Обновить</button>
-          <button class="btn" id="newBtn">+ Новый лидер</button>
-        </div>
+    <!-- LOGIN -->
+    <div class="form" id="loginForm">
+      <input class="field" id="emailL" placeholder="Email" autocomplete="email" />
+      <input class="field" id="passL" placeholder="Пароль" type="password" autocomplete="current-password" />
+      <button class="btn" id="loginBtn" type="button">Войти</button>
+    </div>
 
-        <div style="overflow:auto;">
-          <table>
-            <thead>
-              <tr>
-                <th>Аватар</th>
-                <th>Ник</th>
-                <th>Департамент</th>
-                <th>Аккаунт</th>
-                <th>АШ</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-          </table>
+    <!-- REGISTER -->
+    <div class="form" id="regForm" style="display:none;">
+      <div class="row">
+        <input class="field" id="emailR" placeholder="Email" autocomplete="email" />
+        <input class="field" id="passR" placeholder="Пароль" type="password" autocomplete="new-password" />
+      </div>
+      <button class="btn" id="regBtn" type="button">Создать аккаунт</button>
+      <div class="hint">Если включено подтверждение email в Supabase — нужно подтвердить почту и затем войти.</div>
+    </div>
+
+    <!-- AUTHED AREA -->
+    <div id="authedArea" style="display:none;">
+      <div class="profile">
+        <div class="avatar">
+          <img id="avatarImg" alt="avatar"
+               src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect width='160' height='160' fill='%2310111a'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.75' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E">
         </div>
-        <div class="hint">Редактирование пишет данные в таблицу <b>public.vk_leadboard</b> (nick, department, account_id, avatar_url, points).</div>
+        <div class="pmeta">
+          <div class="plogin" id="pNick">—</div>
+          <div class="pnick" id="pDept">—</div>
+        </div>
       </div>
 
-      <!-- RIGHT: EDITOR -->
-      <div class="panel">
-        <div class="editorTop">
-          <div style="font-weight:900;">Карточка лидера</div>
-          <button class="btnDanger" id="clearBtn">Сброс</button>
+      <div class="hr"></div>
+
+      <!-- LEADER EDITOR -->
+      <div class="form">
+        <div class="row">
+          <input class="field" id="nickI" placeholder="Ник (nick)" />
+          <input class="field" id="deptI" placeholder="Департамент (department)" />
         </div>
 
         <div class="row">
-          <input class="field" id="nick" placeholder="Ник" />
-          <input class="field" id="department" placeholder="Департамент" />
+          <input class="field" id="accI" placeholder="Номер аккаунта (account_id)" />
+          <input class="field" id="pointsI" placeholder="Текущее количество АШ (points)" inputmode="numeric" />
         </div>
 
-        <div class="row" style="margin-top:10px;">
-          <input class="field" id="accountId" placeholder="Номер аккаунта (account_id)" />
-          <input class="field" id="points" placeholder="Текущее количество АШ" type="number" min="0" step="1" />
-        </div>
-
-        <div class="fileRow" style="margin-top:10px;">
+        <div class="fileRow">
           <input id="avatarFile" type="file" accept="image/*" style="display:none;" />
-          <button class="btn2" id="pickAvatar">Выбрать аватар</button>
+          <button class="btn2" id="pickAvatar" type="button">Аватар</button>
           <div class="fileName" id="avatarName">—</div>
         </div>
 
-        <div class="row" style="margin-top:10px;">
-          <button class="btn" id="saveBtn">Сохранить</button>
-          <button class="btn2" id="deleteBtn">Удалить</button>
-        </div>
+        <button class="btn" id="saveLeaderBtn" type="button">Сохранить карточку лидера</button>
+        <button class="btnDanger" id="logoutBtn" type="button">Выйти</button>
 
         <div class="hint">
-          <div class="muted">Важно:</div>
-          <ul class="muted" style="margin:6px 0 0 16px; padding:0; line-height:1.45;">
-            <li>Для корректного <b>upsert</b> заполняй <b>account_id</b> (и сделай unique index как в SQL выше).</li>
-            <li>Аватар загружается в Storage bucket <b>avatars</b>, затем URL пишется в <b>avatar_url</b>.</li>
-            <li>Если RLS включен и не настроен — записи будут падать с “permission denied”.</li>
-          </ul>
+          Сохраняется в таблицу <b>vk_leadboard</b>: department, nick, account_id, avatar_url, points.
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ====== CONFIG ======
+    // ====== твоё ======
     const SUPABASE_URL = "https://buwzzxpzcwjihvylfzom.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqYmhmbHBvZWxndXNmaHltaXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4NzEzODMsImV4cCI6MjA4MDQ0NzM4M30.OUBE062cKr4p4KpKlZlWIYCmqCBpXK43tQq9m-laDfg"; // <- оставь свой ключ
-    const TABLE = "vk_leadboard";
-    const AVATAR_BUCKET = "avatars";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1d3p6eHB6Y3dqaWh2eWxmem9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNDUwMTIsImV4cCI6MjA4MTkyMTAxMn0.5vYMVieAY_AAKdCw6_Y-aR21UJrl0A-AE-ayWPw-L54";
 
-    // ====== UI ======
+    // ====== elements ======
     const msg = document.getElementById("msg");
-    const tbody = document.getElementById("tbody");
-    const refreshBtn = document.getElementById("refreshBtn");
-    const newBtn = document.getElementById("newBtn");
-    const search = document.getElementById("search");
 
-    const nick = document.getElementById("nick");
-    const department = document.getElementById("department");
-    const accountId = document.getElementById("accountId");
-    const points = document.getElementById("points");
+    const tLogin = document.getElementById("tLogin");
+    const tReg = document.getElementById("tReg");
+    const tabs = document.getElementById("tabs");
+
+    const loginForm = document.getElementById("loginForm");
+    const regForm = document.getElementById("regForm");
+    const authedArea = document.getElementById("authedArea");
+
+    const emailL = document.getElementById("emailL");
+    const passL = document.getElementById("passL");
+    const loginBtn = document.getElementById("loginBtn");
+
+    const emailR = document.getElementById("emailR");
+    const passR = document.getElementById("passR");
+    const regBtn = document.getElementById("regBtn");
+
+    const pNick = document.getElementById("pNick");
+    const pDept = document.getElementById("pDept");
+    const avatarImg = document.getElementById("avatarImg");
+
+    const nickI = document.getElementById("nickI");
+    const deptI = document.getElementById("deptI");
+    const accI = document.getElementById("accI");
+    const pointsI = document.getElementById("pointsI");
 
     const avatarFile = document.getElementById("avatarFile");
     const pickAvatar = document.getElementById("pickAvatar");
     const avatarName = document.getElementById("avatarName");
 
-    const saveBtn = document.getElementById("saveBtn");
-    const deleteBtn = document.getElementById("deleteBtn");
-    const clearBtn = document.getElementById("clearBtn");
+    const saveLeaderBtn = document.getElementById("saveLeaderBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
     function setMsg(text){ msg.textContent = text || ""; }
 
-    // ====== Supabase init ======
+    // ====== supabase init ======
     let supabase = null;
     try{
       if (!window.supabase?.createClient) throw new Error("Supabase SDK не загрузился (CDN).");
@@ -269,204 +271,47 @@
       setMsg(e.message);
     }
 
-    // ====== State ======
-    let leaders = [];
-    let currentRow = null; // selected row
-
-    // ====== Helpers ======
-    function escapeHtml(s){
-      return (s ?? "").toString()
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+    function showTab(which){
+      if (which === "login"){
+        tLogin.classList.add("active");
+        tReg.classList.remove("active");
+        loginForm.style.display = "flex";
+        regForm.style.display = "none";
+      } else {
+        tReg.classList.add("active");
+        tLogin.classList.remove("active");
+        loginForm.style.display = "none";
+        regForm.style.display = "flex";
+      }
     }
 
-    function filterLeaders(q){
-      q = (q || "").trim().toLowerCase();
-      if (!q) return leaders;
-      return leaders.filter(r => {
-        const a = (r.account_id || "").toLowerCase();
-        const n = (r.nick || "").toLowerCase();
-        const d = (r.department || "").toLowerCase();
-        return a.includes(q) || n.includes(q) || d.includes(q);
-      });
+    function setAuthedUI(leader){
+      tabs.style.display = "none";
+      loginForm.style.display = "none";
+      regForm.style.display = "none";
+      authedArea.style.display = "block";
+
+      // header
+      pNick.textContent = leader?.nick || "—";
+      pDept.textContent = leader?.department || "—";
+      if (leader?.avatar_url) avatarImg.src = leader.avatar_url;
+
+      // editor
+      nickI.value = leader?.nick || "";
+      deptI.value = leader?.department || "";
+      accI.value = leader?.account_id || "";
+      pointsI.value = (leader?.points ?? "").toString();
     }
 
-    function render(){
-      const rows = filterLeaders(search.value);
-      tbody.innerHTML = rows.map(r => {
-        const img = r.avatar_url
-          ? `<div class="ava"><img src="${escapeHtml(r.avatar_url)}" alt=""></div>`
-          : `<div class="ava"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect width='160' height='160' fill='%2310111a'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.75' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E" alt=""></div>`;
-
-        return `
-          <tr>
-            <td>${img}</td>
-            <td><b>${escapeHtml(r.nick)}</b></td>
-            <td>${escapeHtml(r.department || "—")}</td>
-            <td class="muted">${escapeHtml(r.account_id || "—")}</td>
-            <td><b>${Number(r.points ?? 0)}</b></td>
-            <td><button class="btn2" data-edit="${r.id}">Редактировать</button></td>
-          </tr>
-        `;
-      }).join("");
-
-      tbody.querySelectorAll("[data-edit]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = Number(btn.getAttribute("data-edit"));
-          const row = leaders.find(x => x.id === id);
-          if (row) loadIntoEditor(row);
-        });
-      });
-    }
-
-    function resetEditor(){
-      currentRow = null;
-      nick.value = "";
-      department.value = "";
-      accountId.value = "";
-      points.value = "";
-      avatarFile.value = "";
-      avatarName.textContent = "—";
+    function setGuestUI(){
+      authedArea.style.display = "none";
+      tabs.style.display = "flex";
+      showTab("login");
       setMsg("");
     }
 
-    function loadIntoEditor(row){
-      currentRow = row;
-      nick.value = row.nick || "";
-      department.value = row.department || "";
-      accountId.value = row.account_id || "";
-      points.value = row.points ?? 0;
-      avatarFile.value = "";
-      avatarName.textContent = "—";
-      setMsg(`Редактирование: ${row.nick} (id=${row.id})`);
-    }
-
-    async function uploadAvatar(file, accountIdValue){
-      const ext = (file.name.split(".").pop() || "png").toLowerCase();
-      const safeAccount = (accountIdValue || "no_account").replaceAll(/[^\w\-]/g, "_");
-      const path = `leaders/${safeAccount}/${Date.now()}.${ext}`;
-
-      const { error: upErr } = await supabase.storage
-        .from(AVATAR_BUCKET)
-        .upload(path, file, { upsert: true, contentType: file.type });
-
-      if (upErr) throw upErr;
-
-      const { data } = supabase.storage.from(AVATAR_BUCKET).getPublicUrl(path);
-      return data.publicUrl;
-    }
-
-    // ====== Data ======
-    async function fetchLeaders(){
-      if (!supabase) return;
-      setMsg("");
-      const { data, error } = await supabase
-        .from(TABLE)
-        .select("id,nick,points,updated_at,avatar_url,account_id,department")
-        .order("points", { ascending: false })
-        .limit(500);
-
-      if (error){
-        setMsg(error.message);
-        return;
-      }
-      leaders = data || [];
-      render();
-    }
-
-    async function saveLeader(){
-      if (!supabase) return;
-      setMsg("");
-
-      const n = nick.value.trim();
-      const d = department.value.trim();
-      const a = accountId.value.trim();
-      const p = Number(points.value || 0);
-      const file = avatarFile.files?.[0] || null;
-
-      if (!n || !d || !a){
-        setMsg("Заполни ник, департамент и номер аккаунта (account_id).");
-        return;
-      }
-      if (!Number.isFinite(p) || p < 0){
-        setMsg("АШ (points) должен быть числом >= 0.");
-        return;
-      }
-
-      let avatarUrl = currentRow?.avatar_url || null;
-      try{
-        if (file){
-          avatarUrl = await uploadAvatar(file, a);
-        }
-      }catch(e){
-        console.error(e);
-        setMsg("Аватар не загрузился: " + (e?.message || String(e)));
-        // не прерываем сохранение данных
-      }
-
-      // Upsert по account_id (нужен unique index на account_id)
-      const payload = {
-        nick: n,
-        department: d,
-        account_id: a,
-        points: p,
-        avatar_url: avatarUrl
-      };
-
-      const { data, error } = await supabase
-        .from(TABLE)
-        .upsert(payload, { onConflict: "account_id" })
-        .select()
-        .maybeSingle();
-
-      if (error){
-        setMsg(error.message);
-        return;
-      }
-
-      setMsg("Сохранено.");
-      await fetchLeaders();
-
-      // подхватим сохранённую строку как текущую
-      if (data) loadIntoEditor(data);
-    }
-
-    async function deleteLeader(){
-      if (!supabase) return;
-      setMsg("");
-
-      if (!currentRow?.id){
-        setMsg("Сначала выбери лидера для удаления.");
-        return;
-      }
-
-      const { error } = await supabase
-        .from(TABLE)
-        .delete()
-        .eq("id", currentRow.id);
-
-      if (error){
-        setMsg(error.message);
-        return;
-      }
-
-      setMsg("Удалено.");
-      resetEditor();
-      await fetchLeaders();
-    }
-
-    // ====== Events ======
-    refreshBtn.addEventListener("click", fetchLeaders);
-    newBtn.addEventListener("click", () => {
-      resetEditor();
-      setMsg("Новый лидер: заполни поля и нажми Сохранить.");
-    });
-    clearBtn.addEventListener("click", resetEditor);
-
-    search.addEventListener("input", render);
+    tLogin.addEventListener("click", () => showTab("login"));
+    tReg.addEventListener("click", () => showTab("reg"));
 
     pickAvatar.addEventListener("click", () => avatarFile.click());
     avatarFile.addEventListener("change", () => {
@@ -474,14 +319,203 @@
       avatarName.textContent = f ? f.name : "—";
     });
 
-    saveBtn.addEventListener("click", saveLeader);
-    deleteBtn.addEventListener("click", deleteLeader);
+    // ====== helpers ======
+    async function uploadAvatar(ownerId, file){
+      // ownerId — строка (мы используем auth.uid() как текст)
+      const ext = (file.name.split(".").pop() || "png").toLowerCase();
+      const path = `${ownerId}/${Date.now()}.${ext}`;
 
-    // init
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+
+      if (upErr) throw upErr;
+
+      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    async function loadLeaderByAccountId(accountId){
+      const { data, error } = await supabase
+        .from("vk_leadboard")
+        .select("id,nick,points,updated_at,avatar_url,account_id,department")
+        .eq("account_id", accountId)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data || null;
+    }
+
+    async function upsertLeader(payload){
+      // Требует уникальности account_id (см. настройки Supabase ниже)
+      const { data, error } = await supabase
+        .from("vk_leadboard")
+        .upsert(payload, { onConflict: "account_id" })
+        .select("id,nick,points,updated_at,avatar_url,account_id,department")
+        .single();
+
+      if (error) throw error;
+      return data;
+    }
+
+    // ====== auth actions ======
+    loginBtn.addEventListener("click", async () => {
+      if (!supabase) return;
+      setMsg("");
+
+      const email = emailL.value.trim();
+      const pass = passL.value;
+
+      if (!email || !pass){
+        setMsg("Заполни email и пароль");
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+      if (error){ setMsg(error.message); return; }
+
+      const user = data.user;
+      const accountId = String(user.id);
+
+      try{
+        // подставим account_id = uid по умолчанию (чтобы RLS работал)
+        accI.value = accountId;
+
+        let leader = await loadLeaderByAccountId(accountId);
+        if (!leader){
+          // если записи ещё нет — создадим пустую (можешь убрать автосоздание, если не нужно)
+          leader = await upsertLeader({
+            account_id: accountId,
+            nick: "",
+            department: "",
+            points: 0,
+            avatar_url: null
+          });
+        }
+        setAuthedUI(leader);
+      }catch(e){
+        console.error(e);
+        setMsg(e.message || "Ошибка загрузки лидера");
+      }
+    });
+
+    regBtn.addEventListener("click", async () => {
+      if (!supabase) return;
+      setMsg("");
+
+      const email = emailR.value.trim();
+      const pass = passR.value;
+
+      if (!email || !pass){
+        setMsg("Заполни email и пароль");
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signUp({ email, password: pass });
+      if (error){ setMsg(error.message); return; }
+
+      // Если включено подтверждение email — user может быть null
+      if (!data.user){
+        setMsg("Аккаунт создан. Подтверди email и затем войди.");
+        return;
+      }
+
+      setMsg("Аккаунт создан. Теперь войди.");
+      showTab("login");
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      if (!supabase) return;
+      await supabase.auth.signOut();
+      setGuestUI();
+    });
+
+    // ====== save leader card ======
+    saveLeaderBtn.addEventListener("click", async () => {
+      if (!supabase) return;
+      setMsg("");
+
+      const { data: sess } = await supabase.auth.getSession();
+      const user = sess?.session?.user;
+      if (!user){
+        setMsg("Нет сессии. Войди заново.");
+        setGuestUI();
+        return;
+      }
+
+      const accountId = String(user.id); // ключ для RLS и onConflict
+      const nick = (nickI.value || "").trim();
+      const department = (deptI.value || "").trim();
+      const pointsRaw = (pointsI.value || "").trim();
+      const points = pointsRaw === "" ? 0 : Number(pointsRaw);
+
+      if (!Number.isFinite(points) || points < 0){
+        setMsg("points (АШ) должно быть числом >= 0");
+        return;
+      }
+
+      // account_id в UI показываем, но сохраняем безопасно как uid (чтобы никто не мог писать чужое)
+      accI.value = accountId;
+
+      const file = avatarFile.files?.[0] || null;
+      let avatarUrl = null;
+
+      try{
+        // сохраним текущий url, если не меняли файл
+        const current = await loadLeaderByAccountId(accountId);
+        avatarUrl = current?.avatar_url || null;
+
+        if (file){
+          avatarUrl = await uploadAvatar(accountId, file);
+        }
+
+        const saved = await upsertLeader({
+          account_id: accountId,
+          nick,
+          department,
+          points,
+          avatar_url: avatarUrl
+          // updated_at лучше делать триггером в БД (см. ниже)
+        });
+
+        avatarName.textContent = file ? file.name : "—";
+        setAuthedUI(saved);
+        setMsg("Сохранено ✅");
+      }catch(e){
+        console.error(e);
+        setMsg(e.message || "Ошибка сохранения");
+      }
+    });
+
+    // ====== init ======
     (async function init(){
       if (!supabase) return;
-      await fetchLeaders();
-      resetEditor();
+      const { data } = await supabase.auth.getSession();
+      const user = data?.session?.user || null;
+      if (!user){
+        setGuestUI();
+        return;
+      }
+
+      try{
+        const accountId = String(user.id);
+        accI.value = accountId;
+
+        let leader = await loadLeaderByAccountId(accountId);
+        if (!leader){
+          leader = await upsertLeader({
+            account_id: accountId,
+            nick: "",
+            department: "",
+            points: 0,
+            avatar_url: null
+          });
+        }
+        setAuthedUI(leader);
+      }catch(e){
+        console.error(e);
+        setGuestUI();
+      }
     })();
   </script>
 </body>
