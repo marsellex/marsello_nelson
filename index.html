@@ -37,7 +37,6 @@
       overflow-x:hidden;
     }
 
-    /* ===== AUTH CARD (как у тебя, но проще) ===== */
     .authWrap{
       min-height:100vh;
       display:flex;
@@ -148,7 +147,6 @@
     .fileName{ font-size:12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .hint{ font-size: 12px; color: var(--muted); line-height:1.35; }
 
-    /* ===== GAME SHELL ===== */
     .shell{
       display:none;
       min-height:100vh;
@@ -183,7 +181,6 @@
     }
     .panel > *{ position:relative; z-index:1; }
 
-    /* Left sidebar */
     .sidebar{
       padding: 14px;
       display:flex;
@@ -273,7 +270,6 @@
     }
     .miniBtn:hover{ transform: translateY(-1px); border-color: rgba(43,255,43,.35); box-shadow:0 0 18px rgba(43,255,43,.12); }
 
-    /* Main */
     .main{
       padding: 14px;
       min-height: 520px;
@@ -308,7 +304,6 @@
     }
     .navBtn:hover{ transform: translateY(-1px); border-color: rgba(43,255,43,.35); box-shadow:0 0 18px rgba(43,255,43,.10); }
 
-    /* Market — выделенный */
     .navBtn.market{
       border-color: rgba(43,255,43,.65);
       background: linear-gradient(135deg, rgba(43,255,43,.22), rgba(102,170,255,.12));
@@ -329,7 +324,6 @@
       50%{ opacity:1; transform: translateX(6px); }
     }
 
-    /* Online bubble (правый верх) */
     .onlinePill{
       border-radius: 999px;
       width: 58px;
@@ -430,7 +424,6 @@
 
     @media (max-width: 980px){
       .layout{ grid-template-columns: 1fr; }
-      .onlinePill{ position: fixed; }
       .rouletteBtn{ height: 150px; }
     }
   </style>
@@ -438,10 +431,8 @@
 
 <body>
 
-  <!-- ONLINE -->
   <div class="onlinePill" title="Онлайн" id="onlinePill">—</div>
 
-  <!-- AUTH -->
   <div class="authWrap" id="authWrap">
     <div class="card">
       <div class="title">GAME AUTH</div>
@@ -452,14 +443,12 @@
         <button class="tab" id="tReg" type="button">Регистрация</button>
       </div>
 
-      <!-- LOGIN -->
       <div class="form" id="loginForm">
         <input class="field" id="loginL" placeholder="Логин" autocomplete="username" />
         <input class="field" id="passL" placeholder="Пароль" type="password" autocomplete="current-password" />
         <button class="btn" id="loginBtn" type="button">Войти</button>
       </div>
 
-      <!-- REGISTER -->
       <div class="form" id="regForm" style="display:none;">
         <div class="row">
           <input class="field" id="loginR" placeholder="Логин (лат/цифры/_)" autocomplete="username" />
@@ -479,14 +468,11 @@
     </div>
   </div>
 
-  <!-- SHELL -->
   <div class="shell" id="shell">
     <div class="layout">
-      <!-- LEFT -->
       <div class="panel">
         <div class="sidebar">
 
-          <!-- 2/3/4 -->
           <div class="profileBox">
             <div class="ava"><img id="shellAvatar" alt="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect width='160' height='160' fill='%2310111a'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.75' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E" /></div>
             <div>
@@ -495,7 +481,6 @@
             </div>
           </div>
 
-          <!-- 1 -->
           <div class="rouletteBtn" id="spinBtn">
             <div class="label">Прокрутить<br/>рулетку</div>
           </div>
@@ -511,7 +496,6 @@
         </div>
       </div>
 
-      <!-- MAIN -->
       <div class="panel">
         <div class="main">
           <div class="topRow">
@@ -522,7 +506,6 @@
             </div>
           </div>
 
-          <!-- 6 -->
           <div class="history">
             <div class="dots" id="dotsCol"></div>
             <div class="historyList" id="historyList"></div>
@@ -538,10 +521,8 @@
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script>
   (function(){
-    // === Supabase ===
     var SUPABASE_URL = "https://qjbhflpoelgusfhymipi.supabase.co";
     var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqYmhmbHBvZWxndXNmaHltaXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4NzEzODMsImV4cCI6MjA4MDQ0NzM4M30.OUBE062cKr4p4KpKlZlWIYCmqCBpXK43tQq9m-laDfg";
-    // ↑ ВАЖНО: если у тебя ключ другой (как в прошлых сообщениях), замени этой строкой на свой реальный anonKey.
 
     function $(id){ return document.getElementById(id); }
 
@@ -606,7 +587,6 @@
       localStorage.removeItem("game_user");
     }
 
-    // ===== History (local) =====
     function loadHistory(){
       try{ return JSON.parse(localStorage.getItem("game_history") || "[]"); }
       catch(e){ return []; }
@@ -670,14 +650,12 @@
       });
     }
 
-    // ===== Supabase init =====
     if (!window.supabase || !window.supabase.createClient){
       setMsg("Supabase SDK не загрузился (CDN).");
       return;
     }
     var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ===== Password hash (SHA-256) =====
     async function sha256(text){
       var enc = new TextEncoder().encode(text);
       var buf = await crypto.subtle.digest("SHA-256", enc);
@@ -685,21 +663,25 @@
       return arr.map(function(b){ return b.toString(16).padStart(2,"0"); }).join("");
     }
 
-    // ===== Avatar upload =====
     async function uploadAvatar(file){
-      var ext = (file.name.split(".").pop() || "png").toLowerCase();
-      var path = "public/" + Date.now() + "_" + Math.random().toString(16).slice(2) + "." + ext;
+      try{
+        var ext = (file.name.split(".").pop() || "png").toLowerCase();
+        var path = "public/" + Date.now() + "_" + Math.random().toString(16).slice(2) + "." + ext;
 
-      var up = await supabase.storage.from("avatars")
-        .upload(path, file, { upsert: true, contentType: file.type });
+        var up = await supabase.storage.from("avatars")
+          .upload(path, file, { upsert: true, contentType: file.type });
 
-      if (up.error) throw up.error;
+        if (up.error) throw up.error;
 
-      var pub = supabase.storage.from("avatars").getPublicUrl(path);
-      return pub && pub.data ? pub.data.publicUrl : null;
+        var pub = supabase.storage.from("avatars").getPublicUrl(path);
+        return pub && pub.data ? pub.data.publicUrl : null;
+      }catch(e){
+        // если bucket не создан — просто вернём null
+        console.warn("Avatar upload skipped:", e?.message || e);
+        return null;
+      }
     }
 
-    // ===== DB helpers (простые) =====
     async function getUserByLogin(loginLower){
       var res = await supabase.from("game_users")
         .select("id,login,nick,pass_hash,avatar_url")
@@ -709,18 +691,31 @@
       return res.data || null;
     }
 
-    async function existsByField(field, valueLower){
-      // храним login в нижнем регистре, nick — как ввели, но проверяем через ilike.
-      // если ilike по какой-то причине не работает — уникальный индекс всё равно поймает дубль на insert.
-      var q = supabase.from("game_users").select("id").limit(1);
-      if (field === "login") q = q.eq("login", valueLower);
-      else q = q.ilike("nick", valueLower); // case-insensitive
-      var res = await q;
+    async function loginExists(loginLower){
+      var res = await supabase.from("game_users")
+        .select("id")
+        .eq("login", loginLower)
+        .limit(1);
       if (res.error) throw res.error;
-      return res.data && res.data.length > 0;
+      return (res.data && res.data.length > 0);
     }
 
-    // ===== Online presence =====
+    async function nickExistsCaseInsensitive(nick){
+      // корректная проверка: lower(nick) == lower(input)
+      var lowered = (nick || "").toLowerCase();
+      var res = await supabase.from("game_users")
+        .select("id,nick")
+        .limit(200); // у тебя пользователей пока мало
+      if (res.error) throw res.error;
+
+      var rows = res.data || [];
+      for (var i=0;i<rows.length;i++){
+        var n = (rows[i].nick || "").toLowerCase();
+        if (n === lowered) return true;
+      }
+      return false;
+    }
+
     var onlineTimer = null;
 
     async function heartbeatOnline(user){
@@ -730,15 +725,14 @@
           login: user.login,
           nick: user.nick,
           last_seen: new Date().toISOString()
-        });
+        }, { onConflict: "user_id" });
       }catch(e){
-        // если таблицы нет/политик нет — просто молчим
+        // если таблицы нет/прав нет — молчим
       }
     }
 
     async function refreshOnlineCount(){
       try{
-        // активные за последние 60 секунд
         var since = new Date(Date.now() - 60*1000).toISOString();
         var res = await supabase.from("online_presence")
           .select("user_id", { count: "exact", head: true })
@@ -760,7 +754,6 @@
       }, 15000);
     }
 
-    // ===== UI switch =====
     function showShell(user){
       authWrap.style.display = "none";
       shell.style.display = "block";
@@ -783,7 +776,6 @@
       onlineTimer = null;
     }
 
-    // ===== events =====
     tLogin.onclick = function(){ showTab("login"); };
     tReg.onclick = function(){ showTab("reg"); };
 
@@ -795,6 +787,7 @@
 
     loginBtn.onclick = async function(){
       setMsg("");
+      loginBtn.disabled = true;
       try{
         var login = (loginL.value || "").trim().toLowerCase();
         var pass = passL.value || "";
@@ -806,17 +799,21 @@
         var hash = await sha256(pass);
         if (hash !== user.pass_hash){ setMsg("Неверный логин или пароль"); return; }
 
-        saveSession({ id:user.id, login:user.login, nick:user.nick, avatar_url:user.avatar_url });
-        showShell({ id:user.id, login:user.login, nick:user.nick, avatar_url:user.avatar_url });
+        var sess = { id:user.id, login:user.login, nick:user.nick, avatar_url:user.avatar_url };
+        saveSession(sess);
+        showShell(sess);
         toastShow("Добро пожаловать, " + user.nick + "!");
       }catch(e){
         console.error(e);
         setMsg(e && e.message ? e.message : String(e));
+      }finally{
+        loginBtn.disabled = false;
       }
     };
 
     regBtn.onclick = async function(){
       setMsg("");
+      regBtn.disabled = true;
       try{
         var login = (loginR.value || "").trim().toLowerCase();
         var nick = (nickR.value || "").trim();
@@ -827,15 +824,11 @@
         if (!validLogin(login)){ setMsg("Логин: 3–20 символов, только латиница/цифры/_"); return; }
         if (pass.length < 6){ setMsg("Пароль минимум 6 символов"); return; }
 
-        // быстрые проверки
-        if (await existsByField("login", login)){ setMsg("Такой логин уже занят"); return; }
-        if (await existsByField("nick", nick)){ setMsg("Такой ник уже занят"); return; }
+        if (await loginExists(login)){ setMsg("Такой логин уже занят"); return; }
+        if (await nickExistsCaseInsensitive(nick)){ setMsg("Такой ник уже занят"); return; }
 
         var avatarUrl = null;
-        if (file){
-          try{ avatarUrl = await uploadAvatar(file); }
-          catch(err){ console.error(err); }
-        }
+        if (file) avatarUrl = await uploadAvatar(file);
 
         var hash = await sha256(pass);
 
@@ -848,7 +841,6 @@
 
         if (ins.error){
           console.error(ins.error);
-          // если уникальный индекс сработал — покажем норм текст
           setMsg(ins.error.message || "Ошибка регистрации");
           return;
         }
@@ -861,6 +853,8 @@
       }catch(e){
         console.error(e);
         setMsg(e && e.message ? e.message : String(e));
+      }finally{
+        regBtn.disabled = false;
       }
     };
 
@@ -877,7 +871,6 @@
     };
 
     spinBtn.onclick = function(){
-      // “Рулетка” — демо-логика
       var outcomes = [
         "Выпал предмет: Neon Shard",
         "Выпал предмет: Lucky Chip",
@@ -894,7 +887,6 @@
     btnMyItems.onclick = function(){ addHistoryItem("Открыто: Мои предметы"); toastShow("Мои предметы"); };
     btnGames.onclick = function(){ addHistoryItem("Открыто: Игры"); toastShow("Игры"); };
 
-    // init
     (function(){
       var s = loadSession();
       if (s && s.login) showShell(s);
