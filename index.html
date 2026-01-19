@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Simple Auth + Profile (Supabase)</title>
+  <title>Auth + Profile (Supabase)</title>
   <style>
     :root{
-      --bg0:#070a10;
-      --bg1:#0b1020;
+      --bg0:#070a10; --bg1:#0b1020;
       --panel: rgba(14,18,28,.78);
       --line: rgba(255,255,255,.10);
       --text: rgba(232,238,250,.92);
@@ -26,13 +25,11 @@
         radial-gradient(1100px 740px at 28% 18%, rgba(70, 120, 190, .22), transparent 60%),
         radial-gradient(880px 660px at 78% 75%, rgba(160, 70, 120, .18), transparent 58%),
         linear-gradient(180deg, var(--bg1), var(--bg0));
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display:flex; align-items:center; justify-content:center;
       padding: 16px;
     }
     .card{
-      width: min(520px, 100%);
+      width: min(560px, 100%);
       border-radius: var(--r1);
       background: var(--panel);
       border: 1px solid var(--line);
@@ -51,7 +48,8 @@
       margin-top: 6px;
       font-size: 12px;
       color: var(--muted);
-      min-height: 16px;
+      min-height: 18px;
+      white-space: pre-line;
     }
     .tabs{ display:flex; gap:8px; margin-top: 12px; }
     .tab{
@@ -92,6 +90,7 @@
       font-size: 12px;
       color: rgba(255,255,255,.92);
     }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
     .btn2{
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
@@ -137,9 +136,11 @@
     .plogin{ font-weight: 900; font-size: 14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .pnick{ margin-top: 6px; font-size: 12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-    .hint{ font-size: 12px; color: var(--muted); }
+    .hint{ font-size: 12px; color: var(--muted); line-height: 1.35; }
     .fileRow{ display:flex; gap:10px; align-items:center; }
     .fileName{ font-size:12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sep{ height:1px; background: rgba(255,255,255,.08); margin-top: 12px; }
+    .mini{ font-size:11px; color: rgba(232,238,250,.45); }
   </style>
 </head>
 
@@ -149,34 +150,39 @@
     <div class="sub" id="msg"></div>
 
     <div class="tabs" id="tabs">
-      <button class="tab active" id="tLogin">Вход</button>
-      <button class="tab" id="tReg">Регистрация</button>
+      <button class="tab active" id="tLogin" type="button">Вход</button>
+      <button class="tab" id="tReg" type="button">Регистрация</button>
     </div>
 
     <!-- LOGIN -->
     <div class="form" id="loginForm">
       <input class="field" id="emailL" placeholder="Email" autocomplete="email" />
       <input class="field" id="passL" placeholder="Пароль" type="password" autocomplete="current-password" />
-      <button class="btn" id="loginBtn">Войти</button>
+      <button class="btn" id="loginBtn" type="button">Войти</button>
     </div>
 
     <!-- REGISTER -->
     <div class="form" id="regForm" style="display:none;">
       <div class="row">
         <input class="field" id="emailR" placeholder="Email" autocomplete="email" />
-        <input class="field" id="passR" placeholder="Пароль" type="password" autocomplete="new-password" />
+        <input class="field" id="passR" placeholder="Пароль (мин. 6)" type="password" autocomplete="new-password" />
       </div>
       <div class="row">
-        <input class="field" id="loginR" placeholder="Логин" />
-        <input class="field" id="nickR" placeholder="Ник" />
+        <input class="field" id="loginR" placeholder="Логин (латиница/цифры/_)" />
+        <input class="field" id="nickR" placeholder="Ник (можно русский)" />
       </div>
+
       <div class="fileRow">
         <input id="avatarFile" type="file" accept="image/*" style="display:none;" />
-        <button class="btn2" id="pickAvatar">Аватар</button>
+        <button class="btn2" id="pickAvatar" type="button">Аватар</button>
         <div class="fileName" id="avatarName">—</div>
       </div>
-      <button class="btn" id="regBtn">Создать аккаунт</button>
-      <div class="hint">Если включено подтверждение email в Supabase — нужно подтвердить почту и затем войти.</div>
+
+      <button class="btn" id="regBtn" type="button">Создать аккаунт</button>
+      <div class="hint">
+        Если в Supabase включено подтверждение email — после регистрации придёт письмо.
+        Подтверди почту и просто войди — профиль создастся автоматически.
+      </div>
     </div>
 
     <!-- PROFILE VIEW -->
@@ -189,11 +195,14 @@
         <div class="pmeta">
           <div class="plogin" id="pLogin">—</div>
           <div class="pnick" id="pNick">—</div>
+          <div class="mini" id="pEmail">—</div>
         </div>
       </div>
 
+      <div class="sep"></div>
+
       <div class="form">
-        <button class="btnDanger" id="logoutBtn">Выйти</button>
+        <button class="btnDanger" id="logoutBtn" type="button">Выйти</button>
       </div>
     </div>
   </div>
@@ -201,11 +210,12 @@
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ====== твоё ======
-    const SUPABASE_URL = "https://buwzzxpzcwjihvylfzom.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1d3p6eHB6Y3dqaWh2eWxmem9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNDUwMTIsImV4cCI6MjA4MTkyMTAxMn0.5vYMVieAY_AAKdCw6_Y-aR21UJrl0A-AE-ayWPw-L54";
+    // ====== твой Supabase ======
+    const SUPABASE_URL = "https://qjbhflpoelgusfhymipi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqYmhmbHBvZWxndXNmaHltaXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4NzEzODMsImV4cCI6MjA4MDQ0NzM4M30.OUBE062cKr4p4KpKlZlWIYCmqCBpXK43tQq9m-laDfg";
 
     const msg = document.getElementById("msg");
+    const tabsEl = document.getElementById("tabs");
     const tLogin = document.getElementById("tLogin");
     const tReg = document.getElementById("tReg");
     const loginForm = document.getElementById("loginForm");
@@ -227,12 +237,20 @@
 
     const pLogin = document.getElementById("pLogin");
     const pNick = document.getElementById("pNick");
+    const pEmail = document.getElementById("pEmail");
     const avatarImg = document.getElementById("avatarImg");
     const logoutBtn = document.getElementById("logoutBtn");
 
     function setMsg(text){ msg.textContent = text || ""; }
+    function setBusy(b){
+      loginBtn.disabled = b;
+      regBtn.disabled = b;
+      logoutBtn.disabled = b;
+      pickAvatar.disabled = b;
+      tLogin.disabled = b;
+      tReg.disabled = b;
+    }
 
-    // защитная инициализация
     let supabase = null;
     try{
       if (!window.supabase?.createClient) throw new Error("Supabase SDK не загрузился (CDN).");
@@ -265,7 +283,17 @@
       avatarName.textContent = f ? f.name : "—";
     });
 
+    avatarImg.onerror = () => {
+      avatarImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect width='160' height='160' fill='%2310111a'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.75' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E";
+    };
+
+    function validLogin(login){
+      // 3-20, латиница/цифры/_
+      return /^[a-zA-Z0-9_]{3,20}$/.test(login);
+    }
+
     async function uploadAvatar(userId, file){
+      // Требует bucket "avatars" (лучше public для простоты)
       const ext = (file.name.split(".").pop() || "png").toLowerCase();
       const path = `${userId}/${Date.now()}.${ext}`;
 
@@ -290,115 +318,189 @@
       return data || null;
     }
 
-    function setAuthedUI(profile){
+    async function ensureProfile(user){
+      // Если профиля нет — создаём из user_metadata (и/или из pending после confirm)
+      const existing = await loadProfile(user.id);
+      if (existing) return existing;
+
+      let md = user.user_metadata || {};
+      // fallback: если регистрировались при confirm ON, можно достать из localStorage
+      let pending = null;
+      try{ pending = JSON.parse(localStorage.getItem("pending_profile") || "null"); }catch{}
+
+      const login = (md.login || pending?.login || "").trim();
+      const nick  = (md.nick  || pending?.nick  || "").trim();
+
+      if (!login || !nick){
+        // если метаданных нет — просим пересоздать регистрацию нормально
+        throw new Error("Профиль не найден и нет данных для создания. Зарегистрируйся заново.");
+      }
+
+      const payload = { id: user.id, login, nick, avatar_url: md.avatar_url || pending?.avatar_url || null };
+
+      const { error: insErr } = await supabase.from("profiles").insert(payload);
+      if (insErr){
+        // если логин занят или политика не пускает — покажем причину
+        throw insErr;
+      }
+
+      localStorage.removeItem("pending_profile");
+      return await loadProfile(user.id);
+    }
+
+    function setAuthedUI(user, profile){
       profileArea.style.display = "block";
-      document.getElementById("tabs").style.display = "none";
+      tabsEl.style.display = "none";
       loginForm.style.display = "none";
       regForm.style.display = "none";
 
       pLogin.textContent = profile?.login || "—";
       pNick.textContent = profile?.nick || "—";
+      pEmail.textContent = user?.email || "—";
+
       if (profile?.avatar_url) avatarImg.src = profile.avatar_url;
+      else avatarImg.onerror(); // ставим fallback
     }
 
     function setGuestUI(){
       profileArea.style.display = "none";
-      document.getElementById("tabs").style.display = "flex";
+      tabsEl.style.display = "flex";
       showTab("login");
       setMsg("");
     }
 
-    loginBtn.addEventListener("click", async () => {
+    async function doLogin(){
       if (!supabase) return;
       setMsg("");
-      const email = emailL.value.trim();
-      const pass = passL.value;
+      setBusy(true);
 
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
-      if (error){ setMsg(error.message); return; }
-
-      const user = data.user;
       try{
-        const profile = await loadProfile(user.id);
-        if (!profile){
-          setMsg("Нет профиля. Создай через регистрацию.");
-          await supabase.auth.signOut();
+        const email = emailL.value.trim();
+        const pass = passL.value;
+
+        if (!email || !pass) { setMsg("Введи email и пароль"); return; }
+
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+        if (error) { setMsg(error.message); return; }
+
+        const user = data.user;
+        const profile = await ensureProfile(user);
+        setAuthedUI(user, profile);
+      }catch(e){
+        console.error(e);
+        setMsg(e?.message || String(e));
+        // если профиль не создался — выходим
+        try{ await supabase.auth.signOut(); }catch{}
+        setGuestUI();
+      }finally{
+        setBusy(false);
+      }
+    }
+
+    async function doRegister(){
+      if (!supabase) return;
+      setMsg("");
+      setBusy(true);
+
+      try{
+        const email = emailR.value.trim();
+        const pass = passR.value;
+        const login = loginR.value.trim();
+        const nick = nickR.value.trim();
+        const file = avatarFile.files?.[0] || null;
+
+        if (!email || !pass || !login || !nick){
+          setMsg("Заполни все поля");
           return;
         }
-        setAuthedUI(profile);
+        if (pass.length < 6){
+          setMsg("Пароль минимум 6 символов");
+          return;
+        }
+        if (!validLogin(login)){
+          setMsg("Логин: 3–20 символов, только латиница/цифры/_");
+          return;
+        }
+
+        let avatarUrl = null;
+        if (file){
+          try{ avatarUrl = await uploadAvatar("temp", file); } catch {}
+          // Важно: до user.id мы не знаем путь. Поэтому грузим аватар после signUp, если user вернулся.
+          avatarUrl = null;
+        }
+
+        // сохраняем “на всякий” (для confirm ON)
+        localStorage.setItem("pending_profile", JSON.stringify({ login, nick, avatar_url: null }));
+
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password: pass,
+          options: {
+            data: { login, nick } // попадёт в user_metadata
+          }
+        });
+
+        if (error){ setMsg(error.message); return; }
+
+        const user = data.user;
+
+        // Если confirm ON — user может быть null или не будет активной сессии
+        const s = await supabase.auth.getSession();
+        const authedUser = s.data?.session?.user || null;
+
+        if (!authedUser){
+          setMsg("Аккаунт создан. Проверь почту, подтверди email и затем войди.");
+          return;
+        }
+
+        // Теперь знаем user.id — грузим аватар в правильную папку
+        let finalAvatarUrl = null;
+        if (file){
+          try{
+            finalAvatarUrl = await uploadAvatar(authedUser.id, file);
+          }catch(e){
+            console.error(e);
+          }
+        }
+
+        // Обновим metadata аватара (не обязательно, но удобно)
+        try{
+          await supabase.auth.updateUser({ data: { login, nick, avatar_url: finalAvatarUrl }});
+        }catch{}
+
+        // запишем pending (на случай если insert будет после перезагрузки)
+        localStorage.setItem("pending_profile", JSON.stringify({ login, nick, avatar_url: finalAvatarUrl }));
+
+        const profile = await ensureProfile({ ...authedUser, user_metadata: { login, nick, avatar_url: finalAvatarUrl }});
+        setAuthedUI(authedUser, profile);
+
       }catch(e){
         console.error(e);
-        setMsg(e.message);
+        setMsg(e?.message || String(e));
+      }finally{
+        setBusy(false);
       }
-    });
+    }
 
-    regBtn.addEventListener("click", async () => {
-      if (!supabase) return;
-      setMsg("");
+    loginBtn.addEventListener("click", doLogin);
+    regBtn.addEventListener("click", doRegister);
 
-      const email = emailR.value.trim();
-      const pass = passR.value;
-      const login = loginR.value.trim();
-      const nick = nickR.value.trim();
-      const file = avatarFile.files?.[0] || null;
-
-      if (!email || !pass || !login || !nick){
-        setMsg("Заполни поля");
-        return;
-      }
-
-      const { data, error } = await supabase.auth.signUp({ email, password: pass });
-      if (error){ setMsg(error.message); return; }
-
-      const user = data.user;
-      if (!user){
-        setMsg("Подтверди email и затем войди.");
-        return;
-      }
-
-      let avatarUrl = null;
-      try{
-        if (file) avatarUrl = await uploadAvatar(user.id, file);
-      }catch(e){
-        console.error(e);
-      }
-
-      const { error: pErr } = await supabase.from("profiles").insert({
-        id: user.id,
-        login,
-        nick,
-        avatar_url: avatarUrl
-      });
-
-      if (pErr){
-        setMsg(pErr.message);
-        return;
-      }
-
-      // если email confirm выключен — сессия может появиться сразу
-      const s = await supabase.auth.getSession();
-      const authed = s.data?.session?.user;
-
-      if (!authed){
-        setMsg("Аккаунт создан. Подтверди email и войди.");
-        await supabase.auth.signOut();
-        return;
-      }
-
-      const profile = await loadProfile(user.id);
-      setAuthedUI(profile);
-    });
+    // Enter в полях
+    [emailL, passL].forEach(el => el.addEventListener("keydown", (e)=>{ if(e.key==="Enter") doLogin(); }));
+    [emailR, passR, loginR, nickR].forEach(el => el.addEventListener("keydown", (e)=>{ if(e.key==="Enter") doRegister(); }));
 
     logoutBtn.addEventListener("click", async () => {
       if (!supabase) return;
-      await supabase.auth.signOut();
-      setGuestUI();
+      setBusy(true);
+      try{
+        await supabase.auth.signOut();
+      }finally{
+        setBusy(false);
+        setGuestUI();
+      }
     });
 
-    // небольшие "живые" штуки (не обязательно)
-    document.getElementById("pingPill")?.addEventListener?.("click", ()=>{});
-
-    // init session
+    // init session + реакция на изменение
     (async function init(){
       if (!supabase) return;
       const { data } = await supabase.auth.getSession();
@@ -408,14 +510,25 @@
         return;
       }
       try{
-        const profile = await loadProfile(user.id);
-        if (profile) setAuthedUI(profile);
-        else setGuestUI();
+        const profile = await ensureProfile(user);
+        setAuthedUI(user, profile);
       }catch(e){
         console.error(e);
         setGuestUI();
       }
     })();
+
+    supabase?.auth?.onAuthStateChange?.(async (event, session) => {
+      const user = session?.user || null;
+      if (!user){ setGuestUI(); return; }
+      try{
+        const profile = await ensureProfile(user);
+        setAuthedUI(user, profile);
+      }catch(e){
+        console.error(e);
+        setGuestUI();
+      }
+    });
   </script>
 </body>
 </html>
