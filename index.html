@@ -6,7 +6,7 @@
   <title>WORLD_SCRIPT</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
-  
+
   <style>
     :root{
       --bg0:#07040a;
@@ -42,7 +42,7 @@
       overflow-x:hidden;
     }
 
-    /* ======= АНИМИРОВАННЫЙ ФОН (двигается + меняется) ======= */
+    /* ======= ПРИЯТНЫЙ ГРАДИЕНТНЫЙ ФОН (без картинок) ======= */
     .bgRoot{
       position: fixed;
       inset: 0;
@@ -52,71 +52,65 @@
     }
     .bgLayer{
       position:absolute;
-      inset:-10%;
+      inset:-15%;
+      background:
+        radial-gradient(900px 540px at 18% 18%, rgba(90,140,255,.16), transparent 60%),
+        radial-gradient(820px 520px at 78% 30%, rgba(180,120,255,.12), transparent 62%),
+        radial-gradient(900px 620px at 55% 90%, rgba(70,220,200,.10), transparent 62%),
+        linear-gradient(180deg, #0a0615, #07040a);
       background-size: cover;
       background-position: center;
-      filter: blur(18px) saturate(1.25) contrast(1.05);
-      transform: translate(calc(var(--parX) * 0.06), calc(var(--parY) * 0.06)) scale(1.10);
-      opacity: .30;
-      transition: opacity 1.2s ease-in-out;
-      will-change: transform, opacity;
-      animation: slowPan 22s ease-in-out infinite;
+      filter: blur(18px) saturate(1.15) contrast(1.05);
+      transform: translate(calc(var(--parX) * 0.03), calc(var(--parY) * 0.03)) scale(1.08);
+      opacity: .85;
+      will-change: transform;
+      animation: slowPan 26s ease-in-out infinite;
     }
     @keyframes slowPan{
-      0%   { background-position: 30% 35%; transform: translate(calc(var(--parX) * 0.06), calc(var(--parY) * 0.06)) scale(1.10); }
-      50%  { background-position: 70% 55%; transform: translate(calc(var(--parX) * 0.09), calc(var(--parY) * 0.09)) scale(1.14); }
-      100% { background-position: 30% 35%; transform: translate(calc(var(--parX) * 0.06), calc(var(--parY) * 0.06)) scale(1.10); }
+      0%   { background-position: 30% 35%; transform: translate(calc(var(--parX) * 0.03), calc(var(--parY) * 0.03)) scale(1.08); }
+      50%  { background-position: 70% 55%; transform: translate(calc(var(--parX) * 0.05), calc(var(--parY) * 0.05)) scale(1.12); }
+      100% { background-position: 30% 35%; transform: translate(calc(var(--parX) * 0.03), calc(var(--parY) * 0.03)) scale(1.08); }
     }
     .bgLayer.alt{
-      opacity: 0;
-      animation-duration: 26s;
-      filter: blur(20px) saturate(1.35) contrast(1.08);
+      opacity: .55;
+      filter: blur(22px) saturate(1.20) contrast(1.06);
+      animation-duration: 32s;
     }
 
-    /* Тонировка/дым/виньетка */
+    /* Тонировка/виньетка */
     .bgTint{
       position:absolute;
       inset:0;
       background:
-        radial-gradient(900px 520px at 25% 25%, rgba(255, 90, 0, .20), transparent 60%),
-        radial-gradient(980px 620px at 75% 70%, rgba(255, 210, 0, .14), transparent 62%),
+        radial-gradient(900px 520px at 25% 25%, rgba(120,160,255,.12), transparent 60%),
+        radial-gradient(980px 620px at 75% 70%, rgba(190,120,255,.10), transparent 62%),
         radial-gradient(1100px 800px at 50% 120%, rgba(0,0,0,.62), transparent 60%),
         linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.58));
       pointer-events:none;
       z-index: 2;
     }
 
-    /* ДЫМ (анимированный слой) */
+    /* ДЫМ (холодный) */
     .smoke{
       position:absolute;
       inset:-20%;
       pointer-events:none;
       z-index: 3;
       background:
-        radial-gradient(900px 520px at 20% 10%, rgba(255,140,0,.10), transparent 60%),
-        radial-gradient(820px 480px at 80% 30%, rgba(255,60,0,.10), transparent 58%),
-        radial-gradient(780px 520px at 60% 80%, rgba(255,210,0,.07), transparent 60%),
-        radial-gradient(680px 460px at 30% 70%, rgba(255,60,0,.06), transparent 62%);
-      filter: blur(26px);
+        radial-gradient(900px 520px at 20% 10%, rgba(120,160,255,.08), transparent 60%),
+        radial-gradient(820px 480px at 80% 30%, rgba(190,120,255,.07), transparent 58%),
+        radial-gradient(780px 520px at 60% 80%, rgba(70,220,200,.06), transparent 60%),
+        radial-gradient(680px 460px at 30% 70%, rgba(255,255,255,.03), transparent 62%);
+      filter: blur(28px);
       opacity: .55;
-      animation: smokeMove 16s ease-in-out infinite;
-      transform: translate(calc(var(--parX) * 0.03), calc(var(--parY) * 0.03)) scale(1.12);
+      animation: smokeMove 18s ease-in-out infinite;
+      transform: translate(calc(var(--parX) * 0.02), calc(var(--parY) * 0.02)) scale(1.12);
       will-change: transform;
     }
     @keyframes smokeMove{
       0%   { transform: translate(calc(var(--parX) * 0.02), calc(var(--parY) * 0.02)) scale(1.12) rotate(0deg); }
-      50%  { transform: translate(calc(var(--parX) * 0.05), calc(var(--parY) * 0.05)) scale(1.18) rotate(1.5deg); }
+      50%  { transform: translate(calc(var(--parX) * 0.04), calc(var(--parY) * 0.04)) scale(1.18) rotate(1.2deg); }
       100% { transform: translate(calc(var(--parX) * 0.02), calc(var(--parY) * 0.02)) scale(1.12) rotate(0deg); }
-    }
-
-    /* Искры (canvas) */
-    #sparks{
-      position: fixed;
-      inset: 0;
-      z-index: -8;
-      pointer-events: none;
-      opacity: .85;
-      mix-blend-mode: screen;
     }
 
     /* ===== AUTH CARD ===== */
@@ -131,13 +125,13 @@
       width: min(540px, 100%);
       border-radius: var(--r1);
       background: linear-gradient(180deg, rgba(18,10,18,.78), rgba(8,6,10,.64));
-      border: 1px solid rgba(255, 120, 0, .22);
+      border: 1px solid rgba(180, 120, 255, .30);
       backdrop-filter: blur(14px);
       padding: 14px;
       box-shadow:
         0 30px 90px rgba(0,0,0,.55),
-        0 0 0 1px rgba(255, 80, 0, .10),
-        0 0 40px rgba(255, 60, 0, .10);
+        0 0 0 1px rgba(180,120,255,.10),
+        0 0 40px rgba(180,120,255,.10);
       position:relative;
       overflow:hidden;
     }
@@ -145,9 +139,9 @@
       content:"";
       position:absolute; inset:-2px;
       background:
-        radial-gradient(600px 260px at 10% 5%, rgba(255,60,0,.18), transparent 60%),
-        radial-gradient(520px 240px at 90% 20%, rgba(255,180,0,.12), transparent 55%),
-        radial-gradient(520px 260px at 48% 120%, rgba(255,60,0,.10), transparent 55%);
+        radial-gradient(600px 260px at 10% 5%, rgba(120,160,255,.14), transparent 60%),
+        radial-gradient(520px 240px at 90% 20%, rgba(190,120,255,.12), transparent 55%),
+        radial-gradient(520px 260px at 48% 120%, rgba(70,220,200,.10), transparent 55%);
       pointer-events:none;
       opacity:.95;
     }
@@ -159,11 +153,7 @@
       color: rgba(255,255,255,.86);
       font-size: 12px;
       text-transform: uppercase;
-      animation: fireFlicker 2.2s ease-in-out infinite;
-    }
-    @keyframes fireFlicker{
-      0%,100%{ filter: drop-shadow(0 0 10px rgba(255,60,0,.35)); }
-      50%{ filter: drop-shadow(0 0 18px rgba(255,170,0,.28)); }
+      filter: drop-shadow(0 0 12px rgba(180,120,255,.22));
     }
 
     .sub{
@@ -190,9 +180,9 @@
       text-transform: uppercase;
       letter-spacing:.08em;
     }
-    .tab:hover{ transform: translateY(-1px); border-color: rgba(255,120,0,.35); box-shadow: 0 0 18px rgba(255,60,0,.12); }
+    .tab:hover{ transform: translateY(-1px); border-color: rgba(180,120,255,.35); box-shadow: 0 0 18px rgba(180,120,255,.12); }
     .tab.active{
-      border-color: rgba(255,120,0,.55);
+      border-color: rgba(180,120,255,.55);
       background: rgba(255,255,255,.07);
     }
 
@@ -212,8 +202,8 @@
 
     .btn{
       border-radius: 14px;
-      border: 1px solid rgba(255, 120, 0, .55);
-      background: linear-gradient(135deg, rgba(255,60,0,.22), rgba(255,170,0,.12));
+      border: 1px solid rgba(180, 120, 255, .60);
+      background: linear-gradient(135deg, rgba(90,140,255,.18), rgba(180,120,255,.12));
       padding: 10px 12px;
       cursor:pointer;
       user-select:none;
@@ -224,16 +214,16 @@
       text-transform: uppercase;
       letter-spacing: .08em;
       box-shadow:
-        0 0 18px rgba(255,60,0,.18),
+        0 0 18px rgba(180,120,255,.14),
         0 20px 60px rgba(0,0,0,.35);
     }
     .btn:hover{
       transform: translateY(-1px);
       box-shadow:
-        0 0 26px rgba(255,60,0,.28),
-        0 0 55px rgba(255,170,0,.14),
+        0 0 26px rgba(180,120,255,.22),
+        0 0 55px rgba(90,140,255,.14),
         0 26px 70px rgba(0,0,0,.45);
-      border-color: rgba(255, 200, 0, .70);
+      border-color: rgba(70, 220, 200, .70);
     }
     .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
 
@@ -249,7 +239,7 @@
       color: rgba(255,255,255,.92);
       transition:.14s transform,.14s box-shadow,.14s border-color;
     }
-    .btn2:hover{ transform: translateY(-1px); border-color: rgba(255,120,0,.35); box-shadow:0 0 18px rgba(255,60,0,.12); }
+    .btn2:hover{ transform: translateY(-1px); border-color: rgba(180,120,255,.35); box-shadow:0 0 18px rgba(180,120,255,.12); }
 
     .fileRow{ display:flex; gap:10px; align-items:center; }
     .fileName{ font-size:12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -273,12 +263,12 @@
     .panel{
       border-radius: 24px;
       background: linear-gradient(180deg, rgba(18,10,18,.78), rgba(8,6,10,.64));
-      border: 1px solid rgba(255, 120, 0, .22);
+      border: 1px solid rgba(180, 120, 255, .28);
       backdrop-filter: blur(12px);
       box-shadow:
         0 26px 70px rgba(0,0,0,.45),
-        0 0 0 1px rgba(255, 80, 0, .10),
-        0 0 40px rgba(255, 60, 0, .10);
+        0 0 0 1px rgba(180, 120, 255, .10),
+        0 0 40px rgba(180, 120, 255, .10);
       position:relative;
       overflow:hidden;
     }
@@ -286,9 +276,9 @@
       content:"";
       position:absolute; inset:-2px;
       background:
-        radial-gradient(540px 260px at 12% 10%, rgba(255,60,0,.18), transparent 60%),
-        radial-gradient(520px 260px at 92% 22%, rgba(255,180,0,.12), transparent 58%),
-        radial-gradient(520px 260px at 48% 120%, rgba(255,60,0,.10), transparent 55%);
+        radial-gradient(540px 260px at 12% 10%, rgba(90,140,255,.16), transparent 60%),
+        radial-gradient(520px 260px at 92% 22%, rgba(190,120,255,.12), transparent 58%),
+        radial-gradient(520px 260px at 48% 120%, rgba(70,220,200,.10), transparent 55%);
       pointer-events:none;
       opacity:.95;
     }
@@ -315,8 +305,8 @@
 
     .ava{
       width:64px;height:64px;border-radius:999px;
-      border: 2px solid rgba(255, 120, 0, .75);
-      box-shadow: 0 0 26px rgba(255, 60, 0, .18);
+      border: 2px solid rgba(190, 120, 255, .75);
+      box-shadow: 0 0 26px rgba(190,120,255,.18);
       overflow:hidden;
       background: rgba(0,0,0,.25);
     }
@@ -325,64 +315,12 @@
     .pNick{ font-weight:1000; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .pLogin{ margin-top:6px; font-size:12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-    /* Рулетка + 4 кнопки справа */
-    .spinArea{
-      display:grid;
-      grid-template-columns: 1fr 150px;
-      gap: 12px;
-      align-items: stretch;
-      margin-top: 2px;
-    }
-
-    .rouletteBtn{
-      height: 200px;
-      border-radius: 999px;
-      border: 3px solid rgba(255, 120, 0, .92);
-      background:
-        radial-gradient(circle at 28% 30%, rgba(255, 80, 0, .22), transparent 55%),
-        radial-gradient(circle at 78% 75%, rgba(255, 210, 0, .12), transparent 55%),
-        rgba(255,255,255,.03);
-      box-shadow:
-        0 0 0 6px rgba(255, 80, 0, .10),
-        0 0 60px rgba(255, 60, 0, .22),
-        0 30px 90px rgba(0,0,0,.45);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      user-select:none;
-      text-transform: uppercase;
-      letter-spacing: .10em;
-      font-weight: 1000;
-      transition: .16s transform, .16s box-shadow, .16s border-color;
-      position:relative;
-      overflow:hidden;
-    }
-    .rouletteBtn:hover{
-      transform: translateY(-2px) scale(1.01);
-      border-color: rgba(255, 210, 0, .92);
-      box-shadow:
-        0 0 0 6px rgba(255, 80, 0, .12),
-        0 0 75px rgba(255, 60, 0, .26),
-        0 0 130px rgba(255, 210, 0, .10),
-        0 34px 100px rgba(0,0,0,.52);
-    }
-    .rouletteBtn:active{ transform: translateY(0px) scale(.995); }
-
-    .rouletteBtn .label{
-      font-size: 13px;
-      text-align:center;
-      line-height:1.2;
-      padding: 0 18px;
-      filter: drop-shadow(0 0 10px rgba(255,90,0,.35));
-    }
-
+    /* 4 кнопки */
     .sideGrid{
       display:grid;
       grid-template-columns: 1fr;
       grid-template-rows: repeat(4, 1fr);
       gap: 10px;
-      height: 200px;
     }
 
     .sideBtn{
@@ -402,22 +340,23 @@
       justify-content:center;
       position:relative;
       overflow:hidden;
+      padding: 12px;
     }
     .sideBtn:hover{
       transform: translateY(-1px);
-      border-color: rgba(255,120,0,.38);
-      box-shadow: 0 0 18px rgba(255,60,0,.12);
+      border-color: rgba(180,120,255,.38);
+      box-shadow: 0 0 18px rgba(180,120,255,.12);
     }
     .sideBtn.hot{
-      border-color: rgba(255,120,0,.60);
-      background: linear-gradient(135deg, rgba(255,60,0,.18), rgba(255,170,0,.10));
-      box-shadow: 0 0 18px rgba(255,60,0,.12);
+      border-color: rgba(70,220,200,.60);
+      background: linear-gradient(135deg, rgba(70,220,200,.14), rgba(190,120,255,.10));
+      box-shadow: 0 0 18px rgba(180,120,255,.10);
     }
     .sideBtn.hot:before{
       content:"";
       position:absolute;
       inset:-60px;
-      background: radial-gradient(circle, rgba(255, 120, 0, .18), transparent 60%);
+      background: radial-gradient(circle, rgba(70, 220, 200, .14), transparent 60%);
       animation: pulseGlow 2.2s ease-in-out infinite;
       pointer-events:none;
     }
@@ -445,7 +384,33 @@
       text-transform: uppercase;
       letter-spacing:.08em;
     }
-    .miniBtn:hover{ transform: translateY(-1px); border-color: rgba(255,120,0,.35); box-shadow:0 0 18px rgba(255,60,0,.12); }
+    .miniBtn:hover{ transform: translateY(-1px); border-color: rgba(180,120,255,.35); box-shadow:0 0 18px rgba(180,120,255,.12); }
+
+    /* sidebar bottom */
+    .sidebarBottom{ margin-top:auto; }
+
+    /* balance */
+    .balanceBox{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 12px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.22);
+    }
+    .balanceTitle{
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing:.08em;
+      font-weight: 900;
+    }
+    .balanceValue{
+      margin-top: 8px;
+      font-size: 22px;
+      font-weight: 1000;
+      letter-spacing:.02em;
+      filter: drop-shadow(0 0 14px rgba(180,120,255,.20));
+    }
 
     /* Main */
     .main{
@@ -480,13 +445,13 @@
       text-transform: uppercase;
       letter-spacing:.08em;
     }
-    .navBtn:hover{ transform: translateY(-1px); border-color: rgba(255,120,0,.35); box-shadow:0 0 18px rgba(255,60,0,.10); }
+    .navBtn:hover{ transform: translateY(-1px); border-color: rgba(180,120,255,.35); box-shadow:0 0 18px rgba(180,120,255,.10); }
 
     /* Market — выделенный */
     .navBtn.market{
-      border-color: rgba(255,120,0,.65);
-      background: linear-gradient(135deg, rgba(255,60,0,.22), rgba(255,170,0,.12));
-      box-shadow: 0 0 22px rgba(255,60,0,.14);
+      border-color: rgba(70,220,200,.60);
+      background: linear-gradient(135deg, rgba(70,220,200,.14), rgba(190,120,255,.10));
+      box-shadow: 0 0 22px rgba(180,120,255,.10);
       position:relative;
       overflow:hidden;
     }
@@ -494,7 +459,7 @@
       content:"";
       position:absolute;
       inset:-40px;
-      background: radial-gradient(circle, rgba(255,120,0,.20), transparent 60%);
+      background: radial-gradient(circle, rgba(70,220,200,.14), transparent 60%);
       animation: pulseGlow 2.2s ease-in-out infinite;
       pointer-events:none;
     }
@@ -507,10 +472,10 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      border: 3px solid rgba(255, 120, 0, .88);
+      border: 3px solid rgba(70, 220, 200, .70);
       box-shadow:
-        0 0 28px rgba(255, 60, 0, .22),
-        0 0 60px rgba(255, 180, 0, .10);
+        0 0 28px rgba(70,220,200,.18),
+        0 0 60px rgba(180, 120, 255, .10);
       background: rgba(255,255,255,.03);
       font-weight:1000;
       font-size: 16px;
@@ -521,11 +486,11 @@
       user-select:none;
     }
 
-    /* ===== История: 10 строк, точка + текст в одной линии ===== */
+    /* ===== История ===== */
     .history{
       margin-top: 12px;
       border-radius: 22px;
-      border: 3px solid rgba(255, 120, 0, .88);
+      border: 3px solid rgba(180, 120, 255, .50);
       background: rgba(255,255,255,.02);
       padding: 12px;
       box-shadow: 0 18px 60px rgba(0,0,0,.28);
@@ -542,17 +507,17 @@
       grid-template-columns: 42px 1fr;
       gap: 12px;
       align-items: stretch;
-      min-height: 56px; /* одинаково для кружка и текста */
+      min-height: 56px;
     }
 
     .hDot{
       width: 34px;
       height: 34px;
       border-radius: 999px;
-      border: 2px solid rgba(255, 120, 0, .88);
-      box-shadow: 0 0 18px rgba(255,60,0,.12);
+      border: 2px solid rgba(180, 120, 255, .70);
+      box-shadow: 0 0 18px rgba(180,120,255,.12);
       background: rgba(0,0,0,.12);
-      margin: auto; /* выравнивание по центру строки */
+      margin: auto;
       position: relative;
       overflow:hidden;
     }
@@ -560,7 +525,7 @@
       content:"";
       position:absolute;
       inset:-10px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,210,0,.25), transparent 60%);
+      background: radial-gradient(circle at 30% 30%, rgba(70,220,200,.18), transparent 60%);
       opacity:.55;
     }
 
@@ -573,7 +538,7 @@
       display:flex;
       flex-direction:column;
       justify-content:center;
-      min-height: 56px; /* совпадает с hRow */
+      min-height: 56px;
     }
 
     .hTop{
@@ -589,6 +554,30 @@
       font-weight: 1000;
       letter-spacing:.02em;
       line-height: 1.15;
+    }
+
+    /* profile view */
+    .profileView{
+      margin-top: 12px;
+      border-radius: 22px;
+      border: 3px solid rgba(180,120,255,.55);
+      background: rgba(255,255,255,.03);
+      padding: 14px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.28);
+    }
+    .profileTitle{
+      font-weight: 1000;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+    }
+    .profileText{
+      margin-top: 10px;
+      white-space: pre-line;
+      line-height: 1.35;
+      color: rgba(255,245,240,.92);
+      font-size: 13px;
     }
 
     .toast{
@@ -616,20 +605,16 @@
 
     @media (max-width: 980px){
       .layout{ grid-template-columns: 1fr; }
-      .rouletteBtn{ height: 170px; }
-      .sideGrid{ height: 170px; }
-      .spinArea{ grid-template-columns: 1fr; }
       .sideGrid{ grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
     }
   </style>
 </head>
 
 <body>
-  <!-- Animated background root -->
+  <!-- Background root -->
   <div class="bgRoot" id="bgRoot">
     <div class="bgLayer" id="bgA"></div>
     <div class="bgLayer alt" id="bgB"></div>
-    <canvas id="sparks"></canvas>
     <div class="smoke"></div>
     <div class="bgTint"></div>
   </div>
@@ -693,28 +678,32 @@
             </div>
           </div>
 
-          <!-- Рулетка + 4 кнопки -->
-          <div class="spinArea">
-            <div class="rouletteBtn" id="spinBtn">
-              <div class="label">Прокрутить<br/>рулетку</div>
-            </div>
+          <!-- 4 кнопки -->
+          <div class="sideGrid">
+            <button class="sideBtn hot" id="btnBonus" type="button">Бонус</button>
+            <button class="sideBtn" id="btnRoulette" type="button">Рулетка</button>
+            <button class="sideBtn" id="btnChance" type="button">Шанс</button>
+            <button class="sideBtn" id="btnProfile" type="button">Профиль</button>
+          </div>
 
-            <div class="sideGrid">
-              <button class="sideBtn hot" id="btnBonus" type="button">Бонус</button>
-              <button class="sideBtn" id="btnRoulette" type="button">Рулетка</button>
-              <button class="sideBtn" id="btnChance" type="button">Шанс</button>
-              <button class="sideBtn" id="btnProfile" type="button">Профиль</button>
-            </div>
+          <!-- Баланс -->
+          <div class="balanceBox">
+            <div class="balanceTitle">Баланс</div>
+            <div class="balanceValue" id="balanceValue">$0</div>
           </div>
 
           <div class="sideActions">
-            <button class="miniBtn" id="logoutBtn" type="button">Выйти</button>
             <button class="miniBtn" id="clearHistoryBtn" type="button">Очистить</button>
           </div>
 
           <div class="hint" style="padding:0 6px;">
             История справа: сверху свежее, снизу старое (до 10 действий).
           </div>
+
+          <div class="sidebarBottom">
+            <button class="miniBtn" id="logoutBtn" type="button">Выйти</button>
+          </div>
+
         </div>
       </div>
 
@@ -729,10 +718,20 @@
             </div>
           </div>
 
-          <!-- История -->
-          <div class="history">
-            <div class="historyGrid" id="historyGrid"></div>
+          <!-- Views -->
+          <div id="viewHistory">
+            <div class="history">
+              <div class="historyGrid" id="historyGrid"></div>
+            </div>
           </div>
+
+          <div id="viewProfile" style="display:none;">
+            <div class="profileView">
+              <div class="profileTitle">Профиль</div>
+              <div class="profileText" id="profileText"></div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -745,23 +744,10 @@
   <script>
   (function(){
     // ======================
-    // 0) НАСТРОЙКИ ФОНА
-    // ======================
-    // Положи картинки рядом с html и назови, например:
-    // fire_bg.jpg, fire_bg2.jpg, fire_bg3.jpg
-    // Если есть только одна — оставь одну строку.
-    var FIRE_BACKGROUNDS = [
-      "fire_bg.jpg",
-      "fire_bg2.jpg",
-      "fire_bg3.jpg"
-    ].filter(Boolean);
-
-    // ======================
     // 1) Supabase
     // ======================
     var SUPABASE_URL = "https://qjbhflpoelgusfhymipi.supabase.co";
     var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqYmhmbHBvZWxndXNmaHltaXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4NzEzODMsImV4cCI6MjA4MDQ0NzM4M30.OUBE062cKr4p4KpKlZlWIYCmqCBpXK43tQq9m-laDfg";
-    // ↑ Если ключ другой — замени на свой актуальный anon key.
 
     function $(id){ return document.getElementById(id); }
 
@@ -778,7 +764,6 @@
 
     var shellAvatar = $("shellAvatar"), shellNick = $("shellNick"), shellLogin = $("shellLogin");
 
-    var spinBtn = $("spinBtn");
     var btnBonus = $("btnBonus");
     var btnRoulette = $("btnRoulette");
     var btnChance = $("btnChance");
@@ -792,6 +777,12 @@
 
     var onlinePill = $("onlinePill");
     var toast = $("toast");
+
+    // views
+    var profileText = $("profileText");
+    var viewHistory = $("viewHistory");
+    var viewProfile = $("viewProfile");
+    var balanceValue = $("balanceValue");
 
     function setMsg(text){ msg.textContent = text || ""; }
 
@@ -879,7 +870,7 @@
           '<div class="hDot"></div>' +
           '<div class="hItem">' +
             '<div class="hTop"><span>История</span><span>—</span></div>' +
-            '<div class="hText">Пока пусто. Нажми “Прокрутить рулетку”.</div>' +
+            '<div class="hText">Пока пусто. Нажми “Рулетка” или “Бонус”.</div>' +
           '</div>';
         historyGrid.appendChild(r);
         return;
@@ -897,6 +888,168 @@
           '</div>';
         historyGrid.appendChild(row);
       }
+    }
+
+    // ======================
+    // 2.5) Профиль (local state) + таймеры
+    // ======================
+    function money(n){
+      n = Math.floor(Number(n || 0));
+      return "$" + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    }
+    function fmtLeft(ms){
+      ms = Math.max(0, ms|0);
+      var s = Math.floor(ms/1000);
+      var d = Math.floor(s/86400); s -= d*86400;
+      var h = Math.floor(s/3600);  s -= h*3600;
+      var m = Math.floor(s/60);    s -= m*60;
+      return d+"д "+h+"ч "+m+"мин";
+    }
+    function profileKey(login){ return "profile_state_" + (login || ""); }
+
+    function defaultProfile(user){
+      var now = Date.now();
+      return {
+        pseudo: "Бабабуй",
+        emodji: "Нет",
+        marriage: "Нет",
+        clan: "Нет",
+        autoRoulette: "Нет",
+        takenBonus: 0,
+        frozen: 500000,
+
+        rouletteRating: 18.9,
+        rouletteRank: 6,
+        rouletteRankTitle: "МегаПользователь",
+        activityRating: 6.2,
+        activityPlace: 15,
+
+        bonus: 20355,
+        gameBonus: 0,
+        nickText: "Shadow Smith",
+        inGame: false,
+
+        repEarned: 53002,
+        repIssued: 39,
+        repCashback: 11501,
+
+        t_x2: false,
+        t_eternal: false,
+        t_x3_stream: false,
+        t_auto: false,
+
+        lockTakeBonusUntil: now + (2*86400 + 6*3600 + 29*60) * 1000,
+        chanceUntil: now + (1*86400 + 4*3600 + 11*60) * 1000,
+        bonusResetUntil: now + (6*86400 + 7*3600 + 29*60) * 1000,
+        bonusUntil: now + (5*3600) * 1000,
+        rouletteUntil: now + (1*86400) * 1000,
+
+        bonusTimeMs: (10*3600 + 36*60) * 1000
+      };
+    }
+
+    function loadProfileState(user){
+      try{
+        var k = profileKey(user.login);
+        var raw = localStorage.getItem(k);
+        if (!raw) return defaultProfile(user);
+        var st = JSON.parse(raw);
+        if (!st || typeof st !== "object") return defaultProfile(user);
+        return st;
+      }catch(e){
+        return defaultProfile(user);
+      }
+    }
+    function saveProfileState(user, st){
+      try{
+        localStorage.setItem(profileKey(user.login), JSON.stringify(st));
+      }catch(e){}
+    }
+
+    var currentUser = null;
+    var profileState = null;
+    var profileTimer = null;
+
+    function updateBalanceUI(){
+      if (!balanceValue) return;
+      var bal = 0;
+      if (profileState){
+        bal = (profileState.bonus || 0) + (profileState.gameBonus || 0);
+      }
+      balanceValue.textContent = money(bal);
+    }
+
+    function renderProfile(){
+      if (!currentUser || !profileState || !profileText) return;
+
+      var now = Date.now();
+      var lockLeft = fmtLeft(profileState.lockTakeBonusUntil - now);
+
+      var txt =
+`🆔 Пользователь ${currentUser.login}:
+
+ℹ Рейтинг рулетки: ${profileState.rouletteRating.toFixed(1)}, ранг «${profileState.rouletteRank}»: ${profileState.rouletteRankTitle} (подробнее: «Рулетка инфо»)
+⤴ Рейтинг активности: ${profileState.activityRating.toFixed(1)} (подробнее: «Рейтинг»)
+На ${profileState.activityPlace} месте в топе актива!
+
+🅱 Бонус: ${money(profileState.bonus)}
+⛏ Бонус с игры: ${money(profileState.gameBonus)}
+🔗 Ник: ${profileState.nickText} (${profileState.inGame ? "в игре" : "не в игре"})
+🔸 Нельзя забирать бонус ${lockLeft}
+
+😏 Кэшбек Репутации (подробнее: «Репутация»)
+— Заработано: ${money(profileState.repEarned)}
+— Выдано: ${profileState.repIssued} шт
+— Кэшбек: ${money(profileState.repCashback)}
+
+🔝 Тарифы (подробнее: «Тариф инфо»):
+${profileState.t_x2 ? "✅" : "❌"} Х2 бонусы с 12:00 до 18:00 
+${profileState.t_eternal ? "✅" : "❌"} Вечный Ранг / Псевд / Эмодзи
+${profileState.t_x3_stream ? "✅" : "❌"} Х3 в зоне стрима бота 
+${profileState.t_auto ? "✅" : "❌"} Авторулетка 
+
+⏲ Время до:
+» Шанса: ${fmtLeft(profileState.chanceUntil - now)}
+» Обнуления бонуса: ${fmtLeft(profileState.bonusResetUntil - now)}
+» Бонуса: ${fmtLeft(profileState.bonusUntil - now)}
+» Рулетки: ${fmtLeft(profileState.rouletteUntil - now)}
+
+👫 Брак: ${profileState.marriage}
+🆑 Клан: ${profileState.clan}
+
+Ⓜ EMODJI: ${profileState.emodji}
+🀄 Псевдоним: ${profileState.pseudo}
+🔁 Автопрокр. рулетки в запасе: ${profileState.autoRoulette}
+📂 Забрано бонуса: ${money(profileState.takenBonus)}
+❄ Заморожено: ${money(profileState.frozen)}
+⌛ Бонусное время: ${fmtLeft(profileState.bonusTimeMs)}`;
+
+      profileText.textContent = txt;
+      updateBalanceUI();
+    }
+
+    function showView(name){
+      if (!viewHistory || !viewProfile) return;
+      if (name === "profile"){
+        viewHistory.style.display = "none";
+        viewProfile.style.display = "block";
+        renderProfile();
+      } else {
+        viewProfile.style.display = "none";
+        viewHistory.style.display = "block";
+      }
+    }
+
+    function startProfileTicker(){
+      if (profileTimer) clearInterval(profileTimer);
+      profileTimer = setInterval(function(){
+        if (profileState && profileState.bonusTimeMs > 0){
+          profileState.bonusTimeMs = Math.max(0, profileState.bonusTimeMs - 1000);
+          if (currentUser) saveProfileState(currentUser, profileState);
+        }
+        if (viewProfile && viewProfile.style.display !== "none") renderProfile();
+        else updateBalanceUI();
+      }, 1000);
     }
 
     // ======================
@@ -1007,8 +1160,14 @@
       shellLogin.textContent = user.login ? ("@" + user.login) : "—";
       if (user.avatar_url) shellAvatar.src = user.avatar_url;
 
+      currentUser = user;
+      profileState = loadProfileState(user);
+      updateBalanceUI();
+      startProfileTicker();
+
       renderHistory();
       startOnline(user);
+      showView("history");
     }
 
     function showAuth(){
@@ -1017,8 +1176,14 @@
       showTab("login");
       setMsg("");
       onlinePill.textContent = "—";
+
       if (onlineTimer) clearInterval(onlineTimer);
       onlineTimer = null;
+
+      currentUser = null;
+      profileState = null;
+      if (profileTimer) clearInterval(profileTimer);
+      profileTimer = null;
     }
 
     // ======================
@@ -1120,45 +1285,75 @@
 
     function demoRouletteSpin(){
       var outcomes = [
-        "Выпал предмет: Ember Shard",
-        "Выпал предмет: Ash Coin",
+        "Выпал предмет: Aurora Shard",
+        "Выпал предмет: Violet Coin",
         "Ничего не выпало… но шанс растёт",
-        "Выпал предмет: Flame Core",
+        "Выпал предмет: Prism Core",
         "Бонус: +1 попытка (демо)"
       ];
       return outcomes[Math.floor(Math.random() * outcomes.length)];
     }
 
-    spinBtn.onclick = function(){
+    btnBonus.onclick = function(){
+      if (!profileState || !currentUser) return;
+
+      // демо: бонус +250..750
+      var add = 250 + Math.floor(Math.random()*501);
+      profileState.bonus += add;
+
+      // демо: запрет забора бонуса на 2 часа (если меньше)
+      profileState.lockTakeBonusUntil = Math.max(profileState.lockTakeBonusUntil, Date.now() + 2*3600*1000);
+
+      saveProfileState(currentUser, profileState);
+      updateBalanceUI();
+      if (viewProfile.style.display !== "none") renderProfile();
+
+      addHistoryItem("Бонус: +" + money(add));
+      toastShow("Бонус +" + money(add));
+    };
+
+    btnRoulette.onclick = function(){
+      if (!profileState || !currentUser) return;
+
       var x = demoRouletteSpin();
+      // демо: немного “активности”
+      profileState.activityRating = Math.min(99.9, profileState.activityRating + 0.05);
+      profileState.rouletteUntil = Math.max(profileState.rouletteUntil, Date.now() + 24*3600*1000);
+
+      saveProfileState(currentUser, profileState);
+      updateBalanceUI();
+      if (viewProfile.style.display !== "none") renderProfile();
+
+      showView("history");
       addHistoryItem("Рулетка: " + x);
       toastShow(x);
     };
 
-    btnBonus.onclick = function(){
-      addHistoryItem("Бонус активирован: +10% удачи (демо)");
-      toastShow("Бонус!");
-    };
-
-    btnRoulette.onclick = function(){
-      var x = demoRouletteSpin();
-      addHistoryItem("Быстрая рулетка: " + x);
-      toastShow(x);
-    };
-
     btnChance.onclick = function(){
-      addHistoryItem("Шанс: 12% → 13% (демо)");
+      if (!profileState || !currentUser) return;
+
+      // демо: таймер шанса +24ч, активность чуть-чуть
+      profileState.chanceUntil = Math.max(profileState.chanceUntil, Date.now() + 24*3600*1000);
+      profileState.activityRating = Math.min(99.9, profileState.activityRating + 0.10);
+
+      saveProfileState(currentUser, profileState);
+      updateBalanceUI();
+      if (viewProfile.style.display !== "none") renderProfile();
+
+      showView("history");
+      addHistoryItem("Шанс: обновлён (демо)");
       toastShow("Шанс ↑");
     };
 
     btnProfile.onclick = function(){
-      addHistoryItem("Открыт профиль (демо)");
+      addHistoryItem("Открыт профиль");
       toastShow("Профиль");
+      showView("profile");
     };
 
-    btnMarket.onclick = function(){ addHistoryItem("Открыт: Рынок предметов"); toastShow("Рынок предметов"); };
-    btnMyItems.onclick = function(){ addHistoryItem("Открыто: Мои предметы"); toastShow("Мои предметы"); };
-    btnGames.onclick = function(){ addHistoryItem("Открыто: Игры"); toastShow("Игры"); };
+    btnMarket.onclick = function(){ showView("history"); addHistoryItem("Открыт: Рынок предметов"); toastShow("Рынок предметов"); };
+    btnMyItems.onclick = function(){ showView("history"); addHistoryItem("Открыто: Мои предметы"); toastShow("Мои предметы"); };
+    btnGames.onclick = function(){ showView("history"); addHistoryItem("Открыто: Игры"); toastShow("Игры"); };
 
     // ======================
     // 11) init session
@@ -1170,46 +1365,8 @@
     })();
 
     // ======================
-    // 12) ФОН: ротатор + параллакс
+    // 12) Параллакс мышью (легкий)
     // ======================
-    var bgA = $("bgA");
-    var bgB = $("bgB");
-    var useAlt = false;
-    var bgIndex = 0;
-
-    // если у тебя реально одна картинка — будет просто “двигаться” без смены
-    if (!FIRE_BACKGROUNDS.length) {
-      FIRE_BACKGROUNDS = ["fire_bg.jpg"];
-    }
-
-    function setBg(el, url){
-      el.style.backgroundImage = "url('" + url.replace(/'/g,"%27") + "')";
-    }
-
-    // старт
-    setBg(bgA, FIRE_BACKGROUNDS[0]);
-    setBg(bgB, FIRE_BACKGROUNDS[0]);
-
-    // смена фона каждые 20 сек
-    setInterval(function(){
-      if (FIRE_BACKGROUNDS.length < 2) return;
-      bgIndex = (bgIndex + 1) % FIRE_BACKGROUNDS.length;
-      var next = FIRE_BACKGROUNDS[bgIndex];
-
-      if (!useAlt){
-        setBg(bgB, next);
-        bgB.style.opacity = ".30";
-        bgA.style.opacity = "0";
-        useAlt = true;
-      } else {
-        setBg(bgA, next);
-        bgA.style.opacity = ".30";
-        bgB.style.opacity = "0";
-        useAlt = false;
-      }
-    }, 20000);
-
-    // параллакс мышью
     window.addEventListener("mousemove", function(e){
       var cx = window.innerWidth / 2;
       var cy = window.innerHeight / 2;
@@ -1218,106 +1375,6 @@
       document.documentElement.style.setProperty("--parX", dx.toFixed(0) + "px");
       document.documentElement.style.setProperty("--parY", dy.toFixed(0) + "px");
     }, { passive:true });
-
-    // ======================
-    // 13) ИСКРЫ: canvas particles
-    // ======================
-    var canvas = $("sparks");
-    var ctx = canvas.getContext("2d");
-    var W = 0, H = 0, DPR = Math.min(2, window.devicePixelRatio || 1);
-
-    function resize(){
-      W = Math.floor(window.innerWidth);
-      H = Math.floor(window.innerHeight);
-      canvas.width = Math.floor(W * DPR);
-      canvas.height = Math.floor(H * DPR);
-      canvas.style.width = W + "px";
-      canvas.style.height = H + "px";
-      ctx.setTransform(DPR,0,0,DPR,0,0);
-    }
-    window.addEventListener("resize", resize, { passive:true });
-    resize();
-
-    function rand(a,b){ return a + Math.random()*(b-a); }
-
-    var sparks = [];
-    var MAX_SPARKS = 140;
-    var lastT = performance.now();
-
-    function spawnSpark(){
-      // источник снизу/по краям — как горячий воздух
-      var side = Math.random();
-      var x = side < 0.7 ? rand(0, W) : (Math.random() < 0.5 ? -20 : W+20);
-      var y = H + rand(0, 80);
-
-      var vx = rand(-0.25, 0.25);
-      var vy = rand(-1.6, -0.6);
-      var r = rand(1.0, 2.6);
-      var life = rand(900, 2200);
-
-      sparks.push({
-        x:x, y:y,
-        vx:vx, vy:vy,
-        r:r,
-        a: rand(0.35, 0.95),
-        life: life,
-        t: 0,
-        hue: rand(18, 48) // огненные оттенки
-      });
-    }
-
-    function drawSpark(s){
-      // свечение + точка
-      ctx.beginPath();
-      ctx.fillStyle = "hsla(" + s.hue + ", 100%, 60%, " + s.a + ")";
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.fillStyle = "hsla(" + s.hue + ", 100%, 70%, " + (s.a*0.35) + ")";
-      ctx.arc(s.x, s.y, s.r*3.2, 0, Math.PI*2);
-      ctx.fill();
-    }
-
-    function tick(now){
-      var dt = Math.min(32, now - lastT);
-      lastT = now;
-
-      ctx.clearRect(0,0,W,H);
-
-      // поддерживаем количество
-      while (sparks.length < MAX_SPARKS) spawnSpark();
-
-      for (var i=sparks.length-1; i>=0; i--){
-        var s = sparks[i];
-        s.t += dt;
-        var k = s.t / s.life;
-
-        // плавное затухание
-        s.a = Math.max(0, (1 - k)) * 0.95;
-
-        // небольшое “колыхание”
-        s.vx += Math.sin((now*0.001) + i) * 0.0006;
-
-        s.x += s.vx * dt;
-        s.y += s.vy * dt;
-
-        // ускорение вверх (конвекция)
-        s.vy -= 0.00025 * dt;
-
-        // рост/угасание
-        s.r = Math.max(0.6, s.r * (0.9992));
-
-        drawSpark(s);
-
-        if (k >= 1 || s.y < -60 || s.x < -120 || s.x > W+120){
-          sparks.splice(i,1);
-        }
-      }
-
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
 
   })();
   </script>
