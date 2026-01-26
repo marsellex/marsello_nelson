@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Мой сайт</title>
+  <style>
+    :root{
+      --bg:#0b1020; --card:#121a33; --text:#eaf0ff; --muted:#b7c0e3; --accent:#6aa6ff;
+      --ring: rgba(106,166,255,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 20% 10%, #1b2a65 0%, transparent 55%),
+                  radial-gradient(900px 600px at 80% 20%, #2a1458 0%, transparent 60%),
+                  var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+    .container{max-width:1100px; margin:0 auto; padding:24px}
+    header{
+      position:sticky; top:0; backdrop-filter: blur(10px);
+      background: rgba(11,16,32,.55);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      z-index:10;
+    }
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:16px}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700}
+    .logo{
+      width:34px; height:34px; border-radius:10px;
+      background: linear-gradient(135deg, var(--accent), #a06bff);
+      box-shadow: 0 10px 30px rgba(106,166,255,.25);
+    }
+    .links{display:flex; gap:14px; flex-wrap:wrap}
+    .links a{padding:10px 12px; border-radius:12px; color:var(--muted)}
+    .links a:hover{background:rgba(255,255,255,.06); color:var(--text)}
+    .hero{padding:56px 0 10px}
+    .grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:18px}
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+    .h1{font-size:44px; line-height:1.08; margin:0 0 12px}
+    .lead{color:var(--muted); font-size:18px; line-height:1.5; margin:0 0 20px}
+    .cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:14px}
+    .btn{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      padding:12px 14px; border-radius:14px;
+      display:inline-flex; align-items:center; gap:10px;
+      cursor:pointer;
+      transition:.15s transform, .15s background, .15s border;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.09)}
+    .btn.primary{
+      background: linear-gradient(135deg, var(--accent), #a06bff);
+      border-color: transparent;
+      box-shadow: 0 12px 34px rgba(106,166,255,.25);
+    }
+    .btn.primary:hover{filter:saturate(1.05)}
+    .card{
+      background: rgba(18,26,51,.7);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      padding:16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .stats{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-top:14px}
+    @media (max-width: 520px){ .stats{grid-template-columns:1fr} }
+    .stat b{font-size:20px}
+    .stat span{display:block; color:var(--muted); margin-top:6px}
+    .section{padding:34px 0}
+    .section h2{margin:0 0 12px; font-size:26px}
+    .cards{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px}
+    @media (max-width: 900px){ .cards{grid-template-columns:1fr} }
+    .card p{color:var(--muted); margin:8px 0 0; line-height:1.45}
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px; color:var(--muted);
+      padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+    }
+    form{display:grid; gap:10px}
+    input, textarea{
+      width:100%; padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.15);
+      color:var(--text);
+      outline:none;
+    }
+    input:focus, textarea:focus{box-shadow: 0 0 0 6px var(--ring); border-color: rgba(106,166,255,.55)}
+    textarea{min-height:110px; resize:vertical}
+    footer{padding:26px 0 40px; color:var(--muted); border-top:1px solid rgba(255,255,255,.08); margin-top:24px}
+    .small{font-size:13px}
+    .toast{
+      position: fixed; right: 18px; bottom: 18px;
+      background: rgba(18,26,51,.92);
+      border:1px solid rgba(255,255,255,.12);
+      padding: 12px 14px; border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.4);
+      opacity:0; transform: translateY(8px);
+      transition: .2s;
+      pointer-events:none;
+    }
+    .toast.show{opacity:1; transform: translateY(0)}
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="На главную">
+        <span class="logo" aria-hidden="true"></span>
+        <span>МойСайт</span>
+      </a>
+      <nav class="links" aria-label="Навигация">
+        <a href="#about">О проекте</a>
+        <a href="#features">Возможности</a>
+        <a href="#contact">Контакты</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="container">
+    <section class="hero">
+      <div class="grid">
+        <div>
+          <div class="tag">⚡ Быстрый старт · 1 файл · Без библиотек</div>
+          <h1 class="h1">Привет! Это твой новый сайт ✨</h1>
+          <p class="lead">
+            Замени тексты, добавь картинки и кнопки — и уже можно публиковать.
+            Если хочешь, сделаем многостраничный сайт, блог или интернет-магазин.
+          </p>
+
+          <div class="cta">
+            <button class="btn primary" id="btnStart">Сделать свой раздел</button>
+            <a class="btn" href="#contact">Связаться</a>
+          </div>
+
+          <div class="stats">
+            <div class="card stat">
+              <b>Адаптивный</b>
+              <span>Нормально выглядит на телефоне</span>
+            </div>
+            <div class="card stat">
+              <b>Чистый код</b>
+              <span>Легко редактировать и расширять</span>
+            </div>
+            <div class="card stat">
+              <b>Форма</b>
+              <span>Есть контактная форма (демо)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 style="margin:0 0 10px">Мини-панель</h2>
+          <p class="small" style="margin:0 0 12px">
+            Тут можно быстро поменять название и акцентный цвет.
+          </p>
+
+          <form id="settingsForm">
+            <label class="small">Название (в шапке)</label>
+            <input id="siteName" placeholder="Например: Дмитрий — портфолио" />
+
+            <label class="small">Акцентный цвет</label>
+            <input id="accent" type="color" value="#6aa6ff" />
+
+            <button class="btn" type="submit">Применить</button>
+          </form>
+
+          <hr style="border:0;border-top:1px solid rgba(255,255,255,.10); margin:16px 0" />
+
+          <p class="small" style="margin:0">
+            Подсказка: чтобы добавить картинку — вставь тег
+            <code style="color:#eaf0ff"> &lt;img src="..." /&gt; </code>
+            в нужное место.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <h2>О проекте</h2>
+      <div class="card">
+        <p style="margin:0; color:var(--muted)">
+          Это простой лендинг. Его можно превратить во что угодно: визитку, портфолио, страницу продукта,
+          страницу события или личный блог.
+        </p>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <h2>Возможности</h2>
+      <div class="cards">
+        <div class="card">
+          <h3 style="margin:0">Блоки</h3>
+          <p>Добавляй секции: услуги, отзывы, FAQ, прайс, галерею.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin:0">Кнопки</h3>
+          <p>Ссылки на Telegram/Instagram/GitHub/почту/формы.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin:0">Публикация</h3>
+          <p>Можно залить на GitHub Pages / Netlify / Vercel.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2>Контакты</h2>
+      <div class="grid">
+        <div class="card">
+          <p style="margin:0 0 12px; color:var(--muted)">
+            Оставь сообщение (демо — без отправки на сервер).
+          </p>
+          <form id="contactForm">
+            <input id="name" placeholder="Имя" required />
+            <input id="email" type="email" placeholder="Email" required />
+            <textarea id="message" placeholder="Сообщение" required></textarea>
+            <button class="btn primary" type="submit">Отправить</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 10px">Где я</h3>
+          <p style="margin:0; color:var(--muted)">
+            Добавь сюда свои ссылки и контакты:
+            <br/>• Telegram: @username
+            <br/>• Email: name@example.com
+            <br/>• GitHub: github.com/username
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="small">
+      © <span id="year"></span> <span id="footerName">МойСайт</span>. Сделано вручную 🙂
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const toast = $("toast");
+
+    function showToast(text){
+      toast.textContent = text;
+      toast.classList.add("show");
+      clearTimeout(showToast.t);
+      showToast.t = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    $("year").textContent = new Date().getFullYear();
+
+    $("btnStart").addEventListener("click", () => {
+      showToast("Готово! Теперь скажи, какой сайт ты хочешь 🙂");
+      location.hash = "#about";
+    });
+
+    $("settingsForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = $("siteName").value.trim() || "МойСайт";
+      const accent = $("accent").value;
+
+      document.querySelector(".brand span:last-child").textContent = name;
+      $("footerName").textContent = name;
+      document.documentElement.style.setProperty("--accent", accent);
+
+      showToast("Обновил название и цвет");
+    });
+
+    $("contactForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = $("name").value.trim();
+      showToast(`Спасибо, ${name || "друг"}! (это демо, без отправки)`);
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>
