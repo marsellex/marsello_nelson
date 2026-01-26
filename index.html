@@ -19,10 +19,6 @@
       --text: rgba(255,245,240,.94);
       --muted: rgba(255,220,210,.62);
 
-      --fire1:#ff3b00;
-      --fire2:#ff7a00;
-      --fire3:#ffd000;
-
       --r1: 22px;
       --r2: 18px;
       --ui: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
@@ -245,6 +241,29 @@
     .fileName{ font-size:12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .hint{ font-size: 12px; color: var(--muted); line-height:1.35; }
 
+    /* preview for reg avatar */
+    .avatarPreview{
+      margin-top: 8px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .avatarPreview .bubble{
+      width: 44px; height: 44px;
+      border-radius: 999px;
+      border: 2px solid rgba(190,120,255,.75);
+      overflow:hidden;
+      background: rgba(0,0,0,.25);
+      box-shadow: 0 0 20px rgba(190,120,255,.14);
+      flex:0 0 auto;
+    }
+    .avatarPreview img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .avatarPreview .txt{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
     /* ===== GAME SHELL ===== */
     .shell{
       display:none;
@@ -309,7 +328,28 @@
       box-shadow: 0 0 26px rgba(190,120,255,.18);
       overflow:hidden;
       background: rgba(0,0,0,.25);
+      cursor:pointer;
+      position:relative;
     }
+    .ava:after{
+      content:"Сменить";
+      position:absolute;
+      inset:auto 6px 6px 6px;
+      font-size:10px;
+      color: rgba(255,255,255,.82);
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 999px;
+      padding: 2px 6px;
+      text-align:center;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: .14s;
+      pointer-events:none;
+      backdrop-filter: blur(10px);
+    }
+    .ava:hover:after{ opacity:1; transform: translateY(0); }
+
     .ava img{ width:100%; height:100%; object-fit:cover; display:block; }
 
     .pNick{ font-weight:1000; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -386,7 +426,6 @@
     }
     .miniBtn:hover{ transform: translateY(-1px); border-color: rgba(180,120,255,.35); box-shadow:0 0 18px rgba(180,120,255,.12); }
 
-    /* sidebar bottom */
     .sidebarBottom{ margin-top:auto; }
 
     /* balance */
@@ -447,7 +486,6 @@
     }
     .navBtn:hover{ transform: translateY(-1px); border-color: rgba(180,120,255,.35); box-shadow:0 0 18px rgba(180,120,255,.10); }
 
-    /* Market — выделенный */
     .navBtn.market{
       border-color: rgba(70,220,200,.60);
       background: linear-gradient(135deg, rgba(70,220,200,.14), rgba(190,120,255,.10));
@@ -504,20 +542,28 @@
 
     .hRow{
       display:grid;
-      grid-template-columns: 42px 1fr;
+      grid-template-columns: 74px 1fr;
       gap: 12px;
       align-items: stretch;
-      min-height: 56px;
+      min-height: 64px;
+    }
+
+    .hLeft{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap: 6px;
+      padding-top: 2px;
     }
 
     .hDot{
-      width: 34px;
-      height: 34px;
+      width: 38px;
+      height: 38px;
       border-radius: 999px;
       border: 2px solid rgba(180, 120, 255, .70);
       box-shadow: 0 0 18px rgba(180,120,255,.12);
       background: rgba(0,0,0,.12);
-      margin: auto;
       position: relative;
       overflow:hidden;
     }
@@ -527,6 +573,29 @@
       inset:-10px;
       background: radial-gradient(circle at 30% 30%, rgba(70,220,200,.18), transparent 60%);
       opacity:.55;
+      pointer-events:none;
+    }
+    .hDot img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      position:relative;
+      z-index:1;
+    }
+
+    .hLogin{
+      font-size: 10px;
+      color: rgba(255,255,255,.78);
+      max-width: 70px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
     }
 
     .hItem{
@@ -538,7 +607,7 @@
       display:flex;
       flex-direction:column;
       justify-content:center;
-      min-height: 56px;
+      min-height: 64px;
     }
 
     .hTop{
@@ -654,6 +723,15 @@
           <div class="fileName" id="avatarName">—</div>
         </div>
 
+        <!-- Preview выбранной аватарки -->
+        <div class="avatarPreview">
+          <div class="bubble">
+            <img id="avatarPreviewImg" alt="avatar preview"
+                 src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect width='160' height='160' fill='%2310111a'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.55' font-family='Arial'%3E%2B%3C/text%3E%3C/svg%3E" />
+          </div>
+          <div class="txt" id="avatarPreviewTxt">Выбери изображение — и оно появится тут</div>
+        </div>
+
         <button class="btn" id="regBtn" type="button">Создать аккаунт</button>
         <div class="hint">Логин и ник должны быть уникальны.</div>
       </div>
@@ -668,7 +746,7 @@
         <div class="sidebar">
 
           <div class="profileBox">
-            <div class="ava">
+            <div class="ava" id="shellAvaBox" title="Нажми чтобы сменить аватар">
               <img id="shellAvatar" alt="avatar"
                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect width='160' height='160' fill='%2310111a'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.75' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E" />
             </div>
@@ -677,6 +755,9 @@
               <div class="pLogin" id="shellLogin">—</div>
             </div>
           </div>
+
+          <!-- input для смены аватара в shell -->
+          <input id="avatarChangeFile" type="file" accept="image/*" style="display:none;" />
 
           <!-- 4 кнопки -->
           <div class="sideGrid">
@@ -762,7 +843,13 @@
     var loginR = $("loginR"), nickR = $("nickR"), passR = $("passR"), regBtn = $("regBtn");
     var avatarFile = $("avatarFile"), pickAvatar = $("pickAvatar"), avatarName = $("avatarName");
 
+    var avatarPreviewImg = $("avatarPreviewImg");
+    var avatarPreviewTxt = $("avatarPreviewTxt");
+    var avatarPreviewObjUrl = null;
+
+    var shellAvaBox = $("shellAvaBox");
     var shellAvatar = $("shellAvatar"), shellNick = $("shellNick"), shellLogin = $("shellLogin");
+    var avatarChangeFile = $("avatarChangeFile");
 
     var btnBonus = $("btnBonus");
     var btnRoulette = $("btnRoulette");
@@ -835,13 +922,26 @@
     function saveHistory(arr){
       localStorage.setItem("game_history", JSON.stringify(arr || []));
     }
+
+    // В историю сохраняем автора действия (login + avatar_url)
     function addHistoryItem(text){
       var arr = loadHistory();
-      arr.unshift({ at: new Date().toISOString(), text: text });
+      var actor = currentUser ? {
+        login: currentUser.login || "—",
+        avatar_url: currentUser.avatar_url || null
+      } : { login: "—", avatar_url: null };
+
+      arr.unshift({
+        at: new Date().toISOString(),
+        text: text,
+        actor: actor
+      });
+
       if (arr.length > HISTORY_MAX) arr = arr.slice(0, HISTORY_MAX);
       saveHistory(arr);
       renderHistory();
     }
+
     function fmtTime(iso){
       try{
         var d = new Date(iso);
@@ -867,7 +967,10 @@
         var r = document.createElement("div");
         r.className = "hRow";
         r.innerHTML =
-          '<div class="hDot"></div>' +
+          '<div class="hLeft">' +
+            '<div class="hDot"></div>' +
+            '<div class="hLogin">—</div>' +
+          '</div>' +
           '<div class="hItem">' +
             '<div class="hTop"><span>История</span><span>—</span></div>' +
             '<div class="hText">Пока пусто. Нажми “Рулетка” или “Бонус”.</div>' +
@@ -877,15 +980,27 @@
       }
 
       for (var i=0;i<arr.length;i++){
-        var it = arr[i];
+        var it = arr[i] || {};
+        var actor = it.actor || {};
+        var aLogin = actor.login || "—";
+        var aAva = actor.avatar_url || null;
+
         var row = document.createElement("div");
         row.className = "hRow";
-        row.innerHTML =
-          '<div class="hDot"></div>' +
+
+        var left =
+          '<div class="hLeft">' +
+            '<div class="hDot">' + (aAva ? ('<img alt="a" src="'+escapeHtml(aAva)+'" />') : '') + '</div>' +
+            '<div class="hLogin">' + escapeHtml(aLogin) + '</div>' +
+          '</div>';
+
+        var right =
           '<div class="hItem">' +
             '<div class="hTop"><span>Действие</span><span>'+fmtTime(it.at)+'</span></div>' +
             '<div class="hText">'+escapeHtml(it.text)+'</div>' +
           '</div>';
+
+        row.innerHTML = left + right;
         historyGrid.appendChild(row);
       }
     }
@@ -907,7 +1022,7 @@
     }
     function profileKey(login){ return "profile_state_" + (login || ""); }
 
-    function defaultProfile(user){
+    function defaultProfile(){
       var now = Date.now();
       return {
         pseudo: "Бабабуй",
@@ -952,12 +1067,12 @@
       try{
         var k = profileKey(user.login);
         var raw = localStorage.getItem(k);
-        if (!raw) return defaultProfile(user);
+        if (!raw) return defaultProfile();
         var st = JSON.parse(raw);
-        if (!st || typeof st !== "object") return defaultProfile(user);
+        if (!st || typeof st !== "object") return defaultProfile();
         return st;
       }catch(e){
-        return defaultProfile(user);
+        return defaultProfile();
       }
     }
     function saveProfileState(user, st){
@@ -1076,6 +1191,7 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     // ======================
     async function uploadAvatar(file){
       var ext = (file.name.split(".").pop() || "png").toLowerCase();
+      // ВАЖНО: путь в бакете (без "public/" тоже ок, но оставим папку)
       var path = "public/" + Date.now() + "_" + Math.random().toString(16).slice(2) + "." + ext;
 
       var up = await supabase.storage.from("avatars")
@@ -1106,6 +1222,17 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
       var res = await q;
       if (res.error) throw res.error;
       return res.data && res.data.length > 0;
+    }
+
+    async function updateUserAvatar(userId, avatarUrl){
+      // Если RLS запрещает update — вернется ошибка (покажем)
+      var res = await supabase.from("game_users")
+        .update({ avatar_url: avatarUrl })
+        .eq("id", userId)
+        .select("id,login,nick,avatar_url")
+        .single();
+      if (res.error) throw res.error;
+      return res.data;
     }
 
     // ======================
@@ -1192,10 +1319,24 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     tLogin.onclick = function(){ showTab("login"); };
     tReg.onclick = function(){ showTab("reg"); };
 
+    // Регистрация: выбор аватара -> показ preview
     pickAvatar.onclick = function(){ avatarFile.click(); };
     avatarFile.onchange = function(){
       var f = (avatarFile.files && avatarFile.files[0]) ? avatarFile.files[0] : null;
       avatarName.textContent = f ? f.name : "—";
+
+      // preview
+      if (avatarPreviewObjUrl){
+        try{ URL.revokeObjectURL(avatarPreviewObjUrl); }catch(_){}
+        avatarPreviewObjUrl = null;
+      }
+      if (f){
+        avatarPreviewObjUrl = URL.createObjectURL(f);
+        avatarPreviewImg.src = avatarPreviewObjUrl;
+        avatarPreviewTxt.textContent = "Выбрано: " + f.name;
+      } else {
+        avatarPreviewTxt.textContent = "Выбери изображение — и оно появится тут";
+      }
     };
 
     loginBtn.onclick = async function(){
@@ -1238,8 +1379,16 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
 
         var avatarUrl = null;
         if (file){
-          try{ avatarUrl = await uploadAvatar(file); }
-          catch(err){ console.error(err); }
+          try{
+            avatarUrl = await uploadAvatar(file);
+            if (!avatarUrl) throw new Error("Не удалось получить publicUrl для аватара");
+          }catch(err){
+            console.error(err);
+            // Важно: не молчим — показываем причину, иначе кажется что “не ставится”
+            setMsg("Аватар не загрузился: " + (err && err.message ? err.message : String(err)));
+            // Можно продолжить регистрацию без аватара — но ты просил чтоб ставилось, поэтому остановим:
+            return;
+          }
         }
 
         var hash = await sha256(pass);
@@ -1260,11 +1409,53 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
         var u = ins.data;
         saveSession(u);
         showShell(u);
-        addHistoryItem("Создан аккаунт: " + u.nick);
+        addHistoryItem("Создан аккаунт");
         toastShow("Аккаунт создан!");
       }catch(e){
         console.error(e);
         setMsg(e && e.message ? e.message : String(e));
+      }
+    };
+
+    // ======================
+    // 9.5) events (avatar change in shell)
+    // ======================
+    // Клик по аватарке -> выбрать файл
+    shellAvaBox.onclick = function(){
+      if (!currentUser) return;
+      avatarChangeFile.click();
+    };
+
+    avatarChangeFile.onchange = async function(){
+      try{
+        if (!currentUser) return;
+        var f = (avatarChangeFile.files && avatarChangeFile.files[0]) ? avatarChangeFile.files[0] : null;
+        if (!f) return;
+
+        toastShow("Загрузка аватара…");
+
+        var url = await uploadAvatar(f);
+        if (!url) throw new Error("Не удалось получить publicUrl для аватара");
+
+        // обновим в БД (если RLS не дает — покажем ошибку)
+        var updated = await updateUserAvatar(currentUser.id, url);
+
+        // обновим локально
+        currentUser.avatar_url = updated.avatar_url || url;
+        shellAvatar.src = currentUser.avatar_url;
+        saveSession(currentUser);
+
+        // следующий “кружок” в истории будет уже с новой авой
+        addHistoryItem("Сменён аватар");
+
+        toastShow("Аватар обновлён");
+      }catch(e){
+        console.error(e);
+        toastShow("Ошибка");
+        setMsg("Не удалось сменить аватар: " + (e && e.message ? e.message : String(e)));
+      }finally{
+        // чтобы можно было выбрать тот же файл повторно
+        avatarChangeFile.value = "";
       }
     };
 
@@ -1297,11 +1488,9 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     btnBonus.onclick = function(){
       if (!profileState || !currentUser) return;
 
-      // демо: бонус +250..750
       var add = 250 + Math.floor(Math.random()*501);
       profileState.bonus += add;
 
-      // демо: запрет забора бонуса на 2 часа (если меньше)
       profileState.lockTakeBonusUntil = Math.max(profileState.lockTakeBonusUntil, Date.now() + 2*3600*1000);
 
       saveProfileState(currentUser, profileState);
@@ -1316,7 +1505,6 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
       if (!profileState || !currentUser) return;
 
       var x = demoRouletteSpin();
-      // демо: немного “активности”
       profileState.activityRating = Math.min(99.9, profileState.activityRating + 0.05);
       profileState.rouletteUntil = Math.max(profileState.rouletteUntil, Date.now() + 24*3600*1000);
 
@@ -1332,7 +1520,6 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     btnChance.onclick = function(){
       if (!profileState || !currentUser) return;
 
-      // демо: таймер шанса +24ч, активность чуть-чуть
       profileState.chanceUntil = Math.max(profileState.chanceUntil, Date.now() + 24*3600*1000);
       profileState.activityRating = Math.min(99.9, profileState.activityRating + 0.10);
 
