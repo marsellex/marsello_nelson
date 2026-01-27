@@ -6,6 +6,7 @@
   <title>WORLD_SCRIPT</title>
   <link rel="icon" type="image/png" href="IconWorld.png">
   <link rel="apple-touch-icon" href="IconWorld.png">
+  <meta name="theme-color" content="#0b0614">
 
   <style>
     :root{
@@ -21,6 +22,12 @@
 
       --parX: 0px;
       --parY: 0px;
+
+      --accA: rgba(70,220,200,.85);
+      --accB: rgba(180,120,255,.85);
+
+      --danger: rgba(255, 100, 120, .95);
+      --ok: rgba(120, 255, 190, .95);
     }
 
     *{ box-sizing:border-box; }
@@ -174,6 +181,7 @@
     .tab.active{
       border-color: rgba(180,120,255,.55);
       background: rgba(255,255,255,.07);
+      box-shadow: 0 0 20px rgba(180,120,255,.14);
     }
 
     .form{ margin-top: 12px; display:flex; flex-direction:column; gap:10px; }
@@ -190,6 +198,10 @@
     }
     .field::placeholder{ color: rgba(255,255,255,.35); }
 
+    /* ===== Button states (loading/disabled) ===== */
+    .btn, .btn2, .miniBtn, .sideBtn, .navBtn{
+      -webkit-tap-highlight-color: transparent;
+    }
     .btn{
       border-radius: 14px;
       border: 1px solid rgba(180, 120, 255, .60);
@@ -200,12 +212,17 @@
       font-weight: 1000;
       font-size: 12px;
       color: rgba(255,255,255,.94);
-      transition: .14s transform, .14s box-shadow, .14s border-color;
+      transition: .14s transform, .14s box-shadow, .14s border-color, .14s opacity;
       text-transform: uppercase;
       letter-spacing: .08em;
       box-shadow:
         0 0 18px rgba(180,120,255,.14),
         0 20px 60px rgba(0,0,0,.35);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      min-height: 42px;
     }
     .btn:hover{
       transform: translateY(-1px);
@@ -227,9 +244,21 @@
       font-weight: 900;
       font-size: 12px;
       color: rgba(255,255,255,.92);
-      transition:.14s transform,.14s box-shadow,.14s border-color;
+      transition:.14s transform,.14s box-shadow,.14s border-color,.14s opacity;
+      min-height: 42px;
     }
     .btn2:hover{ transform: translateY(-1px); border-color: rgba(180,120,255,.35); box-shadow:0 0 18px rgba(180,120,255,.12); }
+    .btn2:disabled{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
+
+    .spinner{
+      width: 14px; height: 14px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,.22);
+      border-top-color: rgba(70,220,200,.90);
+      animation: spin .7s linear infinite;
+      flex: 0 0 auto;
+    }
+    @keyframes spin{ to { transform: rotate(360deg); } }
 
     .fileRow{ display:flex; gap:10px; align-items:center; }
     .fileName{ font-size:12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -364,7 +393,7 @@
       font-weight: 1000;
       font-size: 12px;
       color: rgba(255,255,255,.92);
-      transition:.14s transform,.14s box-shadow,.14s border-color;
+      transition:.14s transform,.14s box-shadow,.14s border-color,.14s filter,.14s opacity;
       text-transform: uppercase;
       letter-spacing:.08em;
       display:flex;
@@ -373,6 +402,7 @@
       position:relative;
       overflow:hidden;
       padding: 12px;
+      min-height: 46px;
     }
     .sideBtn:hover{
       transform: translateY(-1px);
@@ -397,6 +427,41 @@
       50%{ opacity:1; transform: translateX(6px); }
     }
 
+    /* подсветка активного раздела */
+    .sideBtn.active,
+    .navBtn.active{
+      border-color: rgba(70,220,200,.80);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.05) inset,
+        0 0 22px rgba(70,220,200,.14),
+        0 0 50px rgba(90,140,255,.10);
+      filter: saturate(1.05);
+    }
+    .sideBtn.active:after,
+    .navBtn.active:after{
+      content:"";
+      position:absolute;
+      inset:-40px;
+      background: radial-gradient(circle, rgba(70,220,200,.14), transparent 60%);
+      opacity: .85;
+      pointer-events:none;
+      animation: activePulse 2.6s ease-in-out infinite;
+    }
+    @keyframes activePulse{
+      0%,100%{ transform: translateX(-6px); opacity:.55; }
+      50%{ transform: translateX(6px); opacity:1; }
+    }
+
+    .sideBtn:disabled,
+    .navBtn:disabled,
+    .miniBtn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none !important;
+      box-shadow:none !important;
+      filter:none !important;
+    }
+
     .sideActions{
       display:flex; gap:10px;
       margin-top: 2px;
@@ -412,9 +477,12 @@
       font-weight: 950;
       font-size: 12px;
       color: rgba(255,255,255,.92);
-      transition:.14s transform,.14s box-shadow,.14s border-color;
+      transition:.14s transform,.14s box-shadow,.14s border-color,.14s opacity;
       text-transform: uppercase;
       letter-spacing:.08em;
+      min-height: 42px;
+      position:relative;
+      overflow:hidden;
     }
     .miniBtn:hover{ transform: translateY(-1px); border-color: rgba(180,120,255,.35); box-shadow:0 0 18px rgba(180,120,255,.12); }
 
@@ -467,9 +535,12 @@
       font-weight: 1000;
       font-size: 12px;
       color: rgba(255,255,255,.92);
-      transition:.14s transform,.14s box-shadow,.14s border-color;
+      transition:.14s transform,.14s box-shadow,.14s border-color,.14s opacity;
       text-transform: uppercase;
       letter-spacing:.08em;
+      position:relative;
+      overflow:hidden;
+      min-height: 42px;
     }
     .navBtn:hover{ transform: translateY(-1px); border-color: rgba(180,120,255,.35); box-shadow:0 0 18px rgba(180,120,255,.10); }
 
@@ -508,6 +579,100 @@
       top: 18px;
       z-index: 5;
       user-select:none;
+      backdrop-filter: blur(10px);
+    }
+
+    /* ===== HOME VIEW ===== */
+    .home{
+      margin-top: 12px;
+      border-radius: 22px;
+      border: 3px solid rgba(180,120,255,.45);
+      background: rgba(255,255,255,.02);
+      padding: 14px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.28);
+      overflow:hidden;
+      position:relative;
+    }
+    .homeTitle{
+      font-weight: 1000;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .homeHello{
+      margin-top: 10px;
+      font-size: 14px;
+      color: rgba(255,245,240,.92);
+      line-height: 1.35;
+    }
+    .homeCards{
+      margin-top: 12px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .homeCard{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 14px;
+      cursor:pointer;
+      user-select:none;
+      position:relative;
+      overflow:hidden;
+      transition: .14s transform, .14s box-shadow, .14s border-color;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      min-height: 62px;
+    }
+    .homeCard:hover{
+      transform: translateY(-1px);
+      border-color: rgba(70,220,200,.35);
+      box-shadow:
+        0 0 22px rgba(70,220,200,.10),
+        0 16px 50px rgba(0,0,0,.35);
+    }
+    .homeCard .left{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width: 0;
+    }
+    .homeCard .kicker{
+      font-size: 11px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.78);
+      font-weight: 1000;
+    }
+    .homeCard .desc{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+    .homeCard .pill{
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 1000;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.88);
+      flex: 0 0 auto;
+      box-shadow: 0 0 18px rgba(180,120,255,.10);
+    }
+    .homeCard.primary{
+      border-color: rgba(70,220,200,.55);
+      background: linear-gradient(135deg, rgba(70,220,200,.12), rgba(190,120,255,.08));
     }
 
     /* ===== История ===== */
@@ -626,6 +791,10 @@
       text-transform: uppercase;
       font-size: 12px;
       color: rgba(255,255,255,.86);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
     }
     .profileText{
       margin-top: 10px;
@@ -633,6 +802,37 @@
       line-height: 1.35;
       color: rgba(255,245,240,.92);
       font-size: 13px;
+    }
+
+    /* Change password block */
+    .pwBox{
+      margin-top: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 12px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.22);
+    }
+    .pwTitle{
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+      font-weight: 1000;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .pwGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .pwRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
     .toast{
@@ -652,15 +852,107 @@
       transition: .18s opacity, .18s transform;
       z-index: 50;
       user-select:none;
+      max-width: calc(100vw - 24px);
+      text-align:center;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
     }
     .toast.show{
       opacity:1;
       transform: translateX(-50%) translateY(-2px);
     }
 
+    /* ===== FOOTER LOGO (hover smoke) ===== */
+    .shellFooter{
+      margin-top: 12px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding: 10px 0 0;
+    }
+    .logoOrb{
+      width: 74px;
+      height: 74px;
+      border-radius: 999px;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border: 2px solid rgba(180,120,255,.38);
+      background: rgba(0,0,0,.18);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.06) inset,
+        0 0 22px rgba(90,140,255,.10),
+        0 0 30px rgba(180,120,255,.10);
+      overflow:hidden;
+      cursor:pointer;
+      user-select:none;
+      transition: .18s transform, .18s box-shadow, .18s border-color, .18s filter;
+    }
+    .logoOrb img{
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      object-fit: cover;
+      display:block;
+      position:relative;
+      z-index:2;
+      filter: saturate(1.05);
+    }
+
+    /* дым + подсветка */
+    .logoOrb:before,
+    .logoOrb:after{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      pointer-events:none;
+      opacity: 0;
+      transition: .18s opacity;
+      z-index:1;
+      filter: blur(14px);
+    }
+    .logoOrb:before{
+      background:
+        radial-gradient(circle at 35% 35%, rgba(80,180,255,.28), transparent 58%),
+        radial-gradient(circle at 70% 60%, rgba(70,220,200,.18), transparent 62%),
+        radial-gradient(circle at 40% 80%, rgba(120,160,255,.18), transparent 60%);
+    }
+    .logoOrb:after{
+      background:
+        radial-gradient(circle at 30% 70%, rgba(80,180,255,.22), transparent 62%),
+        radial-gradient(circle at 70% 30%, rgba(120,160,255,.20), transparent 60%),
+        radial-gradient(circle at 50% 50%, rgba(70,220,200,.16), transparent 60%);
+      mix-blend-mode: screen;
+    }
+
+    @keyframes logoSmoke{
+      0%   { transform: translate(-2%, 2%) rotate(0deg) scale(1.05); }
+      50%  { transform: translate(3%, -3%) rotate(1.2deg) scale(1.12); }
+      100% { transform: translate(-2%, 2%) rotate(0deg) scale(1.05); }
+    }
+
+    .logoOrb:hover{
+      border-color: rgba(70,220,200,.70);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.08) inset,
+        0 0 28px rgba(80,180,255,.20),
+        0 0 46px rgba(70,220,200,.14),
+        0 26px 70px rgba(0,0,0,.38);
+      filter: saturate(1.10) brightness(1.05);
+      transform: translateY(-1px);
+    }
+    .logoOrb:hover:before,
+    .logoOrb:hover:after{
+      opacity: 1;
+      animation: logoSmoke 2.8s ease-in-out infinite;
+    }
+
     @media (max-width: 980px){
       .layout{ grid-template-columns: 1fr; }
       .sideGrid{ grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+      .pwRow{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -769,22 +1061,89 @@
         <div class="main">
           <div class="topRow">
             <div class="navRow">
+              <button class="navBtn active" id="btnHome" type="button">Главная</button>
               <button class="navBtn market" id="btnMarket" type="button">Рынок предметов</button>
               <button class="navBtn" id="btnMyItems" type="button">Мои предметы</button>
               <button class="navBtn" id="btnGames" type="button">Игры</button>
             </div>
           </div>
 
-          <div id="viewHistory">
+          <!-- HOME -->
+          <div id="viewHome">
+            <div class="home">
+              <div class="homeTitle">
+                <span>Главная</span>
+                <span style="color: rgba(255,255,255,.70); font-size:11px; letter-spacing:.10em; text-transform:uppercase;">
+                  Быстрые действия
+                </span>
+              </div>
+              <div class="homeHello" id="homeHello">—</div>
+
+              <div class="homeCards">
+                <div class="homeCard primary" id="homeCardBonus" role="button" tabindex="0">
+                  <div class="left">
+                    <div class="kicker">Бонус</div>
+                    <div class="desc">Получить случайный бонус и обновить таймер</div>
+                  </div>
+                  <div class="pill">Открыть</div>
+                </div>
+
+                <div class="homeCard" id="homeCardRoulette" role="button" tabindex="0">
+                  <div class="left">
+                    <div class="kicker">Рулетка</div>
+                    <div class="desc">Прокрутить демо-рулетку и записать действие</div>
+                  </div>
+                  <div class="pill">Открыть</div>
+                </div>
+
+                <div class="homeCard" id="homeCardProfile" role="button" tabindex="0">
+                  <div class="left">
+                    <div class="kicker">Профиль</div>
+                    <div class="desc">Посмотреть статус + сменить пароль</div>
+                  </div>
+                  <div class="pill">Открыть</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- HISTORY -->
+          <div id="viewHistory" style="display:none;">
             <div class="history">
               <div class="historyGrid" id="historyGrid"></div>
             </div>
           </div>
 
+          <!-- PROFILE -->
           <div id="viewProfile" style="display:none;">
             <div class="profileView">
-              <div class="profileTitle">Профиль</div>
+              <div class="profileTitle">
+                <span>Профиль</span>
+                <button class="btn2" id="closeProfileBtn" type="button">Закрыть</button>
+              </div>
+
               <div class="profileText" id="profileText"></div>
+
+              <div class="pwBox">
+                <div class="pwTitle">Смена пароля</div>
+
+                <div class="pwGrid">
+                  <div class="pwRow">
+                    <input class="field" id="oldPass" type="password" placeholder="Старый пароль" autocomplete="current-password" />
+                    <input class="field" id="newPass" type="password" placeholder="Новый пароль (мин. 6)" autocomplete="new-password" />
+                  </div>
+                  <button class="btn" id="changePassBtn" type="button">Сменить пароль</button>
+                  <div class="hint" id="pwHint">Совет: не используй простой пароль.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- FOOTER LOGO -->
+          <div class="shellFooter">
+            <div class="logoOrb" id="logoOrb" title="WORLD_SCRIPT">
+              <img src="IconWorld.png" alt="WORLD_SCRIPT logo">
             </div>
           </div>
 
@@ -833,6 +1192,7 @@
     var logoutBtn = $("logoutBtn");
     var clearHistoryBtn = $("clearHistoryBtn");
 
+    var btnHome = $("btnHome");
     var btnMarket = $("btnMarket"), btnMyItems = $("btnMyItems"), btnGames = $("btnGames");
     var historyGrid = $("historyGrid");
 
@@ -840,9 +1200,19 @@
     var toast = $("toast");
 
     var profileText = $("profileText");
+    var viewHome = $("viewHome");
     var viewHistory = $("viewHistory");
     var viewProfile = $("viewProfile");
     var balanceValue = $("balanceValue");
+
+    var homeHello = $("homeHello");
+    var homeCardBonus = $("homeCardBonus");
+    var homeCardRoulette = $("homeCardRoulette");
+    var homeCardProfile = $("homeCardProfile");
+
+    var closeProfileBtn = $("closeProfileBtn");
+    var oldPass = $("oldPass"), newPass = $("newPass"), changePassBtn = $("changePassBtn");
+    var pwHint = $("pwHint");
 
     function setMsg(text){ msg.textContent = text || ""; }
 
@@ -865,6 +1235,19 @@
 
     function validLogin(login){
       return /^[a-zA-Z0-9_]{3,20}$/.test(login);
+    }
+
+    // ===== кнопка в loading =====
+    function setBtnLoading(btn, loadingText, isLoading){
+      if (!btn) return;
+      if (!btn.__orig) btn.__orig = btn.textContent;
+      if (isLoading){
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span><span>' + (loadingText || "Загрузка…") + '</span>';
+      } else {
+        btn.disabled = false;
+        btn.textContent = btn.__orig;
+      }
     }
 
     // ======================
