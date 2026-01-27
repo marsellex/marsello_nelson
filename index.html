@@ -1002,6 +1002,116 @@
       font-size: 11px;
     }
 
+    /* ===== MARKET MENU ===== */
+    .dimmed{
+      opacity: .35 !important;
+      filter: grayscale(.2) saturate(.75) brightness(.9);
+    }
+    
+    .marketBox{
+      margin-top: 12px;
+      border-radius: 22px;
+      border: 3px solid rgba(70,220,200,.55);
+      background: rgba(255,255,255,.02);
+      padding: 12px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.28);
+    }
+    
+    .marketTitleBar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-weight: 1000;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+    }
+    
+    .marketGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    
+    .marketPanel{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 10px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.22);
+      min-height: 360px;
+      display:flex;
+      flex-direction:column;
+    }
+    
+    .marketPanelTitle{
+      font-size: 11px;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.80);
+      margin-bottom: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    
+    .marketList{
+      overflow:auto;
+      max-height: 420px;
+      padding-right: 6px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    
+    .mItem{
+      display:grid;
+      grid-template-columns: 54px 1fr auto;
+      gap: 10px;
+      align-items:center;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+      padding: 10px;
+    }
+    
+    .mImg{
+      width:54px; height:54px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+      background: rgba(0,0,0,.20);
+      box-shadow: 0 0 18px rgba(180,120,255,.10);
+    }
+    .mImg img{ width:100%; height:100%; object-fit:cover; display:block; }
+    
+    .mName{
+      font-weight: 1000;
+      line-height: 1.15;
+    }
+    .mSub{
+      margin-top: 4px;
+      font-size: 12px;
+      color: rgba(255,255,255,.62);
+      line-height: 1.15;
+    }
+    
+    .mPrice{
+      font-weight: 1000;
+      color: rgba(243,246,255,.95);
+      white-space:nowrap;
+      text-shadow: 0 0 12px rgba(70,220,200,.12);
+    }
+    
+    @media (max-width: 980px){
+      .marketGrid{ grid-template-columns: 1fr; }
+    }
+    
+
     
   </style>
 </head>
@@ -1120,6 +1230,37 @@
             </div>
           </div>
 
+          <!-- MARKET MENU -->
+          <div id="viewMarket" style="display:none;">
+            <div class="marketBox">
+              <div class="marketTitleBar">
+                <span>Рынок предметов</span>
+                <button class="btn2 tiny" id="exitMenuBtn" type="button">Выйти из меню</button>
+              </div>
+          
+              <div class="marketGrid">
+                <!-- LEFT: user items -->
+                <div class="marketPanel">
+                  <div class="marketPanelTitle">
+                    <span>Мои предметы</span>
+                    <span class="sub" style="margin:0; min-height:auto;">прокрутка</span>
+                  </div>
+                  <div class="marketList" id="myItemsList"></div>
+                </div>
+          
+                <!-- RIGHT: market listings -->
+                <div class="marketPanel">
+                  <div class="marketPanelTitle">
+                    <span>Предметы на рынке</span>
+                    <span class="sub" style="margin:0; min-height:auto;">в продаже</span>
+                  </div>
+                  <div class="marketList" id="marketItemsList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
           <!-- PROFILE -->
           <div id="viewProfile" style="display:none;">
             <div class="profileView">
@@ -1220,6 +1361,12 @@
     var pmPassMasked = $("pmPassMasked");
     var pmPassPlain = $("pmPassPlain");
     var pmTogglePass = $("pmTogglePass");
+
+    var viewMarket = $("viewMarket");
+    var exitMenuBtn = $("exitMenuBtn");
+    var myItemsList = $("myItemsList");
+    var marketItemsList = $("marketItemsList");
+    
 
     
     var authWrap = $("authWrap");
@@ -1397,6 +1544,83 @@
         historyGrid.appendChild(row);
       }
     }
+
+    function svgData(label){
+      // простая SVG-иконка как data-uri, чтобы не тянуть внешние картинки
+      var safe = String(label || "?").slice(0,2).toUpperCase();
+      var svg =
+        "<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>" +
+        "<defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>" +
+        "<stop offset='0' stop-color='%2346dcc8' stop-opacity='.30'/>" +
+        "<stop offset='1' stop-color='%23b478ff' stop-opacity='.28'/>" +
+        "</linearGradient></defs>" +
+        "<rect width='160' height='160' rx='28' ry='28' fill='url(%23g)'/>" +
+        "<rect x='10' y='10' width='140' height='140' rx='22' ry='22' fill='%230b0614' fill-opacity='.35'/>" +
+        "<text x='50%' y='56%' dominant-baseline='middle' text-anchor='middle' " +
+        "font-size='54' fill='white' fill-opacity='.82' font-family='Arial'>" + safe + "</text>" +
+        "</svg>";
+      return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    }
+    
+    var TEST_ITEMS = [
+      { id:"i1", name:"Aurora Shard",        price: 1200, img: svgData("AS") },
+      { id:"i2", name:"Violet Coin",         price: 340,  img: svgData("VC") },
+      { id:"i3", name:"Prism Core",          price: 5600, img: svgData("PC") },
+      { id:"i4", name:"Nebula Thread",       price: 890,  img: svgData("NT") },
+      { id:"i5", name:"Echo Capsule",        price: 2100, img: svgData("EC") },
+      { id:"i6", name:"Glitch Relic",        price: 7750, img: svgData("GR") },
+      { id:"i7", name:"Cryo Crystal",        price: 1550, img: svgData("CC") },
+      { id:"i8", name:"Solar Badge",         price: 640,  img: svgData("SB") },
+      { id:"i9", name:"Quantum Tag",         price: 980,  img: svgData("QT") },
+      { id:"i10",name:"Void Fragment",       price: 4300, img: svgData("VF") },
+    ];
+    
+    function renderItemRow(it){
+      var el = document.createElement("div");
+      el.className = "mItem";
+      el.innerHTML =
+        '<div class="mImg"><img alt="item" src="'+escapeHtml(it.img)+'"></div>' +
+        '<div>' +
+          '<div class="mName">'+escapeHtml(it.name)+'</div>' +
+          '<div class="mSub">ID: '+escapeHtml(it.id)+'</div>' +
+        '</div>' +
+        '<div class="mPrice">'+money(it.price)+'</div>';
+      return el;
+    }
+    
+    function renderMarket(){
+      if (!myItemsList || !marketItemsList) return;
+    
+      myItemsList.innerHTML = "";
+      marketItemsList.innerHTML = "";
+    
+      // слева: пусть будет 10 тестовых "моих"
+      TEST_ITEMS.forEach(function(it){
+        myItemsList.appendChild(renderItemRow(it));
+      });
+    
+      // справа: пусть “рынок” будет те же 10, но как будто “в продаже”
+      TEST_ITEMS.slice().reverse().forEach(function(it){
+        marketItemsList.appendChild(renderItemRow(it));
+      });
+    }
+    
+    function openMarketMenu(){
+      inMenu = true;
+      setGameplayEnabled(false);
+      renderMarket();
+      showView("market");
+      addHistoryItem("Открыт: Рынок предметов");
+      toastShow("Рынок открыт");
+    }
+    
+    function closeMarketMenu(){
+      inMenu = false;
+      setGameplayEnabled(true);
+      showView("history");
+      toastShow("Выход из меню");
+    }
+
 
 
     function openProfileModal(){
@@ -1608,15 +1832,26 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     }
 
     function showView(name){
+      // прячем всё
+      viewHistory.style.display = "none";
+      viewProfile.style.display = "none";
+      if (viewMarket) viewMarket.style.display = "none";
+    
       if (name === "profile"){
-        viewHistory.style.display = "none";
         viewProfile.style.display = "block";
         renderProfile();
-      } else {
-        viewProfile.style.display = "none";
-        viewHistory.style.display = "block";
+        return;
       }
+    
+      if (name === "market"){
+        if (viewMarket) viewMarket.style.display = "block";
+        return;
+      }
+    
+      // default: history
+      viewHistory.style.display = "block";
     }
+
 
     function startProfileTicker(){
       if (profileTimer) clearInterval(profileTimer);
@@ -1709,6 +1944,20 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
   // ======================
   // UI switch
   // ======================
+
+  var inMenu = false;
+
+  function setGameplayEnabled(enabled){
+    // left buttons
+    [btnBonus, btnRoulette, btnChance].forEach(function(b){
+      if (!b) return;
+      b.disabled = !enabled;
+      b.classList.toggle("dimmed", !enabled);
+    });
+  }
+
+
+    
   function showShell(user){
     authWrap.style.display = "none";
     shell.style.display = "block";
@@ -1725,6 +1974,10 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
 
     renderHistory();
     startOnline(user);
+
+    setGameplayEnabled(true);
+    inMenu = false;
+
 
     // теперь по умолчанию показываем историю
     showView("history");
@@ -1888,7 +2141,15 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
 
 
   // Навигация справа (оставляем, но ведём в историю)
-  btnMarket.onclick = function(){ showView("history"); addHistoryItem("Открыт: Рынок предметов"); toastShow("Рынок предметов"); };
+  btnMarket.onclick = function(){
+    openMarketMenu();
+  };
+
+  if (exitMenuBtn){
+    exitMenuBtn.onclick = closeMarketMenu;
+  }
+
+
   btnMyItems.onclick = function(){ showView("history"); addHistoryItem("Открыто: Мои предметы"); toastShow("Мои предметы"); };
   btnGames.onclick = function(){ showView("history"); addHistoryItem("Открыто: Игры"); toastShow("Игры"); };
 
