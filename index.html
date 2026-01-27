@@ -885,6 +885,124 @@
       .sideGrid{ grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
       .pwRow{ grid-template-columns: 1fr; }
     }
+
+    /* ===== profileBox clickable ===== */
+    .profileClickable{
+      cursor: pointer;
+      transition: .14s transform, .14s box-shadow, .14s border-color;
+    }
+    .profileClickable:hover{
+      transform: translateY(-1px);
+      border-color: rgba(70,220,200,.35);
+      box-shadow: 0 0 18px rgba(70,220,200,.10);
+    }
+    .profileClickable:active{ transform: translateY(0); }
+    
+    /* ===== Modal ===== */
+    .modal{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+      z-index: 120;
+    }
+    .modal.active{ display:flex; }
+    
+    .modalCard{
+      width: min(520px, 100%);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(18,10,18,.88), rgba(8,6,10,.76));
+      border: 1px solid rgba(180,120,255,.30);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,.55),
+        0 0 40px rgba(180,120,255,.10);
+      overflow:hidden;
+      position:relative;
+    }
+    .modalCard:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(600px 260px at 10% 5%, rgba(120,160,255,.14), transparent 60%),
+        radial-gradient(520px 240px at 90% 20%, rgba(190,120,255,.12), transparent 55%),
+        radial-gradient(520px 260px at 48% 120%, rgba(70,220,200,.10), transparent 55%);
+      pointer-events:none;
+      opacity:.95;
+    }
+    .modalCard > *{ position:relative; z-index:1; }
+    
+    .modalHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px 14px 10px;
+    }
+    .modalTitle{
+      font-weight: 1000;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(255,255,255,.88);
+    }
+    .modalClose{
+      width: 38px; height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.90);
+      cursor:pointer;
+    }
+    .modalClose:hover{
+      border-color: rgba(180,120,255,.35);
+      box-shadow: 0 0 18px rgba(180,120,255,.10);
+    }
+    
+    .modalBody{ padding: 0 14px 14px; }
+    
+    .pRow{
+      display:grid;
+      grid-template-columns: 130px 1fr;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      margin-top: 10px;
+    }
+    .pLabel{
+      color: rgba(255,255,255,.62);
+      font-size: 12px;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+    .pValue{
+      font-weight: 1000;
+      color: rgba(255,255,255,.92);
+      min-width: 0;
+    }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    
+    .passLine{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn2.tiny{
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+
+    
   </style>
 </head>
 
@@ -948,7 +1066,7 @@
       <div class="panel">
         <div class="sidebar">
 
-          <div class="profileBox">
+          <div class="profileBox profileClickable" id="profileBox" role="button" tabindex="0" title="Открыть профиль">
             <div class="ava" id="shellAvaBox" title="Нажми чтобы сменить аватар">
               <img id="shellAvatar" alt="avatar"
                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect width='160' height='160' fill='%2310111a'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white' fill-opacity='.75' font-family='Arial'%3E%3F%3C/text%3E%3C/svg%3E" />
@@ -965,8 +1083,8 @@
             <button class="sideBtn hot" id="btnBonus" type="button">Бонус</button>
             <button class="sideBtn" id="btnRoulette" type="button">Рулетка</button>
             <button class="sideBtn" id="btnChance" type="button">Шанс</button>
-            <button class="sideBtn" id="btnProfile" type="button">Профиль</button>
           </div>
+
 
           <!-- Баланс: круг -->
           <div class="balanceBox">
@@ -974,7 +1092,7 @@
           </div>
 
           <div class="hint" style="padding:0 6px;">
-            История справа: сверху свежее, снизу старое (до 10 действий).
+            История справа: Сверху свежее, снизу старое
           </div>
 
         </div>
@@ -1021,7 +1139,7 @@
                     <input class="field" id="newPass" type="password" placeholder="Новый пароль (мин. 6)" autocomplete="new-password" />
                   </div>
                   <button class="btn" id="changePassBtn" type="button">Сменить пароль</button>
-                  <div class="hint" id="pwHint">Совет: не используй простой пароль.</div>
+                  <div class="hint" id="pwHint">Не используй простой пароль!</div>
                 </div>
               </div>
 
@@ -1033,6 +1151,47 @@
 
     </div>
   </div>
+
+  <!-- PROFILE MODAL -->
+<div class="modal" id="profileModal" aria-hidden="true">
+  <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <div class="modalHead">
+      <div class="modalTitle" id="profileModalTitle">Профиль</div>
+      <button class="modalClose" id="profileModalClose" type="button">✕</button>
+    </div>
+
+    <div class="modalBody">
+      <div class="pRow">
+        <div class="pLabel">Баланс</div>
+        <div class="pValue" id="pmBalance">$0</div>
+      </div>
+
+      <div class="pRow">
+        <div class="pLabel">Ник</div>
+        <div class="pValue" id="pmNick">—</div>
+      </div>
+
+      <div class="pRow">
+        <div class="pLabel">Логин</div>
+        <div class="pValue mono" id="pmLogin">—</div>
+      </div>
+
+      <div class="pRow">
+        <div class="pLabel">Пароль</div>
+        <div class="pValue passLine">
+          <span class="mono" id="pmPassMasked">******</span>
+          <span class="mono" id="pmPassPlain" style="display:none;"></span>
+          <button class="btn2 tiny" id="pmTogglePass" type="button">Показать</button>
+        </div>
+      </div>
+
+      <div class="hint" style="margin-top:10px;">
+        Пароль показывается только локально
+      </div>
+    </div>
+  </div>
+</div>
+
 
   <div class="toast" id="toast"></div>
 
@@ -1052,6 +1211,17 @@
 
     function $(id){ return document.getElementById(id); }
 
+    var profileBox = $("profileBox");
+    var profileModal = $("profileModal");
+    var profileModalClose = $("profileModalClose");
+    var pmBalance = $("pmBalance");
+    var pmNick = $("pmNick");
+    var pmLogin = $("pmLogin");
+    var pmPassMasked = $("pmPassMasked");
+    var pmPassPlain = $("pmPassPlain");
+    var pmTogglePass = $("pmTogglePass");
+
+    
     var authWrap = $("authWrap");
     var shell = $("shell");
     var msg = $("msg");
@@ -1073,7 +1243,6 @@
     var btnBonus = $("btnBonus");
     var btnRoulette = $("btnRoulette");
     var btnChance = $("btnChance");
-    var btnProfile = $("btnProfile");
 
     var btnMarket = $("btnMarket"), btnMyItems = $("btnMyItems"), btnGames = $("btnGames");
     var historyGrid = $("historyGrid");
@@ -1121,20 +1290,21 @@
         id: user.id,
         login: user.login,
         nick: user.nick,
-        avatar_url: user.avatar_url || null
+        avatar_url: user.avatar_url || null,
+        plain_pass: user.__plain_pass || null
       }));
     }
+
     function loadSession(){
-      try{ return JSON.parse(localStorage.getItem("game_user") || "null"); }
-      catch(e){ return null; }
-    }
-    function clearSession(){
-      localStorage.removeItem("game_user");
+      try{
+        var s = JSON.parse(localStorage.getItem("game_user") || "null");
+        if (s && s.plain_pass) s.__plain_pass = s.plain_pass;
+        return s;
+      }catch(e){
+        return null;
+      }
     }
 
-    // ======================
-    // История (local)
-    // ======================
     var HISTORY_MAX = 10;
 
     function loadHistory(){
@@ -1228,9 +1398,82 @@
       }
     }
 
-    // ======================
-    // Профиль (local state) + таймеры (демо)
-    // ======================
+
+    function openProfileModal(){
+      if (!currentUser) return;
+    
+      // заполняем поля
+      pmNick.textContent = currentUser.nick || "—";
+      pmLogin.textContent = currentUser.login ? ("@" + currentUser.login) : "—";
+    
+      // баланс берём из profileState как у тебя
+      var bal = 0;
+      if (profileState){
+        bal = (profileState.bonus || 0) + (profileState.gameBonus || 0);
+      }
+      pmBalance.textContent = money(bal);
+    
+      // пароль: покажем только если ты сохранил его в сессии
+      // (см. пункт D ниже)
+      var pass = (currentUser && currentUser.__plain_pass) ? String(currentUser.__plain_pass) : "";
+      pmPassPlain.textContent = pass ? pass : "—";
+      pmPassMasked.textContent = pass ? "********" : "—";
+      pmPassPlain.style.display = "none";
+      pmPassMasked.style.display = "";
+      pmTogglePass.textContent = "Показать";
+      pmTogglePass.disabled = !pass;
+    
+      profileModal.classList.add("active");
+      profileModal.setAttribute("aria-hidden","false");
+    }
+    
+    function closeProfileModal(){
+      profileModal.classList.remove("active");
+      profileModal.setAttribute("aria-hidden","true");
+    }
+    
+    // клики/ESC
+    if (profileBox){
+      profileBox.onclick = openProfileModal;
+      profileBox.onkeydown = function(e){
+        if (e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          openProfileModal();
+        }
+      };
+    }
+    
+    if (profileModalClose) profileModalClose.onclick = closeProfileModal;
+    
+    if (profileModal){
+      profileModal.onclick = function(e){
+        if (e.target === profileModal) closeProfileModal();
+      };
+    }
+    
+    window.addEventListener("keydown", function(e){
+      if (e.key === "Escape" && profileModal && profileModal.classList.contains("active")){
+        closeProfileModal();
+      }
+    });
+    
+    if (pmTogglePass){
+      pmTogglePass.onclick = function(){
+        var showing = pmPassPlain.style.display !== "none";
+        if (showing){
+          pmPassPlain.style.display = "none";
+          pmPassMasked.style.display = "";
+          pmTogglePass.textContent = "Показать";
+        } else {
+          pmPassPlain.style.display = "";
+          pmPassMasked.style.display = "none";
+          pmTogglePass.textContent = "Скрыть";
+        }
+      };
+    }
+    
+
+    
     function money(n){
       n = Math.floor(Number(n || 0));
       return "$" + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -1532,6 +1775,7 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
       if (hash !== user.pass_hash){ setMsg("Неверный логин или пароль"); return; }
 
       var sessionUser = { id:user.id, login:user.login, nick:user.nick, avatar_url:user.avatar_url };
+      sessionUser.__plain_pass = pass;
       saveSession(sessionUser);
       showShell(sessionUser);
       toastShow("Добро пожаловать, " + user.nick + "!");
@@ -1572,6 +1816,7 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
       }
 
       var u = ins.data;
+      u.__plain_pass = pass;
       saveSession(u);
       showShell(u);
       addHistoryItem("Создан аккаунт");
@@ -1641,11 +1886,6 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     showView("history");
   };
 
-  btnProfile.onclick = function(){
-    addHistoryItem("Открыт профиль");
-    toastShow("Профиль");
-    showView("profile");
-  };
 
   // Навигация справа (оставляем, но ведём в историю)
   btnMarket.onclick = function(){ showView("history"); addHistoryItem("Открыт: Рынок предметов"); toastShow("Рынок предметов"); };
