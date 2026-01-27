@@ -1587,23 +1587,88 @@
         '<div class="mPrice">'+money(it.price)+'</div>';
       return el;
     }
+
+    async function loadMyProfile(){
+      const res = await supabase.from("profiles").select("*").eq("user_id", (await supabase.auth.getUser()).data.user.id).single();
+      if (res.error) throw res.error;
+      return res.data;
+    }
+
     
-    function renderMarket(){
-      if (!myItemsList || !marketItemsList) return;
-    
+    async function renderMarket(){
       myItemsList.innerHTML = "";
       marketItemsList.innerHTML = "";
     
-      // слева: пусть будет 10 тестовых "моих"
-      TEST_ITEMS.forEach(function(it){
-        myItemsList.appendChild(renderItemRow(it));
+      const inv = await loadMyInventory();
+      const listings = await loadMarket();
+    
+      // LEFT: inventory
+      inv.forEach(row => {
+        const it = row.item_catalog;
+        const qty = row.qty;
+    
+        const el = document.createElement("div");
+        el.className = "mItem";
+        el.innerHTML = `
+          <div class="mImg"><img alt="item" src="${escapeHtml(it.image_url || svgData(it.name))}"></div>
+          <div>
+            <div class="mName">${escapeHtml(it.name)}</div>
+            <div class="mSub">В наличии: ${qty}</div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+            <div class="mPrice">${money(it.base_price || 0)}</div>
+            <button class="btn2 tiny">Продать</button>
+          </div>
+        `;
+        const sellBtn = el.querySelector("button");
+        sellBtn.onclick = async () => {
+          try{
+            // простая форма: цена и количество
+            const p = prompt("Цена за 1 шт ($):", String(it.base_price || 0));
+            if (p === null) return;
+            const price = Math.max(0, parseInt(p,10)||0);
+    
+            const q = prompt(`Количество (1..${qty}):`, "1");
+            if (q === null) return;
+            const sellQty = Math.min(qty, Math.max(1, parseInt(q,10)||1));
+    
+            // RPC
+            const r = await supabase.rpc("create_listing_from_inventory", {
+              p_item_id: it.id,
+              p_qty: sellQty,
+              p_price: price
+            });
+            if (r.error) throw r.error;
+    
+            toastShow("Лот выставлен!");
+            addHistoryItem(`Выставлен лот: ${it.name} x${sellQty} за ${money(price)}`);
+            await renderMarket(); // перерисовать
+          }catch(e){
+            console.error(e);
+            toastShow(e?.message || "Ошибка продажи");
+          }
+        };
+    
+        myItemsList.appendChild(el);
       });
     
-      // справа: пусть “рынок” будет те же 10, но как будто “в продаже”
-      TEST_ITEMS.slice().reverse().forEach(function(it){
-        marketItemsList.appendChild(renderItemRow(it));
+      // RIGHT: market
+      listings.forEach(l => {
+        const it = l.item_catalog;
+        const el = document.createElement("div");
+        el.className = "mItem";
+        el.innerHTML = `
+          <div class="mImg"><img alt="item" src="${escapeHtml(it.image_url || svgData(it.name))}"></div>
+          <div>
+            <div class="mName">${escapeHtml(it.name)}</div>
+            <div class="mSub">Кол-во: ${l.qty}</div>
+          </div>
+          <div class="mPrice">${money(l.price)}</div>
+        `;
+        marketItemsList.appendChild(el);
       });
     }
+
     
     function openMarketMenu(){
       inMenu = true;
@@ -2173,6 +2238,28 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     document.documentElement.style.setProperty("--parX", dx.toFixed(0) + "px");
     document.documentElement.style.setProperty("--parY", dy.toFixed(0) + "px");
   }, { passive:true });
+
+  async function loadMyInventory(){
+  const res = await supabase
+    .from("inventory")
+    .select("qty, item_catalog: item_id ( id, name, image_url, base_price )")
+    .order("updated_at", { ascending: false });
+
+    if (res.error) throw res.error;
+    return res.data || [];
+  }
+  
+  async function loadMarket(){
+    const res = await supabase
+      .from("market_listings")
+      .select("id, qty, price, created_at, item_catalog: item_id ( id, name, image_url, base_price ), seller_id")
+      .eq("status", "active")
+      .order("created_at", { ascending: false });
+  
+    if (res.error) throw res.error;
+    return res.data || [];
+  }
+
 
 })();
   </script> 
