@@ -896,7 +896,7 @@
       box-shadow: 0 0 18px rgba(70,220,200,.10);
     }
     .profileClickable:active{ transform: translateY(0); }
-    
+
     /* ===== Modal ===== */
     .modal{
       position: fixed;
@@ -910,7 +910,7 @@
       z-index: 120;
     }
     .modal.active{ display:flex; }
-    
+
     .modalCard{
       width: min(520px, 100%);
       border-radius: 22px;
@@ -933,7 +933,7 @@
       opacity:.95;
     }
     .modalCard > *{ position:relative; z-index:1; }
-    
+
     .modalHead{
       display:flex;
       align-items:center;
@@ -960,9 +960,9 @@
       border-color: rgba(180,120,255,.35);
       box-shadow: 0 0 18px rgba(180,120,255,.10);
     }
-    
+
     .modalBody{ padding: 0 14px 14px; }
-    
+
     .pRow{
       display:grid;
       grid-template-columns: 130px 1fr;
@@ -987,7 +987,7 @@
       min-width: 0;
     }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
-    
+
     .passLine{
       display:flex;
       align-items:center;
@@ -1006,7 +1006,7 @@
       opacity: .35 !important;
       filter: grayscale(.2) saturate(.75) brightness(.9);
     }
-    
+
     .marketBox{
       margin-top: 12px;
       border-radius: 22px;
@@ -1015,7 +1015,7 @@
       padding: 12px;
       box-shadow: 0 18px 60px rgba(0,0,0,.28);
     }
-    
+
     .marketTitleBar{
       display:flex;
       align-items:center;
@@ -1028,13 +1028,13 @@
       font-size: 12px;
       color: rgba(255,255,255,.86);
     }
-    
+
     .marketGrid{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
-    
+
     .marketPanel{
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.10);
@@ -1045,7 +1045,7 @@
       display:flex;
       flex-direction:column;
     }
-    
+
     .marketPanelTitle{
       font-size: 11px;
       letter-spacing: .10em;
@@ -1057,7 +1057,7 @@
       justify-content:space-between;
       gap: 10px;
     }
-    
+
     .marketList{
       overflow:auto;
       max-height: 420px;
@@ -1066,7 +1066,7 @@
       flex-direction:column;
       gap: 10px;
     }
-    
+
     .mItem{
       display:grid;
       grid-template-columns: 54px 1fr auto;
@@ -1077,7 +1077,7 @@
       background: rgba(0,0,0,.16);
       padding: 10px;
     }
-    
+
     .mImg{
       width:54px; height:54px;
       border-radius: 14px;
@@ -1087,7 +1087,7 @@
       box-shadow: 0 0 18px rgba(180,120,255,.10);
     }
     .mImg img{ width:100%; height:100%; object-fit:cover; display:block; }
-    
+
     .mName{
       font-weight: 1000;
       line-height: 1.15;
@@ -1098,18 +1098,18 @@
       color: rgba(255,255,255,.62);
       line-height: 1.15;
     }
-    
+
     .mPrice{
       font-weight: 1000;
       color: rgba(243,246,255,.95);
       white-space:nowrap;
       text-shadow: 0 0 12px rgba(70,220,200,.12);
     }
-    
+
     @media (max-width: 980px){
       .marketGrid{ grid-template-columns: 1fr; }
     }
-    
+
     .navBtn.admin{
       border-color: rgba(255, 210, 120, .75);
       background: linear-gradient(135deg, rgba(255,210,120,.16), rgba(180,120,255,.10));
@@ -1131,28 +1131,28 @@
     .logoutBtn{
       position: fixed;
       left: 18px;
-      bottom: 102px; /* над логотипом (logoOrb 74px + отступы) */
+      bottom: 102px; /* над логотипом */
       z-index: 60;
-    
+
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.04);
       color: rgba(255,255,255,.92);
-    
+
       padding: 10px 12px;
       min-height: 44px;
       cursor: pointer;
-    
+
       font-weight: 1000;
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: .08em;
-    
+
       backdrop-filter: blur(12px);
       box-shadow:
         0 18px 50px rgba(0,0,0,.32),
         0 0 20px rgba(180,120,255,.10);
-    
+
       transition: .14s transform, .14s box-shadow, .14s border-color, .14s opacity;
     }
     .logoutBtn:hover{
@@ -1164,9 +1164,6 @@
     }
     .logoutBtn:active{ transform: translateY(0); }
     .logoutBtn:disabled{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
-    
-
-    
   </style>
 </head>
 
@@ -1249,7 +1246,6 @@
             <button class="sideBtn" id="btnChance" type="button">Шанс</button>
           </div>
 
-
           <!-- Баланс: круг -->
           <div class="balanceBox">
             <div class="balanceValue" id="balanceValue">$0</div>
@@ -1266,7 +1262,6 @@
         <div class="main">
           <div class="topRow">
             <div class="navRow">
-              <!-- Главная удалена -->
               <button class="navBtn market" id="btnMarket" type="button">Рынок предметов</button>
               <button class="navBtn" id="btnMyItems" type="button">Мои предметы</button>
               <button class="navBtn" id="btnGames" type="button">Игры</button>
@@ -1274,7 +1269,7 @@
             </div>
           </div>
 
-          <!-- HISTORY (сразу сверху) -->
+          <!-- HISTORY -->
           <div id="viewHistory">
             <div class="history">
               <div class="historyTitleBar">
@@ -1292,7 +1287,7 @@
                 <span>Рынок предметов</span>
                 <button class="btn2 tiny" id="exitMenuBtn" type="button">Выйти из меню</button>
               </div>
-          
+
               <div class="marketGrid">
                 <!-- LEFT: user items -->
                 <div class="marketPanel">
@@ -1302,7 +1297,7 @@
                   </div>
                   <div class="marketList" id="myItemsList"></div>
                 </div>
-          
+
                 <!-- RIGHT: market listings -->
                 <div class="marketPanel">
                   <div class="marketPanelTitle">
@@ -1314,7 +1309,6 @@
               </div>
             </div>
           </div>
-
 
           <!-- PROFILE -->
           <div id="viewProfile" style="display:none;">
@@ -1349,95 +1343,93 @@
   </div>
 
   <!-- PROFILE MODAL -->
-<div class="modal" id="profileModal" aria-hidden="true">
-  <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
-    <div class="modalHead">
-      <div class="modalTitle" id="profileModalTitle">Профиль</div>
-      <button class="modalClose" id="profileModalClose" type="button">✕</button>
-    </div>
-
-    <div class="modalBody">
-      <div class="pRow">
-        <div class="pLabel">Баланс</div>
-        <div class="pValue" id="pmBalance">$0</div>
+  <div class="modal" id="profileModal" aria-hidden="true">
+    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+      <div class="modalHead">
+        <div class="modalTitle" id="profileModalTitle">Профиль</div>
+        <button class="modalClose" id="profileModalClose" type="button">✕</button>
       </div>
 
-      <div class="pRow">
-        <div class="pLabel">Ник</div>
-        <div class="pValue" id="pmNick">—</div>
-      </div>
-
-      <div class="pRow">
-        <div class="pLabel">Логин</div>
-        <div class="pValue mono" id="pmLogin">—</div>
-      </div>
-
-      <div class="pRow">
-        <div class="pLabel">Пароль</div>
-        <div class="pValue passLine">
-          <span class="mono" id="pmPassMasked">******</span>
-          <span class="mono" id="pmPassPlain" style="display:none;"></span>
-          <button class="btn2 tiny" id="pmTogglePass" type="button">Показать</button>
+      <div class="modalBody">
+        <div class="pRow">
+          <div class="pLabel">Баланс</div>
+          <div class="pValue" id="pmBalance">$0</div>
         </div>
-      </div>
 
-      <div class="hint" style="margin-top:10px;">
-        Пароль показывается только локально
-      </div>
-    </div>
-  </div>
-</div>
+        <div class="pRow">
+          <div class="pLabel">Ник</div>
+          <div class="pValue" id="pmNick">—</div>
+        </div>
 
-<div class="modal" id="adminModal" aria-hidden="true">
-  <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
-    <div class="modalHead">
-      <div class="modalTitle" id="adminModalTitle">Админка — предметы</div>
-      <button class="modalClose" id="adminModalClose" type="button">✕</button>
-    </div>
+        <div class="pRow">
+          <div class="pLabel">Логин</div>
+          <div class="pValue mono" id="pmLogin">—</div>
+        </div>
 
-    <div class="modalBody">
-      <div class="hint">Кол-во “в продаже” считается по активным лотам и не редактируется.</div>
-
-      <div class="pwBox" style="margin-top:12px;">
-        <div class="pwTitle">Добавить / Изменить предмет</div>
-
-        <div class="pwGrid">
-          <input class="field" id="admItemId" placeholder="ID (пусто = новый)" />
-          <input class="field" id="admName" placeholder="Название" />
-          <input class="field" id="admImageUrl" placeholder="Картинка (URL)" />
-          <input class="field" id="admPrice" placeholder="Цена (число)" type="number" />
-
-          <div class="row">
-            <button class="btn" id="admSaveBtn" type="button">Сохранить</button>
-            <button class="btn2" id="admClearBtn" type="button">Очистить</button>
+        <div class="pRow">
+          <div class="pLabel">Пароль</div>
+          <div class="pValue passLine">
+            <span class="mono" id="pmPassMasked">******</span>
+            <span class="mono" id="pmPassPlain" style="display:none;"></span>
+            <button class="btn2 tiny" id="pmTogglePass" type="button">Показать</button>
           </div>
-
-          <button class="btn2" id="admDeleteBtn" type="button" disabled>Удалить выбранный</button>
         </div>
-      </div>
 
-      <div class="pwBox">
-        <div class="pwTitle">Список предметов</div>
-        <div id="admList" class="marketList" style="max-height:340px;"></div>
+        <div class="hint" style="margin-top:10px;">
+          Пароль показывается только локально
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-  
+  <!-- ADMIN MODAL -->
+  <div class="modal" id="adminModal" aria-hidden="true">
+    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+      <div class="modalHead">
+        <div class="modalTitle" id="adminModalTitle">Админка — предметы</div>
+        <button class="modalClose" id="adminModalClose" type="button">✕</button>
+      </div>
 
+      <div class="modalBody">
+        <div class="hint">Кол-во “в продаже” считается по активным лотам и не редактируется.</div>
+
+        <div class="pwBox" style="margin-top:12px;">
+          <div class="pwTitle">Добавить / Изменить предмет</div>
+
+          <div class="pwGrid">
+            <input class="field" id="admItemId" placeholder="ID (пусто = новый)" />
+            <input class="field" id="admName" placeholder="Название" />
+            <input class="field" id="admImageUrl" placeholder="Картинка (URL)" />
+            <input class="field" id="admPrice" placeholder="Цена (число)" type="number" />
+
+            <div class="row">
+              <button class="btn" id="admSaveBtn" type="button">Сохранить</button>
+              <button class="btn2" id="admClearBtn" type="button">Очистить</button>
+            </div>
+
+            <button class="btn2" id="admDeleteBtn" type="button" disabled>Удалить выбранный</button>
+          </div>
+        </div>
+
+        <div class="pwBox">
+          <div class="pwTitle">Список предметов</div>
+          <div id="admList" class="marketList" style="max-height:340px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="toast" id="toast"></div>
 
-  <!-- LOGO (перенесён внизу слева) -->
+  <!-- LOGO -->
   <div class="logoOrb" id="logoOrb" title="WORLD_SCRIPT">
     <img src="IconWorld.png" alt="WORLD_SCRIPT logo">
   </div>
 
+  <!-- LOGOUT -->
   <button class="logoutBtn" id="logoutBtn" type="button" title="Выйти из аккаунта">
     Выйти из аккаунта
   </button>
-
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script>
@@ -1455,17 +1447,16 @@
 
     var adminModal = $("adminModal");
     var adminModalClose = $("adminModalClose");
-    
+
     var admItemId = $("admItemId");
     var admName = $("admName");
     var admImageUrl = $("admImageUrl");
     var admPrice = $("admPrice");
-    
+
     var admSaveBtn = $("admSaveBtn");
     var admClearBtn = $("admClearBtn");
     var admDeleteBtn = $("admDeleteBtn");
     var admList = $("admList");
-
 
     var profileBox = $("profileBox");
     var profileModal = $("profileModal");
@@ -1481,9 +1472,7 @@
     var exitMenuBtn = $("exitMenuBtn");
     var myItemsList = $("myItemsList");
     var marketItemsList = $("marketItemsList");
-    
 
-    
     var authWrap = $("authWrap");
     var shell = $("shell");
     var msg = $("msg");
@@ -1558,7 +1547,6 @@
       }));
     }
 
-
     function loadSession(){
       try{
         var s = JSON.parse(localStorage.getItem("game_user") || "null");
@@ -1567,6 +1555,10 @@
       }catch(e){
         return null;
       }
+    }
+
+    function clearSession(){
+      localStorage.removeItem("game_user");
     }
 
     var HISTORY_MAX = 10;
@@ -1663,7 +1655,6 @@
     }
 
     function svgData(label){
-      // простая SVG-иконка как data-uri, чтобы не тянуть внешние картинки
       var safe = String(label || "?").slice(0,2).toUpperCase();
       var svg =
         "<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>" +
@@ -1678,52 +1669,27 @@
         "</svg>";
       return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     }
-    
-    var TEST_ITEMS = [
-      { id:"i1", name:"Aurora Shard",        price: 1200, img: svgData("AS") },
-      { id:"i2", name:"Violet Coin",         price: 340,  img: svgData("VC") },
-      { id:"i3", name:"Prism Core",          price: 5600, img: svgData("PC") },
-      { id:"i4", name:"Nebula Thread",       price: 890,  img: svgData("NT") },
-      { id:"i5", name:"Echo Capsule",        price: 2100, img: svgData("EC") },
-      { id:"i6", name:"Glitch Relic",        price: 7750, img: svgData("GR") },
-      { id:"i7", name:"Cryo Crystal",        price: 1550, img: svgData("CC") },
-      { id:"i8", name:"Solar Badge",         price: 640,  img: svgData("SB") },
-      { id:"i9", name:"Quantum Tag",         price: 980,  img: svgData("QT") },
-      { id:"i10",name:"Void Fragment",       price: 4300, img: svgData("VF") },
-    ];
-    
-    function renderItemRow(it){
-      var el = document.createElement("div");
-      el.className = "mItem";
-      el.innerHTML =
-        '<div class="mImg"><img alt="item" src="'+escapeHtml(it.img)+'"></div>' +
-        '<div>' +
-          '<div class="mName">'+escapeHtml(it.name)+'</div>' +
-          '<div class="mSub">ID: '+escapeHtml(it.id)+'</div>' +
-        '</div>' +
-        '<div class="mPrice">'+money(it.price)+'</div>';
-      return el;
-    }
 
     async function loadMyProfile(){
-      const res = await supabase.from("profiles").select("*").eq("user_id", (await supabase.auth.getUser()).data.user.id).single();
+      const u = await supabase.auth.getUser();
+      const uid = u && u.data && u.data.user ? u.data.user.id : null;
+      if (!uid) throw new Error("Нет supabase auth user");
+      const res = await supabase.from("profiles").select("*").eq("user_id", uid).single();
       if (res.error) throw res.error;
       return res.data;
     }
 
-    
     async function renderMarket(){
       myItemsList.innerHTML = "";
       marketItemsList.innerHTML = "";
-    
+
       const inv = await loadMyInventory();
       const listings = await loadMarket();
-    
-      // LEFT: inventory
+
       inv.forEach(row => {
         const it = row.item_catalog;
         const qty = row.qty;
-    
+
         const el = document.createElement("div");
         el.className = "mItem";
         el.innerHTML = `
@@ -1740,36 +1706,33 @@
         const sellBtn = el.querySelector("button");
         sellBtn.onclick = async () => {
           try{
-            // простая форма: цена и количество
             const p = prompt("Цена за 1 шт ($):", String(it.base_price || 0));
             if (p === null) return;
             const price = Math.max(0, parseInt(p,10)||0);
-    
+
             const q = prompt(`Количество (1..${qty}):`, "1");
             if (q === null) return;
             const sellQty = Math.min(qty, Math.max(1, parseInt(q,10)||1));
-    
-            // RPC
+
             const r = await supabase.rpc("create_listing_from_inventory", {
               p_item_id: it.id,
               p_qty: sellQty,
               p_price: price
             });
             if (r.error) throw r.error;
-    
+
             toastShow("Лот выставлен!");
             addHistoryItem(`Выставлен лот: ${it.name} x${sellQty} за ${money(price)}`);
-            await renderMarket(); // перерисовать
+            await renderMarket();
           }catch(e){
             console.error(e);
             toastShow(e?.message || "Ошибка продажи");
           }
         };
-    
+
         myItemsList.appendChild(el);
       });
-    
-      // RIGHT: market
+
       listings.forEach(l => {
         const it = l.item_catalog;
         const el = document.createElement("div");
@@ -1786,7 +1749,6 @@
       });
     }
 
-    
     function openMarketMenu(){
       inMenu = true;
       setGameplayEnabled(false);
@@ -1795,17 +1757,11 @@
       addHistoryItem("Открыт: Рынок предметов");
       toastShow("Рынок открыт");
     }
-    
+
     function closeMarketMenu(){
       inMenu = false;
       setGameplayEnabled(true);
       showView("history");
-            // admin button
-      if (btnAdmin){
-        var isAdmin = (user.role === "admin");
-        btnAdmin.style.display = isAdmin ? "" : "none";
-      }
-
       toastShow("Выход из меню");
     }
 
@@ -1813,17 +1769,17 @@
       if (!currentUser || currentUser.role !== "admin") return;
       adminModal.classList.add("active");
       adminModal.setAttribute("aria-hidden","false");
-      renderAdminItems(); // загрузка списка
+      renderAdminItems();
     }
-    
+
     function closeAdminModal(){
       adminModal.classList.remove("active");
       adminModal.setAttribute("aria-hidden","true");
     }
-    
+
     if (btnAdmin) btnAdmin.onclick = openAdminModal;
     if (adminModalClose) adminModalClose.onclick = closeAdminModal;
-    
+
     if (adminModal){
       adminModal.onclick = function(e){
         if (e.target === adminModal) closeAdminModal();
@@ -1835,21 +1791,21 @@
         .from("item_catalog")
         .select("id,name,image_url,base_price")
         .order("created_at", { ascending: false });
-    
+
       if (res.error) throw res.error;
       return res.data || [];
     }
-    
+
     async function loadActiveListings(){
       const res = await supabase
         .from("market_listings")
         .select("item_id,qty")
         .eq("status","active");
-    
+
       if (res.error) throw res.error;
       return res.data || [];
     }
-    
+
     function sumQtyByItem(listings){
       var map = {};
       listings.forEach(l => {
@@ -1858,7 +1814,7 @@
       });
       return map;
     }
-    
+
     function fillAdminForm(it){
       admItemId.value = it.id || "";
       admName.value = it.name || "";
@@ -1870,11 +1826,11 @@
     async function renderAdminItems(){
       if (!admList) return;
       admList.innerHTML = "";
-    
+
       try{
         const [items, listings] = await Promise.all([loadCatalog(), loadActiveListings()]);
         const qtyMap = sumQtyByItem(listings);
-    
+
         if (!items.length){
           var e = document.createElement("div");
           e.className = "hint";
@@ -1882,12 +1838,12 @@
           admList.appendChild(e);
           return;
         }
-    
+
         items.forEach(it => {
           var el = document.createElement("div");
           el.className = "mItem";
           var q = qtyMap[it.id] || 0;
-    
+
           el.innerHTML = `
             <div class="mImg"><img alt="item" src="${escapeHtml(it.image_url || svgData(it.name))}"></div>
             <div>
@@ -1899,14 +1855,14 @@
               <button class="btn2 tiny">Выбрать</button>
             </div>
           `;
-    
+
           el.querySelector("button").onclick = () => {
             fillAdminForm(it);
           };
-    
+
           admList.appendChild(el);
         });
-    
+
       }catch(e){
         console.error(e);
         toastShow(e?.message || "Ошибка загрузки каталога");
@@ -1920,90 +1876,82 @@
       admPrice.value = "";
       admDeleteBtn.disabled = true;
     }
-    
+
     if (admClearBtn) admClearBtn.onclick = clearAdminForm;
-    
+
     if (admSaveBtn) admSaveBtn.onclick = async function(){
       if (!currentUser || currentUser.role !== "admin") return;
-    
+
       try{
         var id = (admItemId.value || "").trim();
         var name = (admName.value || "").trim();
         var image_url = (admImageUrl.value || "").trim();
         var base_price = Math.max(0, parseInt(admPrice.value || "0", 10) || 0);
-    
+
         if (!name){ toastShow("Название обязательно"); return; }
-    
-        // upsert: если id пустой — вставляем, иначе обновляем
+
         if (!id){
           const ins = await supabase.from("item_catalog").insert({
             name, image_url: image_url || null, base_price
           }).select("id").single();
           if (ins.error) throw ins.error;
-    
+
           toastShow("Предмет добавлен");
           addHistoryItem(`Админ: добавлен предмет "${name}"`);
           clearAdminForm();
           await renderAdminItems();
           return;
         }
-    
+
         const upd = await supabase.from("item_catalog").update({
           name, image_url: image_url || null, base_price
         }).eq("id", id);
-    
+
         if (upd.error) throw upd.error;
-    
+
         toastShow("Сохранено");
         addHistoryItem(`Админ: обновлён предмет "${name}"`);
         await renderAdminItems();
-    
+
       }catch(e){
         console.error(e);
         toastShow(e?.message || "Ошибка сохранения");
       }
     };
-    
+
     if (admDeleteBtn) admDeleteBtn.onclick = async function(){
       if (!currentUser || currentUser.role !== "admin") return;
-    
+
       try{
         var id = (admItemId.value || "").trim();
         if (!id) return;
-    
-        // ВАЖНО: удаление может быть запрещено, если предмет используется в inventory/market_listings (FK).
+
         const del = await supabase.from("item_catalog").delete().eq("id", id);
         if (del.error) throw del.error;
-    
+
         toastShow("Удалено");
         addHistoryItem(`Админ: удалён предмет ID ${id}`);
         clearAdminForm();
         await renderAdminItems();
-    
+
       }catch(e){
         console.error(e);
         toastShow(e?.message || "Ошибка удаления (возможно, предмет используется)");
       }
     };
 
-
-
     function openProfileModal(){
       if (!currentUser) return;
-    
-      // заполняем поля
+
       pmNick.textContent = currentUser.nick || "—";
       pmLogin.textContent = currentUser.login ? ("@" + currentUser.login) : "—";
-    
-      // баланс берём из profileState как у тебя
+
       var bal = 0;
       if (profileState){
         bal = (profileState.bonus || 0) + (profileState.gameBonus || 0);
       }
       pmBalance.textContent = money(bal);
-    
-      // пароль: покажем только если ты сохранил его в сессии
-      // (см. пункт D ниже)
+
       var pass = (currentUser && currentUser.__plain_pass) ? String(currentUser.__plain_pass) : "";
       pmPassPlain.textContent = pass ? pass : "—";
       pmPassMasked.textContent = pass ? "********" : "—";
@@ -2011,17 +1959,16 @@
       pmPassMasked.style.display = "";
       pmTogglePass.textContent = "Показать";
       pmTogglePass.disabled = !pass;
-    
+
       profileModal.classList.add("active");
       profileModal.setAttribute("aria-hidden","false");
     }
-    
+
     function closeProfileModal(){
       profileModal.classList.remove("active");
       profileModal.setAttribute("aria-hidden","true");
     }
-    
-    // клики/ESC
+
     if (profileBox){
       profileBox.onclick = openProfileModal;
       profileBox.onkeydown = function(e){
@@ -2031,21 +1978,24 @@
         }
       };
     }
-    
+
     if (profileModalClose) profileModalClose.onclick = closeProfileModal;
-    
+
     if (profileModal){
       profileModal.onclick = function(e){
         if (e.target === profileModal) closeProfileModal();
       };
     }
-    
+
     window.addEventListener("keydown", function(e){
       if (e.key === "Escape" && profileModal && profileModal.classList.contains("active")){
         closeProfileModal();
       }
+      if (e.key === "Escape" && adminModal && adminModal.classList.contains("active")){
+        closeAdminModal();
+      }
     });
-    
+
     if (pmTogglePass){
       pmTogglePass.onclick = function(){
         var showing = pmPassPlain.style.display !== "none";
@@ -2060,9 +2010,7 @@
         }
       };
     }
-    
 
-    
     function money(n){
       n = Math.floor(Number(n || 0));
       return "$" + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -2156,8 +2104,8 @@
       var txt =
 `🆔 Пользователь ${currentUser.login}:
 
-ℹ Рейтинг рулетки: ${profileState.rouletteRating.toFixed(1)}, ранг «${profileState.rouletteRank}»: ${profileState.rouletteRankTitle} (подробнее: «Рулетка инфо»)
-⤴ Рейтинг активности: ${profileState.activityRating.toFixed(1)} (подробнее: «Рейтинг»)
+ℹ Рейтинг рулетки: ${profileState.rouletteRating.toFixed(1)}, ранг «${profileState.rouletteRank}»: ${profileState.rouletteRankTitle}
+⤴ Рейтинг активности: ${profileState.activityRating.toFixed(1)}
 На ${profileState.activityPlace} месте в топе актива!
 
 🅱 Бонус: ${money(profileState.bonus)}
@@ -2165,16 +2113,16 @@
 🔗 Ник: ${profileState.nickText} (${profileState.inGame ? "в игре" : "не в игре"})
 🔸 Нельзя забирать бонус ${lockLeft}
 
-😏 Кэшбек Репутации (подробнее: «Репутация»)
+😏 Кэшбек Репутации
 — Заработано: ${money(profileState.repEarned)}
 — Выдано: ${profileState.repIssued} шт
 — Кэшбек: ${money(profileState.repCashback)}
 
-🔝 Тарифы (подробнее: «Тариф инфо»):
-${profileState.t_x2 ? "✅" : "❌"} Х2 бонусы с 12:00 до 18:00 
+🔝 Тарифы:
+${profileState.t_x2 ? "✅" : "❌"} Х2 бонусы с 12:00 до 18:00
 ${profileState.t_eternal ? "✅" : "❌"} Вечный Ранг / Псевд / Эмодзи
-${profileState.t_x3_stream ? "✅" : "❌"} Х3 в зоне стрима бота 
-${profileState.t_auto ? "✅" : "❌"} Авторулетка 
+${profileState.t_x3_stream ? "✅" : "❌"} Х3 в зоне стрима бота
+${profileState.t_auto ? "✅" : "❌"} Авторулетка
 
 ⏲ Время до:
 » Шанса: ${fmtLeft(profileState.chanceUntil - now)}
@@ -2197,26 +2145,23 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     }
 
     function showView(name){
-      // прячем всё
       viewHistory.style.display = "none";
       viewProfile.style.display = "none";
       if (viewMarket) viewMarket.style.display = "none";
-    
+
       if (name === "profile"){
         viewProfile.style.display = "block";
         renderProfile();
         return;
       }
-    
+
       if (name === "market"){
         if (viewMarket) viewMarket.style.display = "block";
         return;
       }
-    
-      // default: history
+
       viewHistory.style.display = "block";
     }
-
 
     function startProfileTicker(){
       if (profileTimer) clearInterval(profileTimer);
@@ -2231,379 +2176,446 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     }
 
     // ======================
-  // Supabase init
-  // ======================
-  if (!window.supabase || !window.supabase.createClient){
-    setMsg("Supabase SDK не загрузился (CDN).");
-    return;
-  }
-  var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // ======================
-  // Пароль: SHA-256
-  // ======================
-  async function sha256(text){
-    var enc = new TextEncoder().encode(text);
-    var buf = await crypto.subtle.digest("SHA-256", enc);
-    var arr = Array.from(new Uint8Array(buf));
-    return arr.map(function(b){ return b.toString(16).padStart(2,"0"); }).join("");
-  }
-
-  async function getUserByLogin(loginLower){
-    var res = await supabase.from("game_users")
-      .select("id,login,nick,pass_hash,avatar_url,role")
-      .eq("login", loginLower)
-      .maybeSingle();
-    if (res.error) throw res.error;
-    return res.data || null;
-  }
-
-  async function existsByField(field, value){
-    var q = supabase.from("game_users").select("id").limit(1);
-    if (field === "login") q = q.eq("login", value);
-    else q = q.ilike("nick", value);
-    var res = await q;
-    if (res.error) throw res.error;
-    return res.data && res.data.length > 0;
-  }
-
-  // ======================
-  // Online presence
-  // ======================
-  var onlineTimer = null;
-
-  async function heartbeatOnline(user){
-    try{
-      await supabase.from("online_presence").upsert({
-        user_id: user.id,
-        login: user.login,
-        nick: user.nick,
-        last_seen: new Date().toISOString()
-      });
-    }catch(e){}
-  }
-
-  async function refreshOnlineCount(){
-    try{
-      var since = new Date(Date.now() - 60*1000).toISOString();
-      var res = await supabase.from("online_presence")
-        .select("user_id", { count: "exact", head: true })
-        .gte("last_seen", since);
-      if (res.error) throw res.error;
-      onlinePill.textContent = String(res.count || 0);
-    }catch(e){
-      onlinePill.textContent = "—";
+    // Supabase init
+    // ======================
+    if (!window.supabase || !window.supabase.createClient){
+      setMsg("Supabase SDK не загрузился (CDN).");
+      return;
     }
-  }
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  function startOnline(user){
-    if (onlineTimer) clearInterval(onlineTimer);
-    heartbeatOnline(user);
-    refreshOnlineCount();
-    onlineTimer = setInterval(function(){
+    // ======================
+    // Пароль: SHA-256
+    // ======================
+    async function sha256(text){
+      var enc = new TextEncoder().encode(text);
+      var buf = await crypto.subtle.digest("SHA-256", enc);
+      var arr = Array.from(new Uint8Array(buf));
+      return arr.map(function(b){ return b.toString(16).padStart(2,"0"); }).join("");
+    }
+
+    async function getUserByLogin(loginLower){
+      var res = await supabase.from("game_users")
+        .select("id,login,nick,pass_hash,avatar_url,role")
+        .eq("login", loginLower)
+        .maybeSingle();
+      if (res.error) throw res.error;
+      return res.data || null;
+    }
+
+    async function existsByField(field, value){
+      var q = supabase.from("game_users").select("id").limit(1);
+      if (field === "login") q = q.eq("login", value);
+      else q = q.ilike("nick", value);
+      var res = await q;
+      if (res.error) throw res.error;
+      return res.data && res.data.length > 0;
+    }
+
+    // ======================
+    // Online presence
+    // ======================
+    var onlineTimer = null;
+
+    async function heartbeatOnline(user){
+      try{
+        await supabase.from("online_presence").upsert({
+          user_id: user.id,
+          login: user.login,
+          nick: user.nick,
+          last_seen: new Date().toISOString()
+        });
+      }catch(e){}
+    }
+
+    async function refreshOnlineCount(){
+      try{
+        var since = new Date(Date.now() - 60*1000).toISOString();
+        var res = await supabase.from("online_presence")
+          .select("user_id", { count: "exact", head: true })
+          .gte("last_seen", since);
+        if (res.error) throw res.error;
+        onlinePill.textContent = String(res.count || 0);
+      }catch(e){
+        onlinePill.textContent = "—";
+      }
+    }
+
+    function startOnline(user){
+      if (onlineTimer) clearInterval(onlineTimer);
       heartbeatOnline(user);
       refreshOnlineCount();
-    }, 15000);
-  }
-
-  // ======================
-  // UI switch
-  // ======================
-
-  var inMenu = false;
-
-  function setGameplayEnabled(enabled){
-    // left buttons
-    [btnBonus, btnRoulette, btnChance].forEach(function(b){
-      if (!b) return;
-      b.disabled = !enabled;
-      b.classList.toggle("dimmed", !enabled);
-    });
-  }
-
-  function clearSession(){
-    localStorage.removeItem("game_user");
-  }
-
-  if (logoutBtn){
-    logoutBtn.onclick = doLogout;
-  }
-
-  
-  async function doLogout(){
-    try{
-      // закрыть модалки если открыты
-      if (profileModal && profileModal.classList.contains("active")) closeProfileModal();
-      if (typeof closeAdminModal === "function" && adminModal && adminModal.classList.contains("active")) closeAdminModal();
-  
-      // остановить таймеры
-      if (onlineTimer) clearInterval(onlineTimer);
-      onlineTimer = null;
-  
-      if (profileTimer) clearInterval(profileTimer);
-      profileTimer = null;
-  
-      // (опционально) можно попытаться удалить presence, но это не обязательно
-      // if (currentUser) await supabase.from("online_presence").delete().eq("user_id", currentUser.id);
-  
-      // сброс локальных данных
-      clearSession();
-      currentUser = null;
-      profileState = null;
-  
-      toastShow("Вы вышли из аккаунта");
-      showAuth();
-    }catch(e){
-      console.error(e);
-      clearSession();
-      showAuth();
+      onlineTimer = setInterval(function(){
+        heartbeatOnline(user);
+        refreshOnlineCount();
+      }, 15000);
     }
-  }
 
-    
-  function showShell(user){
-    authWrap.style.display = "none";
-    shell.style.display = "block";
+    // ======================
+    // UI switch
+    // ======================
+    var inMenu = false;
 
-    shellNick.textContent = user.nick || "—";
-    shellLogin.textContent = user.login ? ("@" + user.login) : "—";
-
-    if (user.avatar_url) shellAvatar.src = user.avatar_url;
-
-    if (logoutBtn) logoutBtn.style.display = "";
-    
-    currentUser = user;
-    profileState = loadProfileState(user);
-    updateBalanceUI();
-    startProfileTicker();
-
-    renderHistory();
-    startOnline(user);
-
-    setGameplayEnabled(true);
-    inMenu = false;
-
-
-    // теперь по умолчанию показываем историю
-    showView("history");
-  }
-
-  function showAuth(){
-    shell.style.display = "none";
-    authWrap.style.display = "flex";
-    showTab("login");
-    setMsg("");
-    onlinePill.textContent = "—";
-
-    if (logoutBtn) logoutBtn.style.display = "none";
-      
-    if (onlineTimer) clearInterval(onlineTimer);
-    onlineTimer = null;
-
-    currentUser = null;
-    profileState = null;
-    if (profileTimer) clearInterval(profileTimer);
-    profileTimer = null;
-  }
-
-  // ======================
-  // AUTH Events
-  // ======================
-  tLogin.onclick = function(){ showTab("login"); };
-  tReg.onclick = function(){ showTab("reg"); };
-
-  // регистрационный аватар (оставил как было — твой код сжатия ниже у тебя большой,
-  // тут не трогаю, чтобы не ломать. Просто оставь его в своём файле как раньше.)
-  var regAvatarDataUrl = null;
-
-  pickAvatar.onclick = function(){ avatarFile.click(); };
-
-  // ВАЖНО: оставь твой обработчик avatarFile.onchange (сжатие) как был в исходнике.
-  // Здесь не вставляю, чтобы не раздуть ответ.
-
-  loginBtn.onclick = async function(){
-    setMsg("");
-    try{
-      var login = (loginL.value || "").trim().toLowerCase();
-      var pass = passL.value || "";
-      if (!login || !pass){ setMsg("Введи логин и пароль"); return; }
-
-      var user = await getUserByLogin(login);
-      if (!user){ setMsg("Неверный логин или пароль"); return; }
-
-      var hash = await sha256(pass);
-      if (hash !== user.pass_hash){ setMsg("Неверный логин или пароль"); return; }
-
-      var sessionUser = { id:user.id, login:user.login, nick:user.nick, avatar_url:user.avatar_url };
-      sessionUser.__plain_pass = pass;
-      saveSession(sessionUser);
-      showShell(sessionUser);
-      toastShow("Добро пожаловать, " + user.nick + "!");
-    }catch(e){
-      console.error(e);
-      setMsg(e && e.message ? e.message : String(e));
+    function setGameplayEnabled(enabled){
+      [btnBonus, btnRoulette, btnChance].forEach(function(b){
+        if (!b) return;
+        b.disabled = !enabled;
+        b.classList.toggle("dimmed", !enabled);
+      });
     }
-  };
 
-  regBtn.onclick = async function(){
-    setMsg("");
-    try{
-      var login = (loginR.value || "").trim().toLowerCase();
-      var nick = (nickR.value || "").trim();
-      var pass = passR.value || "";
+    async function doLogout(){
+      try{
+        if (profileModal && profileModal.classList.contains("active")) closeProfileModal();
+        if (adminModal && adminModal.classList.contains("active")) closeAdminModal();
 
-      if (!login || !nick || !pass){ setMsg("Заполни поля"); return; }
-      if (!validLogin(login)){ setMsg("Логин: 3–20 символов, только латиница/цифры/_"); return; }
-      if (pass.length < 6){ setMsg("Пароль минимум 6 символов"); return; }
+        if (onlineTimer) clearInterval(onlineTimer);
+        onlineTimer = null;
 
-      if (await existsByField("login", login)){ setMsg("Такой логин уже занят"); return; }
-      if (await existsByField("nick", nick)){ setMsg("Такой ник уже занят"); return; }
+        if (profileTimer) clearInterval(profileTimer);
+        profileTimer = null;
 
-      var hash = await sha256(pass);
-      var avatarUrl = regAvatarDataUrl || null;
+        clearSession();
+        currentUser = null;
+        profileState = null;
 
-      var ins = await supabase.from("game_users").insert({
-        login: login,
-        nick: nick,
-        pass_hash: hash,
-        avatar_url: avatarUrl
-      }).select("id,login,nick,pass_hash,avatar_url,role").single();
+        toastShow("Вы вышли из аккаунта");
+        showAuth();
+      }catch(e){
+        console.error(e);
+        clearSession();
+        showAuth();
+      }
+    }
 
-      if (ins.error){
-        console.error(ins.error);
-        setMsg(ins.error.message || "Ошибка регистрации");
-        return;
+    if (logoutBtn){
+      logoutBtn.onclick = doLogout;
+    }
+
+    function showShell(user){
+      authWrap.style.display = "none";
+      shell.style.display = "block";
+
+      shellNick.textContent = user.nick || "—";
+      shellLogin.textContent = user.login ? ("@" + user.login) : "—";
+      if (user.avatar_url) shellAvatar.src = user.avatar_url;
+
+      if (logoutBtn) logoutBtn.style.display = "";
+
+      currentUser = user;
+      profileState = loadProfileState(user);
+      updateBalanceUI();
+      startProfileTicker();
+
+      renderHistory();
+      startOnline(user);
+
+      setGameplayEnabled(true);
+      inMenu = false;
+
+      // ✅ ПОКАЗЫВАЕМ АДМИНКУ ПРАВИЛЬНО
+      if (btnAdmin){
+        btnAdmin.style.display = (user && user.role === "admin") ? "" : "none";
       }
 
-      var u = ins.data;
-      u.__plain_pass = pass;
-      saveSession(u);
-      showShell(u);
-      addHistoryItem("Создан аккаунт");
-      toastShow("Аккаунт создан!");
-    }catch(e){
-      console.error(e);
-      setMsg(e && e.message ? e.message : String(e));
+      showView("history");
     }
-  };
 
-  // ======================
-  // SHELL Events (игровые кнопки)
-  // ======================
-  function demoRouletteSpin(){
-    var outcomes = [
-      "Выпал предмет: Aurora Shard",
-      "Выпал предмет: Violet Coin",
-      "Ничего не выпало… но шанс растёт",
-      "Выпал предмет: Prism Core",
-      "Бонус: +1 попытка (демо)"
-    ];
-    return outcomes[Math.floor(Math.random() * outcomes.length)];
-  }
+    function showAuth(){
+      shell.style.display = "none";
+      authWrap.style.display = "flex";
+      showTab("login");
+      setMsg("");
+      onlinePill.textContent = "—";
 
-  btnBonus.onclick = function(){
-    if (!profileState || !currentUser) return;
-    var add = 250 + Math.floor(Math.random()*501);
-    profileState.bonus += add;
-    profileState.lockTakeBonusUntil = Math.max(profileState.lockTakeBonusUntil, Date.now() + 2*3600*1000);
+      if (btnAdmin) btnAdmin.style.display = "none";
+      if (logoutBtn) logoutBtn.style.display = "none";
 
-    saveProfileState(currentUser, profileState);
-    updateBalanceUI();
-    if (viewProfile.style.display !== "none") renderProfile();
+      if (onlineTimer) clearInterval(onlineTimer);
+      onlineTimer = null;
 
-    addHistoryItem("Бонус: +" + money(add));
-    toastShow("Бонус +" + money(add));
-    showView("history");
-  };
+      currentUser = null;
+      profileState = null;
+      if (profileTimer) clearInterval(profileTimer);
+      profileTimer = null;
+    }
 
-  btnRoulette.onclick = function(){
-    if (!profileState || !currentUser) return;
-    var x = demoRouletteSpin();
-    profileState.activityRating = Math.min(99.9, profileState.activityRating + 0.05);
-    profileState.rouletteUntil = Math.max(profileState.rouletteUntil, Date.now() + 24*3600*1000);
+    // ======================
+    // AUTH Events
+    // ======================
+    tLogin.onclick = function(){ showTab("login"); };
+    tReg.onclick = function(){ showTab("reg"); };
 
-    saveProfileState(currentUser, profileState);
-    updateBalanceUI();
-    if (viewProfile.style.display !== "none") renderProfile();
+    // регистрационный аватар — сжатие до 256x256 (встроено, чтобы файл был самодостаточный)
+    var regAvatarDataUrl = null;
 
-    addHistoryItem("Рулетка: " + x);
-    toastShow(x);
-    showView("history");
-  };
+    pickAvatar.onclick = function(){ avatarFile.click(); };
 
-  btnChance.onclick = function(){
-    if (!profileState || !currentUser) return;
+    function fileToDataUrl(file){
+      return new Promise(function(resolve, reject){
+        var r = new FileReader();
+        r.onload = function(){ resolve(String(r.result || "")); };
+        r.onerror = reject;
+        r.readAsDataURL(file);
+      });
+    }
 
-    profileState.chanceUntil = Math.max(profileState.chanceUntil, Date.now() + 24*3600*1000);
-    profileState.activityRating = Math.min(99.9, profileState.activityRating + 0.10);
+    async function compressImageDataUrl(dataUrl, maxSide, quality){
+      return new Promise(function(resolve){
+        var img = new Image();
+        img.onload = function(){
+          var w = img.width, h = img.height;
+          var scale = 1;
+          var m = Math.max(w, h);
+          if (m > maxSide) scale = maxSide / m;
+          var nw = Math.max(1, Math.round(w * scale));
+          var nh = Math.max(1, Math.round(h * scale));
 
-    saveProfileState(currentUser, profileState);
-    updateBalanceUI();
-    if (viewProfile.style.display !== "none") renderProfile();
+          var c = document.createElement("canvas");
+          c.width = nw; c.height = nh;
+          var ctx = c.getContext("2d");
+          ctx.drawImage(img, 0, 0, nw, nh);
 
-    addHistoryItem("Шанс: обновлён (демо)");
-    toastShow("Шанс ↑");
-    showView("history");
-  };
+          // jpeg обычно легче
+          var out = c.toDataURL("image/jpeg", quality || 0.85);
+          resolve(out);
+        };
+        img.onerror = function(){
+          resolve(dataUrl);
+        };
+        img.src = dataUrl;
+      });
+    }
 
+    avatarFile.onchange = async function(){
+      try{
+        var f = avatarFile.files && avatarFile.files[0];
+        if (!f) return;
 
-  // Навигация справа (оставляем, но ведём в историю)
-  btnMarket.onclick = function(){
-    openMarketMenu();
-  };
+        avatarName.textContent = f.name || "avatar";
+        avatarPreviewTxt.textContent = "Обработка…";
 
-  if (exitMenuBtn){
-    exitMenuBtn.onclick = closeMarketMenu;
-  }
+        var raw = await fileToDataUrl(f);
+        var compressed = await compressImageDataUrl(raw, 256, 0.85);
 
+        regAvatarDataUrl = compressed;
+        avatarPreviewImg.src = compressed;
+        avatarPreviewTxt.textContent = "Готово ✓";
+      }catch(e){
+        console.error(e);
+        regAvatarDataUrl = null;
+        avatarName.textContent = "—";
+        avatarPreviewTxt.textContent = "Не удалось загрузить";
+        toastShow("Ошибка аватара");
+      }
+    };
 
-  btnMyItems.onclick = function(){ showView("history"); addHistoryItem("Открыто: Мои предметы"); toastShow("Мои предметы"); };
-  btnGames.onclick = function(){ showView("history"); addHistoryItem("Открыто: Игры"); toastShow("Игры"); };
+    loginBtn.onclick = async function(){
+      setMsg("");
+      try{
+        var login = (loginL.value || "").trim().toLowerCase();
+        var pass = passL.value || "";
+        if (!login || !pass){ setMsg("Введи логин и пароль"); return; }
 
-  // ======================
-  // init session
-  // ======================
-  (function(){
-    var s = loadSession();
-    if (s && s.login) showShell(s);
-    else showAuth();
+        var user = await getUserByLogin(login);
+        if (!user){ setMsg("Неверный логин или пароль"); return; }
+
+        var hash = await sha256(pass);
+        if (hash !== user.pass_hash){ setMsg("Неверный логин или пароль"); return; }
+
+        // ✅ ВАЖНО: сохраняем role
+        var sessionUser = {
+          id: user.id,
+          login: user.login,
+          nick: user.nick,
+          avatar_url: user.avatar_url,
+          role: user.role || "user"
+        };
+        sessionUser.__plain_pass = pass;
+
+        saveSession(sessionUser);
+        showShell(sessionUser);
+        toastShow("Добро пожаловать, " + user.nick + "!");
+      }catch(e){
+        console.error(e);
+        setMsg(e && e.message ? e.message : String(e));
+      }
+    };
+
+    regBtn.onclick = async function(){
+      setMsg("");
+      try{
+        var login = (loginR.value || "").trim().toLowerCase();
+        var nick = (nickR.value || "").trim();
+        var pass = passR.value || "";
+
+        if (!login || !nick || !pass){ setMsg("Заполни поля"); return; }
+        if (!validLogin(login)){ setMsg("Логин: 3–20 символов, только латиница/цифры/_"); return; }
+        if (pass.length < 6){ setMsg("Пароль минимум 6 символов"); return; }
+
+        if (await existsByField("login", login)){ setMsg("Такой логин уже занят"); return; }
+        if (await existsByField("nick", nick)){ setMsg("Такой ник уже занят"); return; }
+
+        var hash = await sha256(pass);
+        var avatarUrl = regAvatarDataUrl || null;
+
+        var ins = await supabase.from("game_users").insert({
+          login: login,
+          nick: nick,
+          pass_hash: hash,
+          avatar_url: avatarUrl
+        }).select("id,login,nick,pass_hash,avatar_url,role").single();
+
+        if (ins.error){
+          console.error(ins.error);
+          setMsg(ins.error.message || "Ошибка регистрации");
+          return;
+        }
+
+        var u = ins.data;
+        u.__plain_pass = pass;
+        u.role = u.role || "user";
+
+        saveSession(u);
+        showShell(u);
+        addHistoryItem("Создан аккаунт");
+        toastShow("Аккаунт создан!");
+      }catch(e){
+        console.error(e);
+        setMsg(e && e.message ? e.message : String(e));
+      }
+    };
+
+    // ======================
+    // SHELL Events (игровые кнопки)
+    // ======================
+    function demoRouletteSpin(){
+      var outcomes = [
+        "Выпал предмет: Aurora Shard",
+        "Выпал предмет: Violet Coin",
+        "Ничего не выпало… но шанс растёт",
+        "Выпал предмет: Prism Core",
+        "Бонус: +1 попытка (демо)"
+      ];
+      return outcomes[Math.floor(Math.random() * outcomes.length)];
+    }
+
+    btnBonus.onclick = function(){
+      if (!profileState || !currentUser) return;
+      var add = 250 + Math.floor(Math.random()*501);
+      profileState.bonus += add;
+      profileState.lockTakeBonusUntil = Math.max(profileState.lockTakeBonusUntil, Date.now() + 2*3600*1000);
+
+      saveProfileState(currentUser, profileState);
+      updateBalanceUI();
+      if (viewProfile.style.display !== "none") renderProfile();
+
+      addHistoryItem("Бонус: +" + money(add));
+      toastShow("Бонус +" + money(add));
+      showView("history");
+    };
+
+    btnRoulette.onclick = function(){
+      if (!profileState || !currentUser) return;
+      var x = demoRouletteSpin();
+      profileState.activityRating = Math.min(99.9, profileState.activityRating + 0.05);
+      profileState.rouletteUntil = Math.max(profileState.rouletteUntil, Date.now() + 24*3600*1000);
+
+      saveProfileState(currentUser, profileState);
+      updateBalanceUI();
+      if (viewProfile.style.display !== "none") renderProfile();
+
+      addHistoryItem("Рулетка: " + x);
+      toastShow(x);
+      showView("history");
+    };
+
+    btnChance.onclick = function(){
+      if (!profileState || !currentUser) return;
+
+      profileState.chanceUntil = Math.max(profileState.chanceUntil, Date.now() + 24*3600*1000);
+      profileState.activityRating = Math.min(99.9, profileState.activityRating + 0.10);
+
+      saveProfileState(currentUser, profileState);
+      updateBalanceUI();
+      if (viewProfile.style.display !== "none") renderProfile();
+
+      addHistoryItem("Шанс: обновлён (демо)");
+      toastShow("Шанс ↑");
+      showView("history");
+    };
+
+    btnMarket.onclick = function(){
+      openMarketMenu();
+    };
+
+    if (exitMenuBtn){
+      exitMenuBtn.onclick = closeMarketMenu;
+    }
+
+    btnMyItems.onclick = function(){ showView("history"); addHistoryItem("Открыто: Мои предметы"); toastShow("Мои предметы"); };
+    btnGames.onclick = function(){ showView("history"); addHistoryItem("Открыто: Игры"); toastShow("Игры"); };
+
+    // ======================
+    // init session (✅ обновляем роль с базы при старте, чтобы админка появлялась даже после выдачи роли)
+    // ======================
+    (async function(){
+      var s = loadSession();
+      if (s && s.login){
+        try{
+          var dbu = await getUserByLogin(String(s.login).toLowerCase());
+          if (dbu){
+            s.id = dbu.id || s.id;
+            s.nick = dbu.nick || s.nick;
+            s.avatar_url = dbu.avatar_url || s.avatar_url || null;
+            s.role = dbu.role || s.role || "user";
+            saveSession(s);
+          } else {
+            s.role = s.role || "user";
+          }
+        }catch(e){
+          s.role = s.role || "user";
+        }
+        showShell(s);
+      } else {
+        showAuth();
+      }
+    })();
+
+    // ======================
+    // Параллакс мышью
+    // ======================
+    window.addEventListener("mousemove", function(e){
+      var cx = window.innerWidth / 2;
+      var cy = window.innerHeight / 2;
+      var dx = (e.clientX - cx);
+      var dy = (e.clientY - cy);
+      document.documentElement.style.setProperty("--parX", dx.toFixed(0) + "px");
+      document.documentElement.style.setProperty("--parY", dy.toFixed(0) + "px");
+    }, { passive:true });
+
+    async function loadMyInventory(){
+      const res = await supabase
+        .from("inventory")
+        .select("qty, item_catalog: item_id ( id, name, image_url, base_price )")
+        .order("updated_at", { ascending: false });
+
+      if (res.error) throw res.error;
+      return res.data || [];
+    }
+
+    async function loadMarket(){
+      const res = await supabase
+        .from("market_listings")
+        .select("id, qty, price, created_at, item_catalog: item_id ( id, name, image_url, base_price ), seller_id")
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+
+      if (res.error) throw res.error;
+      return res.data || [];
+    }
+
   })();
-
-  // ======================
-  // Параллакс мышью (как было)
-  // ======================
-  window.addEventListener("mousemove", function(e){
-    var cx = window.innerWidth / 2;
-    var cy = window.innerHeight / 2;
-    var dx = (e.clientX - cx);
-    var dy = (e.clientY - cy);
-    document.documentElement.style.setProperty("--parX", dx.toFixed(0) + "px");
-    document.documentElement.style.setProperty("--parY", dy.toFixed(0) + "px");
-  }, { passive:true });
-
-  async function loadMyInventory(){
-  const res = await supabase
-    .from("inventory")
-    .select("qty, item_catalog: item_id ( id, name, image_url, base_price )")
-    .order("updated_at", { ascending: false });
-
-    if (res.error) throw res.error;
-    return res.data || [];
-  }
-  
-  async function loadMarket(){
-    const res = await supabase
-      .from("market_listings")
-      .select("id, qty, price, created_at, item_catalog: item_id ( id, name, image_url, base_price ), seller_id")
-      .eq("status", "active")
-      .order("created_at", { ascending: false });
-  
-    if (res.error) throw res.error;
-    return res.data || [];
-  }
-
-
-})();
-  </script> 
-  </body> 
+  </script>
+</body>
 </html>
