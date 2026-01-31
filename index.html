@@ -1129,6 +1129,44 @@
       pointer-events:none;
     }
 
+    .logoutBtn{
+      position: fixed;
+      left: 18px;
+      bottom: 102px; /* над логотипом (logoOrb 74px + отступы) */
+      z-index: 60;
+    
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.92);
+    
+      padding: 10px 12px;
+      min-height: 44px;
+      cursor: pointer;
+    
+      font-weight: 1000;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    
+      backdrop-filter: blur(12px);
+      box-shadow:
+        0 18px 50px rgba(0,0,0,.32),
+        0 0 20px rgba(180,120,255,.10);
+    
+      transition: .14s transform, .14s box-shadow, .14s border-color, .14s opacity;
+    }
+    .logoutBtn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255, 100, 120, .55);
+      box-shadow:
+        0 0 22px rgba(255,100,120,.12),
+        0 18px 60px rgba(0,0,0,.38);
+    }
+    .logoutBtn:active{ transform: translateY(0); }
+    .logoutBtn:disabled{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
+    
+
     
   </style>
 </head>
@@ -1397,6 +1435,11 @@
     <img src="IconWorld.png" alt="WORLD_SCRIPT logo">
   </div>
 
+  <button class="logoutBtn" id="logoutBtn" type="button" title="Выйти из аккаунта">
+    Выйти из аккаунта
+  </button>
+
+
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script>
   (function(){
@@ -1409,6 +1452,7 @@
     function $(id){ return document.getElementById(id); }
 
     var btnAdmin = $("btnAdmin");
+    var logoutBtn = $("logoutBtn");
 
     var adminModal = $("adminModal");
     var adminModalClose = $("adminModalClose");
@@ -2278,6 +2322,44 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     });
   }
 
+  function clearSession(){
+    localStorage.removeItem("game_user");
+  }
+
+  if (logoutBtn){
+    logoutBtn.onclick = doLogout;
+  }
+
+  
+  async function doLogout(){
+    try{
+      // закрыть модалки если открыты
+      if (profileModal && profileModal.classList.contains("active")) closeProfileModal();
+      if (typeof closeAdminModal === "function" && adminModal && adminModal.classList.contains("active")) closeAdminModal();
+  
+      // остановить таймеры
+      if (onlineTimer) clearInterval(onlineTimer);
+      onlineTimer = null;
+  
+      if (profileTimer) clearInterval(profileTimer);
+      profileTimer = null;
+  
+      // (опционально) можно попытаться удалить presence, но это не обязательно
+      // if (currentUser) await supabase.from("online_presence").delete().eq("user_id", currentUser.id);
+  
+      // сброс локальных данных
+      clearSession();
+      currentUser = null;
+      profileState = null;
+  
+      toastShow("Вы вышли из аккаунта");
+      showAuth();
+    }catch(e){
+      console.error(e);
+      clearSession();
+      showAuth();
+    }
+  }
 
     
   function showShell(user){
@@ -2289,6 +2371,8 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
 
     if (user.avatar_url) shellAvatar.src = user.avatar_url;
 
+    if (logoutBtn) logoutBtn.style.display = "";
+    
     currentUser = user;
     profileState = loadProfileState(user);
     updateBalanceUI();
@@ -2312,6 +2396,8 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
     setMsg("");
     onlinePill.textContent = "—";
 
+    if (logoutBtn) logoutBtn.style.display = "none";
+      
     if (onlineTimer) clearInterval(onlineTimer);
     onlineTimer = null;
 
