@@ -1111,6 +1111,23 @@
       .marketGrid{ grid-template-columns: 1fr; }
     }
     
+    .navBtn.admin{
+      border-color: rgba(255, 210, 120, .75);
+      background: linear-gradient(135deg, rgba(255,210,120,.16), rgba(180,120,255,.10));
+      box-shadow:
+        0 0 22px rgba(255,210,120,.18),
+        0 0 55px rgba(255,210,120,.08);
+      position:relative;
+      overflow:hidden;
+    }
+    .navBtn.admin:before{
+      content:"";
+      position:absolute;
+      inset:-40px;
+      background: radial-gradient(circle, rgba(255,210,120,.18), transparent 60%);
+      animation: pulseGlow 2.0s ease-in-out infinite;
+      pointer-events:none;
+    }
 
     
   </style>
@@ -1216,6 +1233,7 @@
               <button class="navBtn market" id="btnMarket" type="button">Рынок предметов</button>
               <button class="navBtn" id="btnMyItems" type="button">Мои предметы</button>
               <button class="navBtn" id="btnGames" type="button">Игры</button>
+              <button class="navBtn admin" id="btnAdmin" type="button" style="display:none;">Админка</button>
             </div>
           </div>
 
@@ -1333,6 +1351,44 @@
   </div>
 </div>
 
+<div class="modal" id="adminModal" aria-hidden="true">
+  <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+    <div class="modalHead">
+      <div class="modalTitle" id="adminModalTitle">Админка — предметы</div>
+      <button class="modalClose" id="adminModalClose" type="button">✕</button>
+    </div>
+
+    <div class="modalBody">
+      <div class="hint">Кол-во “в продаже” считается по активным лотам и не редактируется.</div>
+
+      <div class="pwBox" style="margin-top:12px;">
+        <div class="pwTitle">Добавить / Изменить предмет</div>
+
+        <div class="pwGrid">
+          <input class="field" id="admItemId" placeholder="ID (пусто = новый)" />
+          <input class="field" id="admName" placeholder="Название" />
+          <input class="field" id="admImageUrl" placeholder="Картинка (URL)" />
+          <input class="field" id="admPrice" placeholder="Цена (число)" type="number" />
+
+          <div class="row">
+            <button class="btn" id="admSaveBtn" type="button">Сохранить</button>
+            <button class="btn2" id="admClearBtn" type="button">Очистить</button>
+          </div>
+
+          <button class="btn2" id="admDeleteBtn" type="button" disabled>Удалить выбранный</button>
+        </div>
+      </div>
+
+      <div class="pwBox">
+        <div class="pwTitle">Список предметов</div>
+        <div id="admList" class="marketList" style="max-height:340px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
 
   <div class="toast" id="toast"></div>
 
@@ -1351,6 +1407,22 @@
     var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqYmhmbHBvZWxndXNmaHltaXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4NzEzODMsImV4cCI6MjA4MDQ0NzM4M30.OUBE062cKr4p4KpKlZlWIYCmqCBpXK43tQq9m-laDfg";
 
     function $(id){ return document.getElementById(id); }
+
+    var btnAdmin = $("btnAdmin");
+
+    var adminModal = $("adminModal");
+    var adminModalClose = $("adminModalClose");
+    
+    var admItemId = $("admItemId");
+    var admName = $("admName");
+    var admImageUrl = $("admImageUrl");
+    var admPrice = $("admPrice");
+    
+    var admSaveBtn = $("admSaveBtn");
+    var admClearBtn = $("admClearBtn");
+    var admDeleteBtn = $("admDeleteBtn");
+    var admList = $("admList");
+
 
     var profileBox = $("profileBox");
     var profileModal = $("profileModal");
@@ -1438,9 +1510,11 @@
         login: user.login,
         nick: user.nick,
         avatar_url: user.avatar_url || null,
+        role: user.role || "user",
         plain_pass: user.__plain_pass || null
       }));
     }
+
 
     function loadSession(){
       try{
@@ -1683,8 +1757,191 @@
       inMenu = false;
       setGameplayEnabled(true);
       showView("history");
+            // admin button
+      if (btnAdmin){
+        var isAdmin = (user.role === "admin");
+        btnAdmin.style.display = isAdmin ? "" : "none";
+      }
+
       toastShow("Выход из меню");
     }
+
+    function openAdminModal(){
+      if (!currentUser || currentUser.role !== "admin") return;
+      adminModal.classList.add("active");
+      adminModal.setAttribute("aria-hidden","false");
+      renderAdminItems(); // загрузка списка
+    }
+    
+    function closeAdminModal(){
+      adminModal.classList.remove("active");
+      adminModal.setAttribute("aria-hidden","true");
+    }
+    
+    if (btnAdmin) btnAdmin.onclick = openAdminModal;
+    if (adminModalClose) adminModalClose.onclick = closeAdminModal;
+    
+    if (adminModal){
+      adminModal.onclick = function(e){
+        if (e.target === adminModal) closeAdminModal();
+      };
+    }
+
+    async function loadCatalog(){
+      const res = await supabase
+        .from("item_catalog")
+        .select("id,name,image_url,base_price")
+        .order("created_at", { ascending: false });
+    
+      if (res.error) throw res.error;
+      return res.data || [];
+    }
+    
+    async function loadActiveListings(){
+      const res = await supabase
+        .from("market_listings")
+        .select("item_id,qty")
+        .eq("status","active");
+    
+      if (res.error) throw res.error;
+      return res.data || [];
+    }
+    
+    function sumQtyByItem(listings){
+      var map = {};
+      listings.forEach(l => {
+        var k = l.item_id;
+        map[k] = (map[k] || 0) + (l.qty || 0);
+      });
+      return map;
+    }
+    
+    function fillAdminForm(it){
+      admItemId.value = it.id || "";
+      admName.value = it.name || "";
+      admImageUrl.value = it.image_url || "";
+      admPrice.value = (it.base_price != null) ? String(it.base_price) : "";
+      admDeleteBtn.disabled = !it.id;
+    }
+
+    async function renderAdminItems(){
+      if (!admList) return;
+      admList.innerHTML = "";
+    
+      try{
+        const [items, listings] = await Promise.all([loadCatalog(), loadActiveListings()]);
+        const qtyMap = sumQtyByItem(listings);
+    
+        if (!items.length){
+          var e = document.createElement("div");
+          e.className = "hint";
+          e.textContent = "Пока нет предметов в каталоге.";
+          admList.appendChild(e);
+          return;
+        }
+    
+        items.forEach(it => {
+          var el = document.createElement("div");
+          el.className = "mItem";
+          var q = qtyMap[it.id] || 0;
+    
+          el.innerHTML = `
+            <div class="mImg"><img alt="item" src="${escapeHtml(it.image_url || svgData(it.name))}"></div>
+            <div>
+              <div class="mName">${escapeHtml(it.name)}</div>
+              <div class="mSub">ID: ${escapeHtml(it.id)} • В продаже: ${q}</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+              <div class="mPrice">${money(it.base_price || 0)}</div>
+              <button class="btn2 tiny">Выбрать</button>
+            </div>
+          `;
+    
+          el.querySelector("button").onclick = () => {
+            fillAdminForm(it);
+          };
+    
+          admList.appendChild(el);
+        });
+    
+      }catch(e){
+        console.error(e);
+        toastShow(e?.message || "Ошибка загрузки каталога");
+      }
+    }
+
+    function clearAdminForm(){
+      admItemId.value = "";
+      admName.value = "";
+      admImageUrl.value = "";
+      admPrice.value = "";
+      admDeleteBtn.disabled = true;
+    }
+    
+    if (admClearBtn) admClearBtn.onclick = clearAdminForm;
+    
+    if (admSaveBtn) admSaveBtn.onclick = async function(){
+      if (!currentUser || currentUser.role !== "admin") return;
+    
+      try{
+        var id = (admItemId.value || "").trim();
+        var name = (admName.value || "").trim();
+        var image_url = (admImageUrl.value || "").trim();
+        var base_price = Math.max(0, parseInt(admPrice.value || "0", 10) || 0);
+    
+        if (!name){ toastShow("Название обязательно"); return; }
+    
+        // upsert: если id пустой — вставляем, иначе обновляем
+        if (!id){
+          const ins = await supabase.from("item_catalog").insert({
+            name, image_url: image_url || null, base_price
+          }).select("id").single();
+          if (ins.error) throw ins.error;
+    
+          toastShow("Предмет добавлен");
+          addHistoryItem(`Админ: добавлен предмет "${name}"`);
+          clearAdminForm();
+          await renderAdminItems();
+          return;
+        }
+    
+        const upd = await supabase.from("item_catalog").update({
+          name, image_url: image_url || null, base_price
+        }).eq("id", id);
+    
+        if (upd.error) throw upd.error;
+    
+        toastShow("Сохранено");
+        addHistoryItem(`Админ: обновлён предмет "${name}"`);
+        await renderAdminItems();
+    
+      }catch(e){
+        console.error(e);
+        toastShow(e?.message || "Ошибка сохранения");
+      }
+    };
+    
+    if (admDeleteBtn) admDeleteBtn.onclick = async function(){
+      if (!currentUser || currentUser.role !== "admin") return;
+    
+      try{
+        var id = (admItemId.value || "").trim();
+        if (!id) return;
+    
+        // ВАЖНО: удаление может быть запрещено, если предмет используется в inventory/market_listings (FK).
+        const del = await supabase.from("item_catalog").delete().eq("id", id);
+        if (del.error) throw del.error;
+    
+        toastShow("Удалено");
+        addHistoryItem(`Админ: удалён предмет ID ${id}`);
+        clearAdminForm();
+        await renderAdminItems();
+    
+      }catch(e){
+        console.error(e);
+        toastShow(e?.message || "Ошибка удаления (возможно, предмет используется)");
+      }
+    };
 
 
 
@@ -1951,7 +2208,7 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
 
   async function getUserByLogin(loginLower){
     var res = await supabase.from("game_users")
-      .select("id,login,nick,pass_hash,avatar_url")
+      .select("id,login,nick,pass_hash,avatar_url,role")
       .eq("login", loginLower)
       .maybeSingle();
     if (res.error) throw res.error;
@@ -2125,7 +2382,7 @@ ${profileState.t_auto ? "✅" : "❌"} Авторулетка
         nick: nick,
         pass_hash: hash,
         avatar_url: avatarUrl
-      }).select("id,login,nick,avatar_url").single();
+      }).select("id,login,nick,pass_hash,avatar_url,role").single();
 
       if (ins.error){
         console.error(ins.error);
